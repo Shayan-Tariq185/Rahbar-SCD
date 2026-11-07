@@ -13,23 +13,23 @@ resources:
 #    kindnetd CNI which lacks NetworkPolicy enforcement. Omitting them prevents
 #    unnecessary manifest overhead or unexpected runner port-forward drops.
 
-generatorOptions:
-  disableNameSuffixHash: true
-
-configMapGenerator:
-  - name: rahbar-config
-    behavior: merge
-    literals:
-      - RETRIEVER=chroma
-      - LLM_PROVIDER=stub
-      - EMBED_MODEL=dummy-768
-      - RELEVANCE_FLOOR=0.20
-      - TOP_K=5
-      - CACHE_THRESHOLD=0.88
-      - LOG_LEVEL=INFO
-      - CORPUS_DIR=/corpus
-
 patches:
+  # Patch ConfigMap for CI parameters
+  - patch: |-
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: rahbar-config
+        namespace: rahbar
+      data:
+        RETRIEVER: "chroma"
+        LLM_PROVIDER: "stub"
+        EMBED_MODEL: "dummy-768"
+        RELEVANCE_FLOOR: "0.20"
+        TOP_K: "5"
+        CACHE_THRESHOLD: "0.88"
+        LOG_LEVEL: "INFO"
+        CORPUS_DIR: "/corpus"
   # Reduce API replicas to 1 for ephemeral CI runners, ensure IfNotPresent pull policy
   - patch: |-
       apiVersion: apps/v1

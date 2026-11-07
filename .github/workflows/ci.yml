@@ -80,18 +80,17 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Kustomize
-        uses: imranismail/setup-kustomize@v2
-        with:
-          kustomize-version: "v5.4.3"
-
-      - name: Install Kubeconform
+      - name: Install Kustomize and Kubeconform
         run: |
-          KUBECONFORM_VERSION="v0.6.7"
           mkdir -p ~/.local/bin
+          # Install Kustomize
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash -s -- 5.4.3 ~/.local/bin
+          # Install Kubeconform
+          KUBECONFORM_VERSION="v0.6.7"
           curl -sL "https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz" | tar -xz -C ~/.local/bin kubeconform
-          chmod +x ~/.local/bin/kubeconform
+          chmod +x ~/.local/bin/kustomize ~/.local/bin/kubeconform
           echo "$HOME/.local/bin" >> $GITHUB_PATH
+          ~/.local/bin/kustomize version
           ~/.local/bin/kubeconform -v
 
       - name: Validate Production Overlay with Kubeconform
@@ -183,7 +182,7 @@ jobs:
           tags: rahbar-indexer:scan
 
       - name: Scan API Image with Trivy
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: rahbar-api:scan
           format: "table"
@@ -192,7 +191,7 @@ jobs:
           severity: "HIGH,CRITICAL"
 
       - name: Scan UI Image with Trivy
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: rahbar-ui:scan
           format: "table"
@@ -201,7 +200,7 @@ jobs:
           severity: "HIGH,CRITICAL"
 
       - name: Scan Indexer Image with Trivy
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: rahbar-indexer:scan
           format: "table"
