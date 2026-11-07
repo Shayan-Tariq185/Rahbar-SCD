@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: rahbar-config
+  namespace: rahbar
+data:
+  # The embedding pin: set to dummy-768 for initial cluster bootstrap to match --dummy index
+  EMBED_MODEL: "dummy-768"
+  LLM_PROVIDER: "stub"
+  LLM_MODEL: "llama3.2:3b"
+  RETRIEVER: "stub"
+  CHROMA_HOST: "chroma"
+  CHROMA_PORT: "8000"
+  CHROMA_COLLECTION: "rahbar"
+  TOP_K: "5"
+  # Low temperature balances deterministic grounded retrieval citations with natural fluency
+  TEMPERATURE: "0.2"
+  CHUNK_SIZE: "400"
+  CHUNK_OVERLAP: "50"
+  RELEVANCE_FLOOR: "0.35"
+  CACHE_THRESHOLD: "0.90"
+  REDIS_HOST: "redis"
+  REDIS_PORT: "6379"
+  OLLAMA_URL: "http://host.minikube.internal:11434"
+  HOSTED_BASE_URL: ""
+  LOG_LEVEL: "INFO"
+  CORPUS_DIR: "/corpus"
+
