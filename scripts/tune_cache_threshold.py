@@ -16,7 +16,6 @@ import argparse
 import hashlib
 import json
 import math
-import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -170,7 +169,7 @@ def main() -> int:
 
     embed_fn, embed_label = get_embedder()
     print("\n" + "=" * 80)
-    print(f"RAHBAR Semantic Cache Threshold Tuning Tool")
+    print("RAHBAR Semantic Cache Threshold Tuning Tool")
     print(f"Dataset : {data_path} (section: {section_key})")
     print(f"Embedder: {embed_label}")
     print(f"Counts  : {len(paraphrases)} paraphrases, {len(near_misses)} near-misses")
