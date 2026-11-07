@@ -1,0 +1,21 @@
+# Evidence: Section 4.4 Embedding Pin Guardrail Mismatch Demo
+# Date: 2026-11-07
+# Environment: Minikube / rahbar namespace
+
+$ UNREADY_POD=$(kubectl get pods -n rahbar --no-headers | awk '$2=="0/1" && $3=="Running" {print $1}')
+Targeting unready pod: api-774ffb49d6-7shsg
+
+$ kubectl logs -n rahbar $UNREADY_POD --tail=25
+{"ts": "2026-11-07T13:02:43Z", "level": "ERROR", "logger": "rahbar.health", "msg": "readyz failed: embedding model mismatch", "request_id": "22b53ae68ce74117a52a796d97ad5d5f", "api_model": "nomic-embed-text", "index_model": "dummy-768", "collection": "rahbar"}
+{"ts": "2026-11-07T13:02:48Z", "level": "ERROR", "logger": "rahbar.health", "msg": "readyz failed: embedding model mismatch", "request_id": "54d9b9b3b65046008bb0d298842bd0d0", "api_model": "nomic-embed-text", "index_model": "dummy-768", "collection": "rahbar"}
+{"ts": "2026-11-07T13:02:52Z", "level": "ERROR", "logger": "rahbar.health", "msg": "readyz failed: embedding model mismatch", "request_id": "787911cf8729418a891ca02fbe5495bc", "api_model": "nomic-embed-text", "index_model": "dummy-768", "collection": "rahbar"}
+{"ts": "2026-11-07T13:02:55Z", "level": "ERROR", "logger": "rahbar.health", "msg": "readyz failed: embedding model mismatch", "request_id": "d509f10d9b3b451cab5c295899a87bfc", "api_model": "nomic-embed-text", "index_model": "dummy-768", "collection": "rahbar"}
+{"ts": "2026-11-07T13:02:57Z", "level": "ERROR", "logger": "rahbar.health", "msg": "readyz failed: embedding model mismatch", "request_id": "d509f10d9b3b451cab5c295899a87bfc", "api_model": "nomic-embed-text", "index_model": "dummy-768", "collection": "rahbar"}
+
+$ kubectl exec -n rahbar $UNREADY_POD -- python3 -c "import urllib.request, urllib.error
+try:
+    urllib.request.urlopen('http://localhost:8000/readyz')
+except urllib.error.HTTPError as e:
+    print('HTTP', e.code, e.read().decode())"
+HTTP 503 {"status":"not_ready","failed":"embedding_pin","detail":"Embedding model mismatch: API expects 'nomic-embed-text' but collection metadata records 'dummy-768'"}
+
