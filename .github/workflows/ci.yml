@@ -108,6 +108,7 @@ jobs:
   build:
     name: Build Container Images
     runs-on: ubuntu-latest
+    needs: [lint, test, manifests]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
