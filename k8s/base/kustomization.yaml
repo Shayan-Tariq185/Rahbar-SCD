@@ -14,4 +14,5 @@ resources:
   - reindex-cronjob.yaml
   - ingress.yaml
   - hpa.yaml
+  - networkpolicy.yaml
 
