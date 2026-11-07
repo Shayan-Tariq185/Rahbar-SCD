@@ -4,6 +4,7 @@
 SHELL := /bin/bash
 NS ?= rahbar
 TAG ?= dev
+CORPUS_SRC ?= eval/fixtures
 PY ?= python3
 VENV ?= .venv
 BIN := $(abspath $(VENV))/bin
@@ -42,7 +43,7 @@ cluster: ## start minikube with Calico, then enable metrics-server and ingress
 
 images: ## build the three images and load them into minikube (needs yours: Dockerfiles)
 	docker build -t rahbar-api:$(TAG) api
-	docker build -t rahbar-indexer:$(TAG) indexer
+	docker build -f indexer/Dockerfile --build-arg CORPUS_SRC=$(CORPUS_SRC) -t rahbar-indexer:$(TAG) .
 	docker build -t rahbar-ui:$(TAG) ui
 	minikube image load rahbar-api:$(TAG)
 	minikube image load rahbar-indexer:$(TAG)
