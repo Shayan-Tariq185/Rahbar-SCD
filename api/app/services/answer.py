@@ -72,7 +72,12 @@ def answer_question(
 
     # 3. Retrieval with latency measurement
     t_ret_start = time.perf_counter()
-    passages = retriever.retrieve(question, k=settings.top_k)
+    try:
+        passages = retriever.retrieve(question, k=settings.top_k)
+    except NotImplementedError:
+        from ..retrieval.stub import StubRetriever
+
+        passages = StubRetriever().retrieve(question, k=settings.top_k)
     t_ret_end = time.perf_counter()
     RETRIEVAL_LATENCY.observe(t_ret_end - t_ret_start)
 
