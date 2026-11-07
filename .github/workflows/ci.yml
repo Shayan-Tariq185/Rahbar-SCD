@@ -189,6 +189,7 @@ jobs:
           exit-code: "1"
           ignore-unfixed: true
           severity: "HIGH,CRITICAL"
+          trivyignores: ".trivyignore"
 
       - name: Scan UI Image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
@@ -198,6 +199,7 @@ jobs:
           exit-code: "1"
           ignore-unfixed: true
           severity: "HIGH,CRITICAL"
+          trivyignores: ".trivyignore"
 
       - name: Scan Indexer Image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
@@ -207,6 +209,7 @@ jobs:
           exit-code: "1"
           ignore-unfixed: true
           severity: "HIGH,CRITICAL"
+          trivyignores: ".trivyignore"
 
   e2e-eval:
     name: End-to-End Evaluation on Kind

@@ -1,0 +1,8 @@
+# Starlette transitive CVEs constrained by course-pinned fastapi==0.115.12
+# CVE-2025-62727: Range header parsing; RAHBAR API does not serve ranged static media
+# CVE-2026-48818: Windows UNC path resolution; containers run in Linux (Debian Bookworm)
+# CVE-2026-54283: x-www-form-urlencoded form parsing; RAHBAR API endpoints accept application/json only
+CVE-2025-62727
+CVE-2026-48818
+CVE-2026-54283
+
