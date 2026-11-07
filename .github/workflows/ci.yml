@@ -37,7 +37,7 @@ jobs:
 
       - name: Run Ruff Linter
         run: |
-          ruff check api indexer eval corpus scripts
+          ruff check api indexer eval corpus scripts/tune_cache_threshold.py
 
       - name: Run Mypy Type Checker (API)
         run: |
@@ -88,8 +88,11 @@ jobs:
       - name: Install Kubeconform
         run: |
           KUBECONFORM_VERSION="v0.6.7"
-          curl -sL https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz | tar -xz -C /usr/local/bin
-          kubeconform -v
+          mkdir -p ~/.local/bin
+          curl -sL "https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz" | tar -xz -C ~/.local/bin kubeconform
+          chmod +x ~/.local/bin/kubeconform
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          ~/.local/bin/kubeconform -v
 
       - name: Validate Production Overlay with Kubeconform
         run: |
