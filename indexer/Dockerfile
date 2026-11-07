@@ -5,8 +5,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app
 
-# Install system dependencies for document extraction and OCR, then clean apt cache
+# Install system dependencies for document extraction and OCR, update OS packages, then clean apt cache
 RUN apt-get update && \
+    apt-get upgrade -y && \
     apt-get install -y --no-install-recommends tesseract-ocr poppler-utils && \
     rm -rf /var/lib/apt/lists/*
 

@@ -5,6 +5,9 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
     PYTHONPATH=/app
 
+# Update base OS packages to patch known CVEs
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/*
+
 # Create dedicated non-root application user with UID 10001
 RUN useradd -u 10001 -r -s /bin/false -d /app appuser
 
