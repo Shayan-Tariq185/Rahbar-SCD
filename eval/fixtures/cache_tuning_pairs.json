@@ -1,0 +1,135 @@
+{
+  "_comment": "Fixture-grounded pairs for tuning CACHE_THRESHOLD in RAHBAR semantic cache.",
+  "fixtures": {
+    "paraphrases": [
+      {
+        "id": "p-01",
+        "description": "Attendance requirement for final exam (80% rule)",
+        "q1": "What attendance percentage is required to sit in the final exam?",
+        "q2": "What is the minimum lecture attendance needed to be eligible for finals?"
+      },
+      {
+        "id": "p-02",
+        "description": "Medical condonation of attendance absences by HoD",
+        "q1": "Can the Head of Department excuse low attendance for medical reasons?",
+        "q2": "Under what medical circumstances can the HoD condone student absences?"
+      },
+      {
+        "id": "p-03",
+        "description": "FA grade awarded for low attendance",
+        "q1": "What grade is awarded to a student who fails the attendance threshold?",
+        "q2": "What grade do you receive if your attendance falls below the minimum?"
+      },
+      {
+        "id": "p-04",
+        "description": "Academic warning CGPA threshold in 2026",
+        "q1": "What CGPA causes a student to be placed on academic warning in 2026?",
+        "q2": "Below what cumulative GPA does a student receive an academic warning under 2026 rules?"
+      },
+      {
+        "id": "p-05",
+        "description": "Dismissal after consecutive warnings",
+        "q1": "How many consecutive semesters on warning leads to expulsion from the programme?",
+        "q2": "When is a student dropped from the university for continuous academic warnings?"
+      },
+      {
+        "id": "p-06",
+        "description": "Grade counting rule when repeating a course in 2026",
+        "q1": "Which grade is counted when a student repeats a course in 2026?",
+        "q2": "Does the most recent attempt count even if lower when repeating a course?"
+      },
+      {
+        "id": "p-07",
+        "description": "Tuition fee per credit hour for BS students",
+        "q1": "How much is the tuition fee per credit hour for BS students?",
+        "q2": "What is the per credit hour tuition rate for undergraduate disciplines?"
+      },
+      {
+        "id": "p-08",
+        "description": "Tuition fee per credit hour for MS students",
+        "q1": "What is the tuition cost per credit hour for the MS degree?",
+        "q2": "How much does a graduate student pay per credit hour for an MS course?"
+      },
+      {
+        "id": "p-09",
+        "description": "Fee per transcript copy",
+        "q1": "What is the fee for obtaining an official transcript copy?",
+        "q2": "How much does the institute charge per copy of a transcript?"
+      },
+      {
+        "id": "p-10",
+        "description": "Full refund period for course drop",
+        "q1": "Within how many days can I drop a class to get a 100 percent refund?",
+        "q2": "What is the deadline for receiving a full refund upon dropping a course?"
+      }
+    ],
+    "near_misses": [
+      {
+        "id": "nm-01",
+        "description": "Warning CGPA in 2026 (2.00) vs 2023 (1.75)",
+        "q1": "What CGPA puts a student on academic warning under the 2026 rules?",
+        "q2": "What CGPA puts a student on academic warning under the 2023 rules?"
+      },
+      {
+        "id": "nm-02",
+        "description": "Dismissal after warning in 2026 (3 semesters) vs 2023 (2 semesters)",
+        "q1": "How many warning semesters cause dismissal under the 2026 policy?",
+        "q2": "How many warning semesters cause dismissal under the 2023 policy?"
+      },
+      {
+        "id": "nm-03",
+        "description": "Minimum attendance in 2026 (80%) vs 2023 (75%)",
+        "q1": "What is the minimum lecture attendance percentage in 2026?",
+        "q2": "What was the minimum lecture attendance percentage in 2023?"
+      },
+      {
+        "id": "nm-04",
+        "description": "Repeat course grade cap in 2026 (any grade) vs 2023 (capped at B)",
+        "q1": "Can a student achieve an A grade when repeating a course in 2026?",
+        "q2": "What is the highest grade a student can receive when repeating in 2023?"
+      },
+      {
+        "id": "nm-05",
+        "description": "Tuition per credit hour BS (10,000 PKR) vs MS (12,500 PKR)",
+        "q1": "What is the per credit hour fee for BS programs?",
+        "q2": "What is the per credit hour fee for MS programs?"
+      },
+      {
+        "id": "nm-06",
+        "description": "Refund at day 5 (100%) vs day 15 (50%)",
+        "q1": "What refund percentage do I get if I drop a course on day 5?",
+        "q2": "What refund percentage do I get if I drop a course on day 15?"
+      },
+      {
+        "id": "nm-07",
+        "description": "Refund at day 15 (50%) vs day 25 (0%)",
+        "q1": "What refund do I receive if I drop a course on day 15?",
+        "q2": "What refund do I receive if I drop a course on day 25?"
+      },
+      {
+        "id": "nm-08",
+        "description": "Late registration fee (3,000 PKR) vs Campus transfer (5,000 PKR)",
+        "q1": "What is the fee charged for late course registration?",
+        "q2": "What is the fee charged for campus transfer?"
+      },
+      {
+        "id": "nm-09",
+        "description": "Transcript fee (1,500 PKR) vs Late registration fee (3,000 PKR)",
+        "q1": "How much does it cost to request a transcript copy?",
+        "q2": "How much does it cost to pay late registration charges?"
+      },
+      {
+        "id": "nm-10",
+        "description": "Repeating eligibility in 2026 (any course) vs 2023 (C or lower only)",
+        "q1": "Can a student repeat a course if they obtained a B grade under 2026 rules?",
+        "q2": "What minimum grade restriction existed in 2023 for repeating courses?"
+      }
+    ]
+  },
+  "real_corpus": {
+    "_instructions": "Add your pairs from your institution's real corpus documents below to benchmark real embeddings.",
+    "paraphrases": [],
+    "near_misses": []
+  }
+}
+

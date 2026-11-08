@@ -1,0 +1,203 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cd-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  test:
+    name: Re-run Unit Tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.12
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r api/requirements.txt -r api/requirements-dev.txt -r indexer/requirements.txt -r indexer/requirements-dev.txt
+
+      - name: Run API Tests with Coverage Gate (>= 60%)
+        run: |
+          cd api && pytest -v --cov=app --cov-fail-under=60 --cov-report=term-missing
+
+      - name: Run Indexer Offline Tests
+        run: |
+          cd indexer && pytest -v
+
+  build-push:
+    name: Build & Push Images to Docker Hub
+    needs: [test]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Push API Image (${{ github.sha }} only)
+        uses: docker/build-push-action@v6
+        with:
+          context: api
+          file: api/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rahbar-api:${{ github.sha }}
+
+      - name: Build and Push UI Image (${{ github.sha }} only)
+        uses: docker/build-push-action@v6
+        with:
+          context: ui
+          file: ui/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rahbar-ui:${{ github.sha }}
+
+      - name: Build and Push Indexer Image (${{ github.sha }} only)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: indexer/Dockerfile
+          build-args: |
+            CORPUS_SRC=eval/fixtures
+          push: true
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/rahbar-indexer:${{ github.sha }}
+
+  deploy:
+    name: Ephemeral Kind Deployment & Smoke Test
+    needs: [build-push]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install Kustomize
+        run: |
+          mkdir -p ~/.local/bin
+          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash -s -- 5.4.3 ~/.local/bin
+          chmod +x ~/.local/bin/kustomize
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+          ~/.local/bin/kustomize version
+
+      - name: Create Ephemeral Kind Cluster
+        uses: helm/kind-action@v1.12.0
+        with:
+          cluster_name: rahbar-cd
+          wait: 120s
+
+      - name: Set Production Overlay Images to Commit SHA
+        run: |
+          cd k8s/overlays/prod
+          ~/.local/bin/kustomize edit set image rahbar-api=${{ secrets.DOCKERHUB_USERNAME }}/rahbar-api:${{ github.sha }}
+          ~/.local/bin/kustomize edit set image rahbar-ui=${{ secrets.DOCKERHUB_USERNAME }}/rahbar-ui:${{ github.sha }}
+          ~/.local/bin/kustomize edit set image rahbar-indexer=${{ secrets.DOCKERHUB_USERNAME }}/rahbar-indexer:${{ github.sha }}
+          echo "=== Updated k8s/overlays/prod/kustomization.yaml ==="
+          cat kustomization.yaml
+
+      - name: Apply Production Manifests
+        run: |
+          kubectl apply -k k8s/overlays/prod
+
+      - name: Wait for Chroma StatefulSet Rollout
+        run: |
+          kubectl rollout status statefulset/chroma -n rahbar --timeout=180s
+
+      - name: Wait for Indexer Job Completion
+        run: |
+          echo "Waiting for indexer batch job to complete..."
+          kubectl wait --for=condition=complete job/indexer -n rahbar --timeout=240s || {
+            echo "Indexer job failed or timed out. Logs:"
+            kubectl logs -n rahbar job/indexer --tail=100
+            exit 1
+          }
+
+      - name: Wait for API Deployment Rollout
+        run: |
+          kubectl rollout status deploy/api -n rahbar --timeout=180s
+
+      - name: Wait for UI Deployment Rollout
+        run: |
+          kubectl rollout status deploy/ui -n rahbar --timeout=120s
+
+      - name: Run End-to-End Smoke Tests
+        # Note on Networking:
+        # Standard ephemeral Kind clusters do not bind host ports 80/443 without custom
+        # extraPortMappings and an Ingress-Nginx controller DaemonSet. Running smoke tests
+        # via kubectl port-forward provides a deterministic, zero-dependency validation
+        # of the live container images and HTTP routing directly within the runner.
+        run: |
+          echo "Setting up port forwards for API (8000) and UI (8080)..."
+          kubectl port-forward svc/api 8000:8000 -n rahbar &
+          kubectl port-forward svc/ui 8080:8080 -n rahbar &
+          sleep 5
+
+          echo "1. Probing API liveness (/healthz)..."
+          HEALTHZ=$(curl -sSf http://localhost:8000/healthz)
+          echo "Healthz response: $HEALTHZ"
+          echo "$HEALTHZ" | grep -q "ok" || {
+            echo "Smoke test failed: /healthz did not return ok"
+            exit 1
+          }
+
+          echo "2. Probing API readiness (/readyz)..."
+          READYZ=$(curl -s http://localhost:8000/readyz)
+          echo "Readyz response: $READYZ"
+
+          echo "3. Querying /api/ask with test question..."
+          RESPONSE=$(curl -sSf -X POST http://localhost:8000/api/ask \
+            -H "Content-Type: application/json" \
+            -d '{"question": "What is the minimum attendance needed to sit the final exam?"}')
+          echo "Ask response: $RESPONSE"
+          echo "$RESPONSE" | grep -q "request_id" || {
+            echo "Smoke test failed: /api/ask missing request_id"
+            exit 1
+          }
+
+          echo "4. Probing UI frontend (port 8080)..."
+          UI_BODY=$(curl -sSf http://localhost:8080/)
+          echo "$UI_BODY" | grep -q "RAHBAR" || {
+            echo "Smoke test failed: UI index page missing RAHBAR title"
+            exit 1
+          }
+
+          echo "SUCCESS: All smoke tests passed for commit ${{ github.sha }}!"
+
+      - name: Cluster Diagnostics on Failure
+        if: failure()
+        run: |
+          echo "=== K8s Resources in Namespace rahbar ==="
+          kubectl get all,pvc,configmap -n rahbar
+          echo "=== Describe Pods ==="
+          kubectl describe pods -n rahbar
+          echo "=== Indexer Job Logs ==="
+          kubectl logs -n rahbar job/indexer --tail=200 || true
+          echo "=== API Pod Logs ==="
+          kubectl logs -n rahbar -l app=rahbar-api --tail=200 || true
+          echo "=== Chroma Pod Logs ==="
+          kubectl logs -n rahbar -l app=rahbar-chroma --tail=200 || true
+
