@@ -1,0 +1,34 @@
+documents:
+  # P2 version pair + P7 exact terms (clause numbers, CGPA thresholds)
+  - name: Undergraduate Academic Rules (Aug 2023)
+    url: http://nu.edu.pk/public/downloads/Academic-Rules-Undergrad-Aug-2023.pdf
+    doc_version: "2023-08"
+    superseded: true
+  - name: Academic Rules Handbook (Jun 2026)
+    url: https://nu.edu.pk/public/downloads/Academic_Rules_Handbook_2026.pdf
+    doc_version: "2026-06"
+    superseded: false
+
+  # P5 long definitions (GenAI / conduct policy)
+  - name: Student Handbook (Jun 2026)
+    url: https://nu.edu.pk/public/downloads/Student_Handbook_2026.pdf
+    doc_version: "2026-06"
+    superseded: false
+
+  # P1 scale + P4 real tables
+  - name: Annual Report 2023-24
+    url: https://nu.edu.pk/public/downloads/AnnualReportForm/Annual Report 2023-24.pdf
+    doc_version: "2023-24"
+    superseded: false
+  - name: Annual Report 2019-20
+    url: https://nu.edu.pk/public/downloads/AnnualReportForm/Annual Report 2019-20.pdf
+    doc_version: "2019-20"
+    superseded: false
+
+  # P3 scanned image-only PDF
+  - name: Faculty Entrepreneurship and Technical Start-ups Policy
+    url: https://nu.edu.pk/OricResources/ResearchPolicies/27.pdf?20220530
+    doc_version: "2022-05"
+    superseded: false
+
+  # P6 absent topic: hostel/transport PDF is deliberately NOT included.

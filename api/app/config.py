@@ -43,8 +43,8 @@ class Settings:
 
     log_level: str = "INFO"
 
-    # Semantic cache & grounding settings (Track A contracts)
-    relevance_floor: float = 0.35
+    # Semantic cache & grounding settings
+    relevance_floor: float = 0.2
     cache_threshold: float = 0.90
     redis_host: str = "redis"
     redis_port: int = 6379
@@ -65,7 +65,7 @@ def get_settings() -> Settings:
         hosted_base_url=os.environ.get("HOSTED_BASE_URL", ""),
         llm_api_key=os.environ.get("LLM_API_KEY", ""),
         log_level=os.environ.get("LOG_LEVEL", "INFO"),
-        relevance_floor=_float("RELEVANCE_FLOOR", 0.35),
+        relevance_floor=_float("RELEVANCE_FLOOR", 0.2),
         cache_threshold=_float("CACHE_THRESHOLD", 0.90),
         redis_host=os.environ.get("REDIS_HOST", "redis"),
         redis_port=_int("REDIS_PORT", 6379),
