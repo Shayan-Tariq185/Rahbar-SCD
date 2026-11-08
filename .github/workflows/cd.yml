@@ -159,8 +159,8 @@ jobs:
           echo "1. Probing API liveness (/healthz)..."
           HEALTHZ=$(curl -sSf http://localhost:8000/healthz)
           echo "Healthz response: $HEALTHZ"
-          echo "$HEALTHZ" | grep -q "ok" || {
-            echo "Smoke test failed: /healthz did not return ok"
+          echo "$HEALTHZ" | grep -q -E "alive|ok" || {
+            echo "Smoke test failed: /healthz did not return alive or ok"
             exit 1
           }
 
