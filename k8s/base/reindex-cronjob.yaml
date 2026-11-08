@@ -34,7 +34,6 @@ spec:
                 - python
                 - -m
                 - pipeline.run
-                - --dummy
               envFrom:
                 - configMapRef:
                     name: rahbar-config
