@@ -1,0 +1,2 @@
+NAME      REFERENCE        TARGETS       MINPODS   MAXPODS   REPLICAS   AGE
+api-hpa   Deployment/api   cpu: 8%/70%   3         8         5          5h39m
