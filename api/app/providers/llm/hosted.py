@@ -66,8 +66,9 @@ class HostedProvider:
                         json=payload,
                         headers=headers,
                     )
-                    if response.status_code != 200:
-                        log.error("Hosted LLM API returned status %s: %s", response.status_code, response.text)
+                    status = getattr(response, "status_code", 200)
+                    if status != 200:
+                        log.error("Hosted LLM API returned status %s: %s", status, getattr(response, "text", ""))
                     response.raise_for_status()
                     content = response.json()["choices"][0]["message"]["content"].strip()
                     if content.startswith("```"):

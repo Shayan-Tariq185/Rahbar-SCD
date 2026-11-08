@@ -30,16 +30,8 @@ def check_citations(answer: Answer, passages: list[Passage]) -> Answer:
                 matched.append(Citation(source=passage.source, section=passage.section, page=passage.page))
                 break
 
-    # If the model didn't provide citations or cited non-existent sources, but answered from context,
-    # backfill the citation with the top retrieved passage if relevant
-    if not matched and passages and answer.answered_from_context:
-        top = passages[0]
-        matched.append(Citation(source=top.source, section=top.section, page=top.page))
-
-    return answer.model_copy(
-        update={
-            "citations": matched,
-            "answered_from_context": True if matched else False,
-            "confidence": "high" if matched else "low",
-        }
-    )
+    if answer.answered_from_context and not matched:
+        return answer.model_copy(
+            update={"citations": [], "answered_from_context": False, "confidence": "low"}
+        )
+    return answer.model_copy(update={"citations": matched})
