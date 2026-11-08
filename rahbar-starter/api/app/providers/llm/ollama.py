@@ -37,12 +37,14 @@ class OllamaProvider:
             "stream": False,
         }
         with httpx.Client(timeout=120.0) as client:
-            response = client.post(
-                f"{self.settings.ollama_url.rstrip('/')}/api/chat", json=payload
-            )
-            response.raise_for_status()
-            content = response.json()["message"]["content"]
-        try:
-            return parse_answer(json.loads(content))
-        except (json.JSONDecodeError, KeyError, TypeError, ValueError):
-            return fallback_answer()
+            for _ in range(2):
+                response = client.post(
+                    f"{self.settings.ollama_url.rstrip('/')}/api/chat", json=payload
+                )
+                response.raise_for_status()
+                try:
+                    content = response.json()["message"]["content"]
+                    return parse_answer(json.loads(content))
+                except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+                    continue
+        return fallback_answer()

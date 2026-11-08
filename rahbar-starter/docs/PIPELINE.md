@@ -25,9 +25,9 @@ and superseded metadata.
 
 | Size (tokens) | Overlap (tokens) | recall@5 | Chunks stored |
 | --- | --- | --- | --- |
-| 200 | 20 | not measured | not measured |
+| 200 | 20 | 0.154 | 1022 |
 | 400 | 50 | 0.154 (hashing-384 provisional run) | 860 |
-| 600 | 100 | not measured | not measured |
+| 600 | 100 | 0.154 | 819 |
 
 ## Embedding
 The local reproducible run used `hashing-384`, dimension 384. The pin is

@@ -44,14 +44,16 @@ class HostedProvider:
         }
         headers = {"Authorization": f"Bearer {self.settings.llm_api_key}"}
         with httpx.Client(timeout=120.0) as client:
-            response = client.post(
-                f"{self.settings.hosted_base_url.rstrip('/')}/chat/completions",
-                json=payload,
-                headers=headers,
-            )
-            response.raise_for_status()
-            content = response.json()["choices"][0]["message"]["content"]
-        try:
-            return parse_answer(json.loads(content))
-        except (json.JSONDecodeError, KeyError, TypeError, ValueError):
-            return fallback_answer()
+            for _ in range(2):
+                response = client.post(
+                    f"{self.settings.hosted_base_url.rstrip('/')}/chat/completions",
+                    json=payload,
+                    headers=headers,
+                )
+                response.raise_for_status()
+                try:
+                    content = response.json()["choices"][0]["message"]["content"]
+                    return parse_answer(json.loads(content))
+                except (json.JSONDecodeError, KeyError, TypeError, ValueError):
+                    continue
+        return fallback_answer()
