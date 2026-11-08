@@ -84,7 +84,8 @@ jobs:
         run: |
           mkdir -p ~/.local/bin
           # Install Kustomize
-          curl -s --retry 5 --retry-connrefused "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash -s -- 5.4.3 ~/.local/bin
+          curl -sSL -f --retry 5 --retry-connrefused "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.4.3/kustomize_v5.4.3_linux_amd64.tar.gz" | tar -xz -C ~/.local/bin kustomize || \
+          wget -qO- --tries=5 "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.4.3/kustomize_v5.4.3_linux_amd64.tar.gz" | tar -xz -C ~/.local/bin kustomize
           # Install Kubeconform
           KUBECONFORM_VERSION="v0.6.7"
           curl -sSL -f --retry 5 --retry-connrefused "https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz" | tar -xz -C ~/.local/bin kubeconform || \

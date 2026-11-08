@@ -99,7 +99,8 @@ jobs:
       - name: Install Kustomize
         run: |
           mkdir -p ~/.local/bin
-          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash -s -- 5.4.3 ~/.local/bin
+          curl -sSL -f --retry 5 --retry-connrefused "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.4.3/kustomize_v5.4.3_linux_amd64.tar.gz" | tar -xz -C ~/.local/bin kustomize || \
+          wget -qO- --tries=5 "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.4.3/kustomize_v5.4.3_linux_amd64.tar.gz" | tar -xz -C ~/.local/bin kustomize
           chmod +x ~/.local/bin/kustomize
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           ~/.local/bin/kustomize version
