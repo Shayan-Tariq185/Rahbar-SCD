@@ -63,7 +63,7 @@ jobs:
       - name: Install Test Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r api/requirements.txt -r api/requirements-dev.txt -r indexer/requirements.txt
+          pip install -r api/requirements.txt -r api/requirements-dev.txt -r indexer/requirements.txt -r indexer/requirements-dev.txt
 
       - name: Run API Tests with Coverage Gate (>= 60%)
         run: |
