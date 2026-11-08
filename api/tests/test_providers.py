@@ -88,3 +88,25 @@ def test_ollama_returns_safe_fallback_after_two_invalid_responses(monkeypatch) -
     assert answer.answered_from_context is False
     assert answer.citations == []
     assert client.calls == 2
+
+
+def test_hosted_provider_returns_valid_answer(monkeypatch) -> None:
+    from app.providers.llm.hosted import HostedProvider
+
+    valid = {
+        "reasoning": "evidence",
+        "answer": "Attendance is required.",
+        "citations": [{"source": "rules.pdf", "section": "1.21 Attendance", "page": 2}],
+        "answered_from_context": True,
+        "confidence": "high",
+    }
+    client = _FakeClient([
+        {"choices": [{"message": {"content": json.dumps(valid)}}]}
+    ])
+    monkeypatch.setattr(httpx, "Client", lambda timeout: client)
+
+    settings = Settings(hosted_base_url="https://api.hosted.com", llm_api_key="test-key", llm_model="test")
+    answer = HostedProvider(settings).generate("What is required?", [_passage()])
+    assert answer.answer == "Attendance is required."
+    assert answer.answered_from_context is True
+
