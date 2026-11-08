@@ -192,6 +192,8 @@ jobs:
           ignore-unfixed: true
           severity: "HIGH,CRITICAL"
           trivyignores: ".trivyignore"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Scan UI Image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
@@ -202,6 +204,8 @@ jobs:
           ignore-unfixed: true
           severity: "HIGH,CRITICAL"
           trivyignores: ".trivyignore"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Scan Indexer Image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
@@ -212,6 +216,8 @@ jobs:
           ignore-unfixed: true
           severity: "HIGH,CRITICAL"
           trivyignores: ".trivyignore"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   e2e-eval:
     name: End-to-End Evaluation on Kind
