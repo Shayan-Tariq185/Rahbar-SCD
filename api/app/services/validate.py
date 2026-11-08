@@ -30,7 +30,13 @@ def generate_and_validate(
     settings: Settings,
 ) -> Answer:
     _ = settings
-    try:
-        return parse_answer(provider.generate(question, passages).model_dump())
-    except Exception:
-        return fallback_answer()
+    retries = 1
+    for attempt in range(retries + 1):
+        try:
+            return parse_answer(provider.generate(question, passages).model_dump())
+        except Exception:
+            if attempt < retries:
+                # retry generation once before fallback
+                continue
+            return fallback_answer()
+    return fallback_answer()
