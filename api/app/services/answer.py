@@ -78,6 +78,11 @@ def answer_question(
         from ..retrieval.stub import StubRetriever
 
         passages = StubRetriever().retrieve(question, k=settings.top_k)
+    except Exception as exc:
+        log.exception("Retrieval failed, falling back to stub retriever: %s", exc)
+        from ..retrieval.stub import StubRetriever
+
+        passages = StubRetriever().retrieve(question, k=settings.top_k)
     t_ret_end = time.perf_counter()
     RETRIEVAL_LATENCY.observe(t_ret_end - t_ret_start)
 

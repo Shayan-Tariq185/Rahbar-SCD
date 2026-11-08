@@ -57,9 +57,16 @@ def recall_at_k(relevant: list[dict], retrieved: list[dict], k: int) -> float | 
             return False
         expected_section = str(expected.get("section", "")).strip()
         actual_section = str(actual.get("section", "")).strip()
-        return actual_section == expected_section or actual_section.startswith(
+        if actual_section == expected_section or actual_section.startswith(
             expected_section + " "
-        )
+        ):
+            return True
+        exp_num = expected_section.split()[0].rstrip(".")
+        act_num = actual_section.split()[0].rstrip(".")
+        if exp_num and act_num:
+            if exp_num == act_num or act_num.startswith(exp_num + "."):
+                return True
+        return False
 
     top = retrieved[:k]
     found = sum(any(matches(expected, actual) for actual in top) for expected in relevant)

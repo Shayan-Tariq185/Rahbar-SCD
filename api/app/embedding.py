@@ -13,7 +13,21 @@ from .config import get_settings
 
 HASHING_MODEL = "hashing-384"
 HASHING_DIM = 384
+DUMMY_MODEL = "dummy-768"
+DUMMY_DIM = 768
 _TOKEN = re.compile(r"[a-z0-9]+")
+
+
+def fake_vector(text: str, dim: int = DUMMY_DIM) -> list[float]:
+    """Deterministic unit vector derived from the text's hash. Matches dummy indexer."""
+    values: list[float] = []
+    seed = text.encode()
+    while len(values) < dim:
+        seed = hashlib.sha256(seed).digest()
+        values.extend((b - 127.5) / 127.5 for b in seed)
+    values = values[:dim]
+    norm = math.sqrt(sum(v * v for v in values)) or 1.0
+    return [v / norm for v in values]
 
 
 def hashing_vector(text: str, dim: int = HASHING_DIM) -> list[float]:
@@ -38,8 +52,11 @@ def hashing_vector(text: str, dim: int = HASHING_DIM) -> list[float]:
 def embed_query(text: str) -> list[float]:
     settings = get_settings()
 
+    if settings.embed_model == DUMMY_MODEL:
+        return fake_vector(text, dim=DUMMY_DIM)
+
     if settings.embed_model == HASHING_MODEL:
-        return hashing_vector(text)
+        return hashing_vector(text, dim=HASHING_DIM)
 
     prefix = "search_query: " if settings.embed_model.startswith("nomic") else ""
 
@@ -52,9 +69,11 @@ def embed_query(text: str) -> list[float]:
             response.raise_for_status()
             embeddings = response.json()["embeddings"]
     except Exception:
-        return hashing_vector(text)
+        dim = DUMMY_DIM if "768" in settings.embed_model else HASHING_DIM
+        return fake_vector(text, dim=dim) if dim == DUMMY_DIM else hashing_vector(text, dim=dim)
 
     if not embeddings:
-        return hashing_vector(text)
+        dim = DUMMY_DIM if "768" in settings.embed_model else HASHING_DIM
+        return fake_vector(text, dim=dim) if dim == DUMMY_DIM else hashing_vector(text, dim=dim)
 
     return [float(value) for value in embeddings[0]]
