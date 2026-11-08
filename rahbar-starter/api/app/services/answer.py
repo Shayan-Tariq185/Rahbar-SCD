@@ -13,6 +13,7 @@ from ..logjson import request_id_var
 from ..providers.llm.base import LLMProvider
 from ..retrieval.base import Retriever
 from ..schemas import AskResponse, RetrievedRef
+from .grounding import check_citations, should_abstain
 
 log = logging.getLogger("rahbar.answer")
 
@@ -20,13 +21,11 @@ log = logging.getLogger("rahbar.answer")
 def answer_question(
     question: str, retriever: Retriever, provider: LLMProvider, settings: Settings
 ) -> AskResponse:
-    # STARTER-TODO(3.2-3.4): add the production steps around these two calls:
-    # the semantic cache (3.3), the relevance floor and honest abstention (3.4),
-    # validation with one retry and a safe fallback (3.4), and the check that every
-    # citation matches a retrieved passage (3.4). Keep this function thin: put each
-    # step in its own module under services/ so each can be unit-tested.
     passages = retriever.retrieve(question, k=settings.top_k)
-    answer = provider.generate(question, passages)
+    if should_abstain(passages, settings.relevance_floor):
+        answer = provider.generate(question, [])
+    else:
+        answer = check_citations(provider.generate(question, passages), passages)
 
     log.info(
         "answered",
