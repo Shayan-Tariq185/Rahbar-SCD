@@ -1,0 +1,203 @@
+# Network security policies for RAHBAR (Track A)
+# Implements deny-by-default isolation with least-privilege allow-lists.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-all
+  namespace: rahbar
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+    - Egress
+---
+# Allow DNS egress to CoreDNS for all pods in the rahbar namespace
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-dns-egress
+  namespace: rahbar
+spec:
+  podSelector: {}
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+---
+# UI policies: Ingress from Ingress-Nginx; Egress to API
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-ui
+  namespace: rahbar
+spec:
+  podSelector:
+    matchLabels:
+      app: rahbar-ui
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: rahbar-api
+      ports:
+        - protocol: TCP
+          port: 8000
+---
+# API policies: Ingress from Ingress-Nginx & UI; Egress to Chroma, Redis, Ollama host
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-api
+  namespace: rahbar
+spec:
+  podSelector:
+    matchLabels:
+      app: rahbar-api
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: ingress-nginx
+      ports:
+        - protocol: TCP
+          port: 8000
+    - from:
+        - podSelector:
+            matchLabels:
+              app: rahbar-ui
+      ports:
+        - protocol: TCP
+          port: 8000
+  egress:
+    # Egress to Chroma vector store
+    - to:
+        - podSelector:
+            matchLabels:
+              app: rahbar-chroma
+      ports:
+        - protocol: TCP
+          port: 8000
+    # Egress to Redis semantic cache
+    - to:
+        - podSelector:
+            matchLabels:
+              app: rahbar-redis
+      ports:
+        - protocol: TCP
+          port: 6379
+    # Egress to Ollama running on host (host.minikube.internal:11434)
+    - to:
+        - ipBlock:
+            cidr: 192.168.49.1/32
+      ports:
+        - protocol: TCP
+          port: 11434
+    # Optional egress for hosted LLM provider (disabled by default)
+    # - to:
+    #     - ipBlock:
+    #         cidr: 0.0.0.0/0
+    #   ports:
+    #     - protocol: TCP
+    #       port: 443
+---
+# Chroma policies: Ingress allowed ONLY from API and Indexer workloads
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-chroma
+  namespace: rahbar
+spec:
+  podSelector:
+    matchLabels:
+      app: rahbar-chroma
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: rahbar-api
+        - podSelector:
+            matchLabels:
+              app: rahbar-indexer
+        - podSelector:
+            matchLabels:
+              app: rahbar-reindex
+      ports:
+        - protocol: TCP
+          port: 8000
+---
+# Redis policies: Ingress allowed ONLY from API pods
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-redis
+  namespace: rahbar
+spec:
+  podSelector:
+    matchLabels:
+      app: rahbar-redis
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: rahbar-api
+      ports:
+        - protocol: TCP
+          port: 6379
+---
+# Indexer policies: Egress to Chroma and Ollama host for document embeddings
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-indexer
+  namespace: rahbar
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values:
+          - rahbar-indexer
+          - rahbar-reindex
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: rahbar-chroma
+      ports:
+        - protocol: TCP
+          port: 8000
+    - to:
+        - ipBlock:
+            cidr: 192.168.49.1/32
+      ports:
+        - protocol: TCP
+          port: 11434
+

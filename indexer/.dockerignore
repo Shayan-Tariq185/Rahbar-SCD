@@ -1,0 +1,12 @@
+.git
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.venv
+venv
+corpus/raw
+.pytest_cache
+.mypy_cache
+.coverage
+tests

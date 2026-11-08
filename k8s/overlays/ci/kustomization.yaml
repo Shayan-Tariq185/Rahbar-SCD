@@ -1,0 +1,146 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+# Overlay configuration for ephemeral CI clusters (e.g. GitHub Actions kind runner)
+# 1. RETRIEVER is switched to 'chroma' to test vector store integration.
+# 2. LLM_PROVIDER is set to 'stub' (offline deterministic responses).
+# 3. EMBED_MODEL is pinned to 'hashing-384' (or the pinned CI embedding model).
+# 4. HPA is removed because ephemeral single-node CI clusters have limited CPU/memory.
+# 5. NetworkPolicy is omitted because standard kind clusters utilize the default
+#    kindnetd CNI which lacks NetworkPolicy enforcement. Omitting them prevents
+#    unnecessary manifest overhead or unexpected runner port-forward drops.
+
+patches:
+  # Patch ConfigMap for CI parameters
+  - patch: |-
+      apiVersion: v1
+      kind: ConfigMap
+      metadata:
+        name: rahbar-config
+        namespace: rahbar
+      data:
+        RETRIEVER: "chroma"
+        LLM_PROVIDER: "stub"
+        EMBED_MODEL: "dummy-768"
+        RELEVANCE_FLOOR: "0.20"
+        TOP_K: "5"
+        CACHE_THRESHOLD: "0.88"
+        LOG_LEVEL: "INFO"
+        CORPUS_DIR: "/corpus"
+  # Reduce API replicas to 1 for ephemeral CI runners, ensure IfNotPresent pull policy
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: api
+        namespace: rahbar
+      spec:
+        replicas: 1
+        template:
+          spec:
+            containers:
+              - name: api
+                imagePullPolicy: IfNotPresent
+  # Ensure UI deployment uses local image in kind
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: ui
+        namespace: rahbar
+      spec:
+        template:
+          spec:
+            containers:
+              - name: ui
+                imagePullPolicy: IfNotPresent
+  # Indexer Job runs the real pipeline (un-dummied) in CI against eval/fixtures
+  - patch: |-
+      apiVersion: batch/v1
+      kind: Job
+      metadata:
+        name: indexer
+        namespace: rahbar
+      spec:
+        template:
+          spec:
+            containers:
+              - name: indexer
+                imagePullPolicy: IfNotPresent
+                args:
+                  - python
+                  - -m
+                  - pipeline.run
+                  - --dummy
+  # Remove HorizontalPodAutoscaler in CI
+  - patch: |-
+      $patch: delete
+      apiVersion: autoscaling/v2
+      kind: HorizontalPodAutoscaler
+      metadata:
+        name: api-hpa
+        namespace: rahbar
+  # Omit NetworkPolicies in kind (kindnetd CNI does not enforce NetworkPolicy by default)
+  - patch: |-
+      $patch: delete
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      metadata:
+        name: default-deny-all
+        namespace: rahbar
+  - patch: |-
+      $patch: delete
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      metadata:
+        name: allow-dns-egress
+        namespace: rahbar
+  - patch: |-
+      $patch: delete
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      metadata:
+        name: allow-ui
+        namespace: rahbar
+  - patch: |-
+      $patch: delete
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      metadata:
+        name: allow-api
+        namespace: rahbar
+  - patch: |-
+      $patch: delete
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      metadata:
+        name: allow-chroma
+        namespace: rahbar
+  - patch: |-
+      $patch: delete
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      metadata:
+        name: allow-redis
+        namespace: rahbar
+  - patch: |-
+      $patch: delete
+      apiVersion: networking.k8s.io/v1
+      kind: NetworkPolicy
+      metadata:
+        name: allow-indexer
+        namespace: rahbar
+
+images:
+  - name: rahbar-api
+    newName: rahbar-api
+    newTag: ci
+  - name: rahbar-indexer
+    newName: rahbar-indexer
+    newTag: ci
+  - name: rahbar-ui
+    newName: rahbar-ui
+    newTag: ci

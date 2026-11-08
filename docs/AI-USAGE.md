@@ -1,0 +1,10 @@
+# AI Usage Disclosure
+
+In compliance with course academic integrity policies, this document provides an honest, comprehensive disclosure of the generative AI tooling used during the development of **RAHBAR: Grounded RAG on Kubernetes**.
+
+| Tool | What it wrote or shaped | What we changed afterwards, and why |
+| :--- | :--- | :--- |
+| **Google Antigravity** | Initial scaffolding for Kubernetes manifests (`k8s/base/`), non-root Dockerfiles, Calico `NetworkPolicy` deny-by-default templates, and GitHub Actions workflow outlines (`ci.yml`, `cd.yml`). | Adjusted security contexts to enforce `readOnlyRootFilesystem: true` with `/tmp` `emptyDir` mounts; replaced third-party GitHub Actions (`setup-kustomize`) with official SIG installation scripts to avoid runner 404s; pinned all container image base tags to exact Debian Bookworm/Alpine versions. |
+| **Google Antigravity** | Implementation skeleton for the Section 4.4 `/readyz` embedding-pin check, Redis semantic cache (`RedisSemanticCache`), and Prometheus latency metric definitions (`metrics_defs.py`). | Added defensive fail-open exception handling for Redis so cache outages never drop user queries; added startup Chroma collection metadata polling for `index_id` to ensure atomic cache invalidation across corpus updates. |
+| **Google Antigravity** | Draft outlines and structural templates for Architecture Decision Records (ADRs 0001–0004), `docs/ARCHITECTURE.md`, `docs/FAILURE-ANALYSIS.md`, and `scripts/collect_evidence.sh`. | Rewrote ADR technical justifications in our own words; conducted live Minikube fault-injection tests to capture real terminal outputs and screenshots; tuned cache similarity threshold to `0.88` based on empirical paraphrase evaluation. |
+| **Track B Partner AI Tools** | *(Track B partner to record any AI tooling used for data extraction, OCR, chunking, or Ollama prompting)* | *(Track B partner to document manual revisions, prompt engineering refinements, and grounding fixes)* |
