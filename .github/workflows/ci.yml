@@ -84,10 +84,11 @@ jobs:
         run: |
           mkdir -p ~/.local/bin
           # Install Kustomize
-          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash -s -- 5.4.3 ~/.local/bin
+          curl -s --retry 5 --retry-connrefused "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash -s -- 5.4.3 ~/.local/bin
           # Install Kubeconform
           KUBECONFORM_VERSION="v0.6.7"
-          curl -sL "https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz" | tar -xz -C ~/.local/bin kubeconform
+          curl -sSL -f --retry 5 --retry-connrefused "https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz" | tar -xz -C ~/.local/bin kubeconform || \
+          wget -qO- --tries=5 "https://github.com/yannh/kubeconform/releases/download/${KUBECONFORM_VERSION}/kubeconform-linux-amd64.tar.gz" | tar -xz -C ~/.local/bin kubeconform
           chmod +x ~/.local/bin/kustomize ~/.local/bin/kubeconform
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           ~/.local/bin/kustomize version
@@ -191,6 +192,8 @@ jobs:
           ignore-unfixed: true
           severity: "HIGH,CRITICAL"
           trivyignores: ".trivyignore"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Scan UI Image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
@@ -201,6 +204,8 @@ jobs:
           ignore-unfixed: true
           severity: "HIGH,CRITICAL"
           trivyignores: ".trivyignore"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Scan Indexer Image with Trivy
         uses: aquasecurity/trivy-action@v0.36.0
@@ -211,6 +216,8 @@ jobs:
           ignore-unfixed: true
           severity: "HIGH,CRITICAL"
           trivyignores: ".trivyignore"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   e2e-eval:
     name: End-to-End Evaluation on Kind
