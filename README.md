@@ -180,6 +180,14 @@ python scripts/check_submission.py
 
 ## Documentation Index
 
+Assignment 03 Member 2 work is at **M2.0: proposed contracts and offline harness**.
+The existing Assignment 02 commands remain in place. The full A03 suite,
+gate, coverage Jobs and release evidence are not implemented yet. Start with the
+[Member 2 audit](docs/member2/GAP.md), [H0 proposal](docs/member2/H0-CONTRACTS.md),
+[manual command runbook](docs/member2/RUNBOOK.md) and [phase status](docs/member2/PROGRESS.md).
+Member 1 integrates API/ingestion/traces/runtime and the supplied shared-file patch;
+no A03 runtime success is claimed by these documents.
+
 - [Architecture & StatefulSet Deep Dive](docs/ARCHITECTURE.md)
 - [Document Corpus Specifications](docs/CORPUS.md)
 - [Pipeline Chunking & Storage Amplification](docs/PIPELINE.md)

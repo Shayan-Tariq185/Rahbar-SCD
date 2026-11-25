@@ -1,0 +1,2 @@
+# H0 JSON Schema validation only; no production API dependency changes.
+jsonschema==4.26.0
