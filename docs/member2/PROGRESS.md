@@ -50,8 +50,10 @@ found Docker Desktop stopped and no WSL current-context. No cluster was started 
 - Reviewed origin/feat/m1-ragops at 3132046a1e79c64a208f47002af2341e4d2aa60a without merging.
   M1-ADAPTER-REVIEW.md identifies its actual endpoints, missing evidence fields and older
   scaffold code needing owner-led reconciliation with completed A02.
-- Feature branch is prepared for push and draft PR to dev. Actual push/PR/CI status is
-  reported separately after execution; no merge or direct main push is part of M2.0.
+- Pushed commit e79640a90414e7e27299c4c7cf6039b201b40ed3 to feat/m2-evaluation-contracts.
+- Opened draft PR https://github.com/Shayan-Tariq185/Rahbar-SCD/pull/30 targeting dev.
+  Remote CI was not yet reported at the immediate post-creation check. No merge or
+  direct main push is part of M2.0.
 
 ## Remaining checkpoint
 

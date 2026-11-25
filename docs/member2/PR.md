@@ -23,7 +23,7 @@ the YAML evaluator/golden set remain unchanged.
 - After command delegation: Linux CPython 3.12.16 ran all 24 M2 schema/contract and
   evaluator tests successfully. A02 API: 27 passed, coverage 80.61%. Indexer: 34 passed,
   one OCR test skipped because system OCR tools are absent. Full Ruff passed.
-- A separate Linux-cache environment installed all declared test dependencies. See
+- A separate Linux-cache environment installed all declared test dependencies.
   Final make test/lint and member test/lint targets all passed in that environment;
   mypy passed on 26 API, 11 indexer and 3 RAGOps source files. Docker/cluster state
   was inspected only; no deployment, measured RAG results or human labels were generated.
