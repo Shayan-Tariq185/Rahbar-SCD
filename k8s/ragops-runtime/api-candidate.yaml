@@ -1,0 +1,126 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-candidate
+  namespace: rahbar
+  labels:
+    app: rahbar-api-candidate
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: rahbar-api-candidate
+  template:
+    metadata:
+      labels:
+        app: rahbar-api-candidate
+    spec:
+      serviceAccountName: api-sa
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      terminationGracePeriodSeconds: 30
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+        - name: api
+          image: rahbar-api:dev
+          imagePullPolicy: IfNotPresent
+          lifecycle:
+            preStop:
+              exec:
+                command:
+                  - /bin/sh
+                  - -c
+                  - sleep 5
+          ports:
+            - name: http
+              containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: rahbar-config
+          env:
+            - name: CHROMA_COLLECTION
+              value: "rahbar_cand_good"
+            - name: EMBED_MODEL
+              value: "nomic-embed-text"
+            - name: EMBED_VERSION
+              value: ""
+            - name: TOP_K
+              value: "5"
+            - name: TRACES_DIR
+              value: "/traces"
+            - name: EVAL_INTERNAL_ENABLED
+              value: "true"
+            - name: LLM_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: rahbar-secret
+                  key: LLM_API_KEY
+                  optional: true
+          securityContext:
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            initialDelaySeconds: 2
+            periodSeconds: 2
+            failureThreshold: 30
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8000
+            periodSeconds: 10
+            timeoutSeconds: 3
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8000
+            periodSeconds: 5
+            timeoutSeconds: 3
+          volumeMounts:
+            - name: traces
+              mountPath: /traces
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: traces
+          persistentVolumeClaim:
+            claimName: rahbar-traces-pvc
+        - name: tmp
+          emptyDir: {}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-candidate
+  namespace: rahbar
+  labels:
+    app: rahbar-api-candidate
+spec:
+  type: ClusterIP
+  selector:
+    app: rahbar-api-candidate
+  ports:
+    - name: http
+      port: 8000
+      targetPort: 8000
