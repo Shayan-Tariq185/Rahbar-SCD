@@ -1,0 +1,12 @@
+# A02 retains its own api/ and indexer/ settings. These cover the new M2 code.
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests/ragops", "eval"]
+pythonpath = [".", "eval", "tests/ragops/evaluation"]
