@@ -20,7 +20,7 @@ from .config import Settings, get_settings
 from .logjson import configure_logging, request_id_var
 from .providers.llm import get_provider
 from .retrieval import get_retriever
-from .routes import ask, health, metrics
+from .routes import ask, eval_adapter, health, metrics
 from .services.cache import get_cache, get_redis_client
 
 log = logging.getLogger("rahbar.api")
@@ -54,6 +54,18 @@ def verify_startup_embedding_pin(settings: Settings) -> tuple[bool, str | None]:
                 extra={
                     "api_model": settings.embed_model,
                     "index_model": index_model,
+                    "collection": settings.collection,
+                },
+            )
+            return False, index_model
+
+        index_digest = metadata.get("embed_digest")
+        if settings.embed_version and index_digest and index_digest != settings.embed_version:
+            log.error(
+                "embedding digest mismatch between API and index",
+                extra={
+                    "api_embed_version": settings.embed_version,
+                    "index_digest": index_digest,
                     "collection": settings.collection,
                 },
             )
@@ -131,6 +143,7 @@ async def request_context(request: Request, call_next):  # type: ignore[no-untyp
 app.include_router(health.router)
 app.include_router(metrics.router)
 app.include_router(ask.router)
+app.include_router(eval_adapter.router)
 
 # Development only: `make dev` serves the chat UI from this process
 _ui_dir = os.environ.get("SERVE_UI_DIR")

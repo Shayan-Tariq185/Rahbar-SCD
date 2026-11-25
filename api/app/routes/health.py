@@ -109,7 +109,7 @@ def readyz(request: Request, response: Response) -> dict[str, Any]:
             "detail": f"Error querying collection count: {exc}",
         }
 
-    # 4. Embedding model pin check (Section 4.4)
+    # 4. Embedding model pin check (Section 4.4 + A03 digest/dimension pin)
     metadata = collection.metadata or {}
     index_model = metadata.get("embed_model")
     if index_model != settings.embed_model:
@@ -128,6 +128,26 @@ def readyz(request: Request, response: Response) -> dict[str, Any]:
             "detail": (
                 f"Embedding model mismatch: API expects '{settings.embed_model}' "
                 f"but collection metadata records '{index_model}'"
+            ),
+        }
+
+    index_digest = metadata.get("embed_digest")
+    if settings.embed_version and index_digest and index_digest != settings.embed_version:
+        log.error(
+            "readyz failed: embedding digest mismatch",
+            extra={
+                "api_embed_version": settings.embed_version,
+                "index_digest": index_digest,
+                "collection": settings.collection,
+            },
+        )
+        response.status_code = 503
+        return {
+            "status": "not_ready",
+            "failed": "embedding_digest_pin",
+            "detail": (
+                f"Embedding digest mismatch: API expects '{settings.embed_version}' "
+                f"but collection metadata records '{index_digest}'"
             ),
         }
 

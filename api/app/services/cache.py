@@ -124,6 +124,12 @@ class RedisSemanticCache:
             log.warning("could not refresh index_id from Chroma metadata", extra={"error": str(exc)})
         return self._current_index_id
 
+    def _namespace_prefix(self, current_index_id: str) -> str:
+        return (
+            f"rahbar:cache:{self.settings.collection}:{current_index_id}:"
+            f"{self.settings.embed_model}:k{self.settings.top_k}:{self.settings.prompt_version}"
+        )
+
     def get(self, question: str, embedding: list[float] | None = None) -> AskResponse | None:
         """Lookup cached response using brute-force cosine similarity over active index_id entries."""
         if not embedding or self.redis_client is None:
@@ -131,7 +137,7 @@ class RedisSemanticCache:
 
         try:
             current_index_id = self.get_current_index_id()
-            pattern = f"rahbar:cache:{current_index_id}:*"
+            pattern = f"{self._namespace_prefix(current_index_id)}:*"
             keys = self.redis_client.keys(pattern)
             if not keys:
                 return None
@@ -180,7 +186,7 @@ class RedisSemanticCache:
         try:
             current_index_id = self.get_current_index_id()
             q_hash = hashlib.sha256(question.strip().lower().encode("utf-8")).hexdigest()
-            key = f"rahbar:cache:{current_index_id}:{q_hash}"
+            key = f"{self._namespace_prefix(current_index_id)}:{q_hash}"
             payload = {
                 "question": question,
                 "embedding": embedding,

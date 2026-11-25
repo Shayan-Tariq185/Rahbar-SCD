@@ -56,6 +56,7 @@ class RetrievedRef(BaseModel):
 
 class AskResponse(BaseModel):
     request_id: str
+    trace_id: str | None = None
     answer: str
     citations: list[Citation]
     answered_from_context: bool
