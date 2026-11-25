@@ -77,3 +77,6 @@ eval-fixtures: ## score the CI fixture golden set against a local `make dev`
 
 check: ## run the submission checker
 	$(PY) scripts/check_submission.py
+
+include mk/ragops-runtime.mk
+-include mk/ragops-eval.mk
