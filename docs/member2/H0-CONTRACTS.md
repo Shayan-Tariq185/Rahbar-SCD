@@ -72,8 +72,9 @@ Each JSONL row has id, question, origin human/synthetic, actual author, answerab
 booleans, expected behavior, relevant canonical passages, reviews, applicable batches and
 notes. Page = one-based physical PDF page, not a printed page label. For plain text/Markdown
 fixtures use page 1. Do not silently infer stable doc_id from a filename. A relevant
-passage requires doc_id/page plus section or chunk_id; version is required for
-version-sensitive ground truth. Allow multiple relevant passages; deduplicate their
+passage requires doc_id/version/page. Section or chunk_id is optional precision and,
+when supplied, is enforced in addition to the page. Prose can use explicit page-level
+ground truth without a guessed heading. Allow multiple relevant passages; deduplicate their
 canonical keys when scoring. M1 must publish doc_id/version -> source/page inventory.
 
 Minimums are independent: >=25 total, >=15 answerable, >=5 unanswerable, >=5 hard.

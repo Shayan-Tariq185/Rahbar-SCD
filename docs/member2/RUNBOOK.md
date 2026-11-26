@@ -4,7 +4,7 @@ Updated 2026-11-26. Member 2 owns evaluation, gates, coverage, evaluation Jobs a
 
 ## Current checkpoint
 
-The independent evaluator, gate, coverage checker, Job wrappers and editable report templates exist. Offline validation is recorded in PROGRESS.md. No real Assignment 03 baseline, release decision, coverage improvement or Kubernetes screenshot is claimed. Golden questions and reviews are pending user revision. Files ending in `.pending.jsonl` are not approved inputs.
+The independent evaluator, gate, coverage checker, Job wrappers and editable report templates exist. Offline validation is recorded in PROGRESS.md. No real Assignment 03 baseline, release decision, coverage improvement or Kubernetes screenshot is claimed. Eight final human questions and the user's four synthetic acceptances are recorded; the partner's four synthetic reviews are pending. Files ending in `.pending.jsonl` are not approved inputs.
 
 ## Terminals and directories
 
@@ -33,12 +33,11 @@ The complete A02 source catalog is `corpus/sources.yaml`; immutable expected has
 "$RAGOPS_PY" scripts/validate_golden.py --golden eval/golden.jsonl --live eval/live_queries.jsonl --pairs eval/embedding_pairs.jsonl --draft
 ```
 
-After both members supply their actual four handwritten questions, fill `eval/human_questions.template.jsonl` into a separate actual-entries file. Keep exact human wording; the agent can map verified document/page ground truth. Each actual member must review four synthetic questions, with their own notes. Do not run the merge twice on the same entries.
+The eight final questions in `eval/human_questions.jsonl` have already been merged; do not run eval_merge_human.py again on those entries. The user's q01-q04 acceptances are recorded from chat. The remaining reviewer is the partner: she should inspect q05-q08 in SYNTHETIC-REVIEW.md and provide her actual decisions. In the interactive command below she must skip q01-q04 (already covered by the user), then review q05-q08. No agent should enter decisions for her.
 
 ```bash
-"$RAGOPS_PY" scripts/eval_merge_human.py --golden eval/golden.jsonl --entries eval/human_questions.jsonl
-"$RAGOPS_PY" scripts/review_synthetic.py --golden eval/golden.jsonl --reviewer 'Shayan-Tariq185' --limit 4
-# Partner runs review_synthetic.py herself with her actual identity and four decisions.
+"$RAGOPS_PY" scripts/review_synthetic.py --golden eval/golden.jsonl --reviewer 'Mahrukh Masroor' --limit 4
+# Partner skips q01-q04 and personally reviews q05-q08; or relays her decisions in chat.
 "$RAGOPS_PY" scripts/validate_golden.py --golden eval/golden.jsonl --live eval/live_queries.jsonl --pairs eval/embedding_pairs.jsonl
 "$RAGOPS_PY" scripts/eval_freeze_golden.py --golden eval/golden.jsonl --out eval/golden.v1.jsonl
 ```
