@@ -1,0 +1,15 @@
+schema_version: '1.0'
+frozen: false
+embedding_url: http://host.minikube.internal:11434
+embedding:
+  model: nomic-embed-text
+  digest: null
+  dimension: 768
+similarity_cutoff: 0.75
+coverage_floor: 0.85
+topic_reviewers: {}
+rationale: >-
+  Provisional values only. Choose the cosine cutoff from real nearest-question
+  similarities and inspected positive/negative examples before golden expansion.
+  The 85 percent aggregate floor is a separate usage-coverage target, not a cosine.
+  Pin the actual model digest and freeze the same live set and policy for before/after.

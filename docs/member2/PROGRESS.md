@@ -1,67 +1,45 @@
 # Member 2 progress
 
-Updated: 2026-11-25 (Asia/Karachi).
+Updated 2026-11-26 (Asia/Karachi).
 
-## M2.0: offline checks passed; H0 review and remote CI pending
+## Current status
 
-The user authorized tool execution and feature-branch pushes. Both assignment PDFs and
-the full Member 2 guide were read. No M2.1+ implementation or runtime deployment started.
+Independent M2 implementation is ready for review after offline validation. Real A03 experiments, final report and submission are NOT complete. The user authorized implementation, command execution and feature pushes; the user performs merges. PR #30 (contracts) was merged into dev at 1a3e6db. Current completion branch: feat/m2-ragops-completion. No partner branch was merged.
 
-Implemented: proposed H0 JSON schemas, independent typed API/embedding/judge interfaces,
-isolated test doubles, fixture/error/cache admission checks, audit and runtime-adapter
-handoff, member make fragment, root test settings and CI integration. Root Makefile and
-shared CONTRACTS.md receive only an unapplied patch for Member 1. A02 API/indexer code,
-YAML evaluator/golden data and manifests remain unchanged.
+## Implemented owned work
 
-CI retains API coverage >=60% and existing checks, adds M2/evaluator tests, runs feature
-PRs to dev, and removes the legacy exemption that accepted evaluator exit 2.
+- B: strict golden/source provenance validation, three-level real HTTP evaluator, seeded typo noise, at least two whole-suite repeats, all metric deltas, query/trace evidence, embedding module measurements, pinned Ollama faithfulness judge and actual human-label calibration.
+- C: fail-closed gate with fixed inputs, original baseline-bound policy, two-percentage-point recall drop math, quality/latency checks, matching vector snapshot and effective top-k-only comparisons. Fixture/preliminary/error/cache/stale/demo decisions cannot authorize release.
+- E: nearest-golden cosine coverage, separate cutoff and aggregate floor, real calibration/policy freeze, uncovered topic groups, fixed-golden drift comparison and subsequent six-question expansion draft helper.
+- F2: non-root evaluation image, dedicated results PVC/ServiceAccount/network policies, literal eval-job.yaml, coverage Job, complete/failed wait, persisted exit 0/1/2 and export after failure. ConfigMap read at process start; demo wrapper preserves the cluster edit and restores the original policy without rebuilding.
+- G: editable report draft with Student 1/Student 2 placeholders and a human-work template. Native Word render inspection confirmed eight report pages and two human-template pages. They are templates, not measured final reports. Final output refuses missing evidence/editorial placeholders.
+- CI: retains A02 checks and API coverage >=60%, adds owned helper lint/Bash syntax, eval resource schema validation and evaluation image build. New remote CI has not yet been observed for this completion branch.
 
-## Actual checks
+## Actual validation
 
-Final environment: Ubuntu-22.04, CPython 3.12.16, all declared requirement files installed
-in /home/shayantariq/.cache/rahbar-m2-validation-20261125. The broken copied .venv was
-not replaced. Initial Windows-only checks are superseded by this supported Linux run.
-A partial Windows-mounted nested environment and nonpersistent /tmp attempt were setup
-steps only; they are not reported as successful fresh-environment validation.
-
-| Check | Actual result |
+| Check | Observed result |
 | --- | --- |
-| make test, API | 27 passed |
-| make test, indexer | 34 passed, 1 skipped (needs tesseract-ocr and poppler-utils) |
-| CI-equivalent API coverage command in final environment | 27 passed, 80.61% app coverage; >=60% gate passed |
-| M2 schemas/contracts + existing A02 evaluator tests | 24 passed |
-| make lint, Ruff/API mypy/indexer mypy | All passed; mypy checked 26 API and 11 indexer files |
-| M2 Ruff + strict mypy | Passed; mypy checked 3 source files |
-| Workflow structure/Python syntax/JSON checks | Passed; existing coverage gate preserved, all nonzero eval exits fail |
-| Integration patch counts/source context | 2 hunks match current files; patch not applied |
+| M2 contracts/schemas/measurements/HTTP and Job boundaries plus A02 evaluator | 48 passed |
+| M2 Ruff including owned Python helpers | Passed |
+| Strict mypy | Passed, 13 source files |
+| Preserved API tests and >=60% coverage gate | 27 passed, 80.61% coverage |
+| Preserved indexer tests | 34 passed, 1 OCR-dependent skip |
+| Evaluation kustomization with kubeconform v0.6.7, strict | 6 valid, 0 invalid/errors/skipped |
+| Evaluation Job, coverage Job, exporter with kubeconform strict | 3 valid, 0 invalid/errors/skipped |
+| All six A02 source PDFs | Downloaded and matched committed SHA-256; inventory records 274 physical pages |
 
-No measured RAG result artifacts, human questions/reviews/labels or screenshots were
-fabricated. The OCR skip is not OCR execution evidence. Kubernetes/Docker inventory
-found Docker Desktop stopped and no WSL current-context. No cluster was started or changed.
+Validation environment: Ubuntu-22.04, CPython 3.12.16 under /home/shayantariq/.cache/rahbar-m2-validation-20261125. Do not replace the broken copied .venv. Source text was cropped to visible PDF pages; scans still require OCR or visual inspection. Test fixtures remain under tests/temporary output and are never presented as real measurements.
 
-## Git and integration
+## Human inputs and runtime blockers
 
-- Fetched origin; latest dev is 9ff0e66 and has the same tree as the previous main checkout.
-- Created feat/m2-evaluation-contracts from origin/dev without resetting local changes.
-- Configured user-provided local identity: Shayan-Tariq185, shayantariqq185@gmail.com.
-- Confirmed existing GitHub authentication belongs to Shayan-Tariq185, without printing tokens.
-- Only explicit M2 files are included in the phase commit. Existing scripts/check_submission.py
-  edit, root assignment PDFs/guides and output artifacts remain excluded and untouched.
-- Reviewed origin/feat/m1-ragops at 3132046a1e79c64a208f47002af2341e4d2aa60a without merging.
-  M1-ADAPTER-REVIEW.md identifies its actual endpoints, missing evidence fields and older
-  scaffold code needing owner-led reconciliation with completed A02.
-- Pushed commit e79640a90414e7e27299c4c7cf6039b201b40ed3 to feat/m2-evaluation-contracts.
-- Opened draft PR https://github.com/Shayan-Tariq185/Rahbar-SCD/pull/30 targeting dev.
-  Remote CI was not yet reported at the immediate post-creation check. No merge or
-  direct main push is part of M2.0.
+The user supplied an initial eight questions and confirmed partner=1-4, self=5-8, then asked to leave questions pending while providing updated ones. The initial entries are preserved locally in eval/human_questions.pending.jsonl and are excluded from the active golden set. No review approvals were supplied or fabricated. Active golden has 28 unreviewed synthetic drafts; human minima deliberately block full validation/freezing.
 
-## Remaining checkpoint
+Required next: eight final handwritten questions (four each), eight actual synthetic reviews (four each), then eight real answer/context faithfulness labels (four each) after preliminary runtime capture. Actual names/rolls can be filled into the editable report by the user.
 
-Member 1 must review H0 identity/page/digest/cache/error contracts and reconcile their
-runtime branch with current dev. New adapter endpoints exist only on that unmerged branch.
-Shared Makefile/CONTRACTS patch remains M1-integrated. Remote CI outcome must be observed.
+Fetched origin/feat/m1-ragops again: still 3132046a1e79c64a208f47002af2341e4d2aa60a. M1 needs to reconcile its scaffold-era API/indexer changes with completed A02, supply current identity/vector fingerprints and exact model-request trace evidence, and harden the release helper to consume release_authorized and nested identities. See M1-ADAPTER-REVIEW.md. M2 does not modify partner-owned runtime/release files.
 
-M2.1 needs separate phase authorization under the guide and actual human contributions:
-four handwritten questions and four synthetic reviews per member, plus human faithfulness
-labels if an LLM judge is selected. No H0 agreement, measured release, or submission
-readiness is claimed. M2.0 requires no screenshot; later appendix commands use real runs.
+Docker client is installed; Docker Desktop's Linux daemon was unavailable during inventory. No cluster, A/B ingestion, real semantic evaluation, candidate release, rollback, coverage improvement or runtime resource measurement was performed. Bootstrap image names/resources are provisional and do not establish demo readiness. All measured outcomes remain pending the integrated real Kubernetes runtime and human inputs.
+
+## Repository boundaries
+
+Existing scripts/check_submission.py edit, root assignment PDFs/guides, output/, tmp/ and ignored corpus/raw are excluded from the M2 commit. Shared Makefile/CONTRACTS changes remain an unapplied integration patch for M1. A02 application/indexer code and existing YAML golden evaluator remain preserved. No merge is performed by Codex.

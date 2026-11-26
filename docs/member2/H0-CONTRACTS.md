@@ -1,8 +1,9 @@
 # H0 proposal: evaluation and release assurance
 
 Status: **PROPOSED, awaiting Member 1 review.** Schema version 1.0 is a draft until H0
-acceptance. No route, collection, runtime adapter or shared-file change below is claimed
-to exist. Scope: M2.0 (B/C/E/F2/G preparation).
+acceptance. M2 clients, schemas, metrics and Job wrappers are implemented and tested
+offline. M1 production routes, collections and runtime integration remain pending;
+the shared-file integration patch is not applied. See PROGRESS.md for actual validation.
 
 Update: a later fetch exposed unmerged Member 1 work at `origin/feat/m1-ragops`.
 It has `/internal/eval/retrieve` and `/internal/eval/ask`; prefer those names.
@@ -92,19 +93,20 @@ NA uses null and an explicit reason, never an invented zero. JSON+Markdown outpu
 uniquely timestamped under `eval/results/` only for actual runs. Test artifacts stay in
 tests or temporary directories and never authorize release.
 
-Proposed metric names (freeze before M2.2):
+Implemented metric names (confirm the integration agreement with M1):
 
 | Level | Keys | Unit |
 | --- | --- | --- |
-| module | paraphrase_cosine_mean, unrelated_cosine_mean, cosine_gap | cosine |
+| module | paraphrase_cosine_mean, unrelated_cosine_mean | cosine |
+| module | cosine_gap | cosine_difference |
 | module | embedding_ms_per_chunk | ms |
 | module | identical_text_max_difference | coordinate_difference |
 | component / noisy_component | recall_at_3, recall_at_5, mrr, ndcg_at_5 | fraction |
 | e2e | faithfulness, abstention_correctness, citation_validity, judge_human_agreement | fraction |
 | e2e | latency_p50_ms, latency_p95_ms | ms |
 
-Faithfulness methodology remains a human choice: fully human, or an LLM judge with
->=8 human labels and agreement. Citation validity is not a faithfulness surrogate.
+The implemented faithfulness method is a pinned Ollama LLM judge with
+>=8 human answer/context labels and agreement. Citation validity is not a faithfulness surrogate.
 Abstentions do not inflate faithfulness. Record retrieval/E2E denominators separately.
 
 ### Gates, experiments and coverage
@@ -135,7 +137,7 @@ Abstentions do not inflate faithfulness. Record retrieval/E2E denominators separ
 | Item | Proposed integration |
 | --- | --- |
 | API target | Existing `http://api.rahbar.svc.cluster.local:8000`; candidate Service name agreed at H4 |
-| Image | Future `eval/Dockerfile`, root build context, copies ragops/, scripts and explicit immutable inputs; no API/indexer imports |
+| Image | `eval/Dockerfile`, root build context, copies only evaluation modules and schemas; inputs explicitly staged on PVC; no API/indexer imports |
 | Results | Dedicated results PVC, mounted `/results`; helper exporter can read after Job completion/failure |
 | Security | Dedicated ServiceAccount, no API token in evaluator pod unless required, UID/GID 10001, fsGroup, read-only rootfs, `/tmp` emptyDir |
 | Inputs | Packaged or explicitly staged golden/pairs/baseline with hashes; local WSL paths never assumed mounted |
@@ -149,9 +151,9 @@ directory**, but uses fixed Job name `rahbar-eval` to support literal
 `kubectl apply -f k8s/eval-job.yaml`. Refuse an active Job; archive terminal Job logs/results
 before replacing only the completed/failed Job. No namespace/PVC deletion. M1 must agree.
 
-The future Job runs the complete suite and gate; baseline mode runs the suite and explicitly
+The implemented Job runs the complete suite and gate; baseline mode runs the suite and explicitly
 produces no release authorization. ConfigMap demo must read the cluster policy without
-silently overwriting it from the local file. These wrappers/manifests do not exist in M2.0.
+silently overwriting it from the local file. Wrappers/manifests now exist; live execution is pending.
 
 ## H0 acceptance checklist (both members)
 
@@ -159,5 +161,5 @@ silently overwriting it from the local file. These wrappers/manifests do not exi
 - [ ] M1 agrees API/trace routes, cache bypass and explicit runtime error reporting.
 - [ ] Both agree schemas, units, metric naming, judge method and exit codes.
 - [ ] M1 agrees Makefile/CONTRACTS patches and network/PVC requirements.
-- [ ] User provides actual WSL Python 3.12/A02 test+lint outputs; any baseline failures recorded.
-- [ ] M2.0 review/commit/PR performed by the user; M2.1 separately authorized.
+- [x] WSL Python 3.12/A02 test outputs were observed; actual results are in PROGRESS.md.
+- [x] M2.0 PR #30 merged by user; user authorized remaining M2 implementation and command execution.

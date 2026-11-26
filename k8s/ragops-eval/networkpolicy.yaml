@@ -1,0 +1,61 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-evaluation-egress
+  namespace: rahbar
+spec:
+  podSelector:
+    matchLabels:
+      app: rahbar-eval
+  policyTypes: [Ingress, Egress]
+  ingress: []
+  egress:
+    - to:
+        - podSelector:
+            matchLabels: {app: rahbar-api}
+        - podSelector:
+            matchLabels: {app: rahbar-api-candidate}
+      ports:
+        - {protocol: TCP, port: 8000}
+    - to:
+        - namespaceSelector:
+            matchLabels: {kubernetes.io/metadata.name: kube-system}
+      ports:
+        - {protocol: UDP, port: 53}
+        - {protocol: TCP, port: 53}
+    # Existing A02 host route; validate this actual address before any live run.
+    - to:
+        - ipBlock: {cidr: 192.168.49.1/32}
+      ports:
+        - {protocol: TCP, port: 11434}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-evaluation-api-ingress
+  namespace: rahbar
+spec:
+  podSelector:
+    matchExpressions:
+      - key: app
+        operator: In
+        values: [rahbar-api, rahbar-api-candidate]
+  policyTypes: [Ingress]
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels: {app: rahbar-eval}
+      ports:
+        - {protocol: TCP, port: 8000}
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: isolate-evaluation-exporter
+  namespace: rahbar
+spec:
+  podSelector:
+    matchLabels: {app: rahbar-eval-exporter}
+  policyTypes: [Ingress, Egress]
+  ingress: []
+  egress: []

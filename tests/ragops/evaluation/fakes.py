@@ -48,6 +48,7 @@ class FakeApiClient:
     def __init__(self, evidence: QueryEvidence | None = None, *, fail: bool = False) -> None:
         self.evidence = evidence or fixture_query()
         self.fail = fail
+        self.calls = 0
 
     def identity(self) -> RuntimeIdentity:
         return self.evidence.retrieval.identity
@@ -61,7 +62,9 @@ class FakeApiClient:
                        passages=self.evidence.retrieval.passages[:k])
 
     def ask(self, question: str, *, use_cache: bool, seed: int) -> QueryEvidence:
-        return replace(self.evidence, retrieval=self.retrieve(question, k=5, seed=seed))
+        self.calls += 1
+        return replace(self.evidence, retrieval=self.retrieve(question, k=5, seed=seed),
+                       trace_id=f"fixture-trace-{self.calls}", request_id=f"fixture-request-{self.calls}")
 
 
 class FakeEmbeddingClient:
