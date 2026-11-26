@@ -13,7 +13,7 @@ Independent M2 implementation is ready for review after offline validation. Real
 - E: nearest-golden cosine coverage, separate cutoff and aggregate floor, real calibration/policy freeze, uncovered topic groups, fixed-golden drift comparison and subsequent six-question expansion draft helper.
 - F2: non-root evaluation image, dedicated results PVC/ServiceAccount/network policies, literal eval-job.yaml, coverage Job, complete/failed wait, persisted exit 0/1/2 and export after failure. ConfigMap read at process start; demo wrapper preserves the cluster edit and restores the original policy without rebuilding.
 - G: editable report draft with Student 1/Student 2 placeholders and a human-work template. Native Word render inspection confirmed eight report pages and two human-template pages. They are templates, not measured final reports. Final output refuses missing evidence/editorial placeholders.
-- CI: retains A02 checks and API coverage >=60%, adds owned helper lint/Bash syntax, eval resource schema validation and evaluation image build. New remote CI has not yet been observed for this completion branch.
+- CI: retains A02 checks and API coverage >=60%, adds owned helper lint/Bash syntax, eval resource schema validation and evaluation image build. PR #31 is open as a draft into dev. Its first run passed lint, tests, manifests and all image builds; downstream scan/Kind checks were still running at this update.
 
 ## Actual validation
 
@@ -27,6 +27,8 @@ Independent M2 implementation is ready for review after offline validation. Real
 | Evaluation kustomization with kubeconform v0.6.7, strict | 6 valid, 0 invalid/errors/skipped |
 | Evaluation Job, coverage Job, exporter with kubeconform strict | 3 valid, 0 invalid/errors/skipped |
 | All six A02 source PDFs | Downloaded and matched committed SHA-256; inventory records 274 physical pages |
+| Full golden validator | Expected exit 2 observed: final human contributions remain missing |
+| Shared integration patch | git apply --check passed after correcting trailing-blank-line context; patch not applied |
 
 Validation environment: Ubuntu-22.04, CPython 3.12.16 under /home/shayantariq/.cache/rahbar-m2-validation-20261125. Do not replace the broken copied .venv. Source text was cropped to visible PDF pages; scans still require OCR or visual inspection. Test fixtures remain under tests/temporary output and are never presented as real measurements.
 
@@ -43,3 +45,5 @@ Docker client is installed; Docker Desktop's Linux daemon was unavailable during
 ## Repository boundaries
 
 Existing scripts/check_submission.py edit, root assignment PDFs/guides, output/, tmp/ and ignored corpus/raw are excluded from the M2 commit. Shared Makefile/CONTRACTS changes remain an unapplied integration patch for M1. A02 application/indexer code and existing YAML golden evaluator remain preserved. No merge is performed by Codex.
+
+Implementation commit: 2d11060eae2c37ab45bf945abc4237cc6c81fba1 on feat/m2-ragops-completion. Draft PR: https://github.com/Shayan-Tariq185/Rahbar-SCD/pull/31. CI results are distinct from human acceptance and integrated runtime/demo readiness.

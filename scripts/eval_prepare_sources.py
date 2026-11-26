@@ -39,8 +39,11 @@ def main() -> int:
             if not path.exists():
                 # Some official links use HTTP; HTTPS is attempted before the listed URL.
                 actual_url = url.replace("http://", "https://", 1)
-                response = client.get(actual_url)
-                response.raise_for_status()
+                try:
+                    response = client.get(actual_url)
+                    response.raise_for_status()
+                except httpx.HTTPError as exc:
+                    raise RuntimeError(f"{filename}: source download failed ({type(exc).__name__})") from exc
                 data = response.content
                 if hashlib.sha256(data).hexdigest() != expected:
                     raise ValueError(f"{filename}: upstream bytes differ from the committed A02 checksum")

@@ -73,7 +73,14 @@ In the original WSL terminal, set OLLAMA_URL to the verified host endpoint. The 
 "$RAGOPS_PY" -m ragops.evalsuite --target-api http://127.0.0.1:8000 --golden eval/golden.v1.jsonl --pairs eval/embedding_pairs.jsonl --embedding-url "$OLLAMA_URL" --collect-labels --out eval/results/label-collection
 ```
 
-Use the exact `suite_json=` path printed above as LABEL_SUITE. Each member labels four distinct actual answer/context snapshots; this is separate from reviewing synthetic questions. Consult the label tool's --help for its exact output arguments. Combine actual label rows without changing evidence hashes. Final suites require at least eight distinct labels and four from each actual reviewer. Reuse the immutable calibration set and judge identity for comparisons.
+Use the exact `suite_json=` path printed above as LABEL_SUITE. Each member labels four distinct actual answer/context snapshots; this is separate from reviewing synthetic questions. In the same WSL terminal and repository directory:
+
+```bash
+"$RAGOPS_PY" scripts/eval_label_faithfulness.py --results "$LABEL_SUITE" --out eval/human_faithfulness.jsonl --reviewer 'Shayan-Tariq185' --limit 4
+# Partner runs the same command herself with her actual reviewer identity.
+```
+
+The second reviewer must use the shared labels file, or combine actual label rows from separate files without duplicating evidence hashes. Final suites require at least eight distinct labels and four from each actual reviewer. Reuse the immutable calibration set and judge identity for comparisons.
 
 ## Image and Kubernetes evaluation Job
 
