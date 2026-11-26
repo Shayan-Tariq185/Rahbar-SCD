@@ -52,6 +52,10 @@ def retrieval_metrics(relevant: list[dict[str, Any]], passages: tuple[RankedPass
             return False
         if chunk is not None:
             return bool(chunk == passage.chunk_id)
+        # Assignment B permits document + physical-page ground truth. An optional
+        # clause/chunk annotation adds precision; do not invent headings for prose.
+        if section is None:
+            return True
         # Golden sections may be clause numbers, but never prefix-match 1.2 with 1.20.
         return bool(section == passage.section or passage.section.startswith(str(section) + " "))
 

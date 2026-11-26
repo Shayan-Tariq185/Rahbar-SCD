@@ -49,6 +49,18 @@ def test_mrr_considers_available_ranks_beyond_five_but_recall5_does_not() -> Non
     assert result["ndcg_at_5"] == 0
 
 
+def test_page_ground_truth_matches_exact_document_version_page_without_invented_section() -> None:
+    passage = fixture_query().retrieval.passages[0]
+    relevant = [{"doc_id": passage.doc_id, "doc_version": passage.doc_version, "page": passage.page}]
+    schema_check("relevant", relevant[0])
+    assert retrieval_metrics(relevant, (passage,))["recall_at_5"] == 1
+    for wrong in (replace(passage, page=passage.page + 1), replace(passage, doc_version="other"),
+                  replace(passage, doc_id="other")):
+        assert retrieval_metrics(relevant, (wrong,))["recall_at_5"] == 0
+    # An explicitly annotated section still requires that section, even on the right page.
+    assert retrieval_metrics([{**relevant[0], "section": "missing-clause"}], (passage,))["recall_at_5"] == 0
+
+
 def test_cosine_and_linear_percentile_are_explicit() -> None:
     assert cosine((1., 0.), (0., 1.)) == 0
     assert cosine((1., 0.), (-1., 0.)) == -1

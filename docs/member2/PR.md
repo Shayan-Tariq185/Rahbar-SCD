@@ -6,13 +6,13 @@ Add provenance validators, human input/review/label tools, source checksum inven
 
 ## Validation
 
-- 48 M2 and existing evaluator tests passed; owned Ruff and strict mypy (13 files) passed.
+- 49 M2 and existing evaluator tests passed after integrating final human questions and a page-granularity regression; owned Ruff and strict mypy (13 files) passed.
 - A02 API: 27 passed, 80.61% coverage. Indexer: 34 passed, one OCR-dependent skip.
 - Kubeconform strict: six evaluation infrastructure resources and three Job/exporter resources valid, no errors/skips.
 - All six corpus PDFs match committed hashes. Report templates rendered/inspected at eight and two pages.
 
 ## Integration checkpoint
 
-Draft review: no real A03 baseline/candidate/coverage results or Kubernetes demo evidence yet. Golden handwritten questions are being revised; actual reviews and faithfulness labels remain required. M1 must reconcile its runtime branch with dev, implement the documented identity/trace additions and strengthen release.sh before release tests. Evaluation resource values/host routing remain provisional until measured.
+Draft review: no real A03 baseline/candidate/coverage results or Kubernetes demo evidence yet. Eight final human questions are integrated; the user accepted four synthetic reviews, while the partner's four reviews and both members' real faithfulness labels remain required. M1 must reconcile its runtime branch with dev, implement the documented identity/trace additions and strengthen release.sh before release tests. Evaluation resource values/host routing remain provisional until measured.
 
 The user merges PRs. Partner-owned runtime code, the shared Makefile/CONTRACTS patch, unrelated checker edit, raw sources and temporary renders are not included as implementation changes here.

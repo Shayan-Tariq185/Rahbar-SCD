@@ -19,7 +19,7 @@ Independent M2 implementation is ready for review after offline validation. Real
 
 | Check | Observed result |
 | --- | --- |
-| M2 contracts/schemas/measurements/HTTP and Job boundaries plus A02 evaluator | 48 passed |
+| M2 contracts/schemas/measurements/HTTP and Job boundaries plus A02 evaluator | 49 passed after final human-question integration and page-granularity regression test |
 | M2 Ruff including owned Python helpers | Passed |
 | Strict mypy | Passed, 13 source files |
 | Preserved API tests and >=60% coverage gate | 27 passed, 80.61% coverage |
@@ -34,9 +34,9 @@ Validation environment: Ubuntu-22.04, CPython 3.12.16 under /home/shayantariq/.c
 
 ## Human inputs and runtime blockers
 
-The user supplied an initial eight questions and confirmed partner=1-4, self=5-8, then asked to leave questions pending while providing updated ones. The initial entries are preserved locally in eval/human_questions.pending.jsonl and are excluded from the active golden set. No review approvals were supplied or fabricated. Active golden has 28 unreviewed synthetic drafts; human minima deliberately block full validation/freezing.
+The user supplied eight final handwritten questions with source pages, confirming partner=1-4 and self=5-8. All eight source references were checked and the questions merged into the active golden set. It now contains 36 questions: 31 answerable, five unanswerable, seven hard and eight human questions. The earlier local pending draft is not an approved input. HUMAN-GROUNDTRUTH.md explains the two cross-page metadata cases and precise page-only scoring for the plagiarism question.
 
-Required next: eight final handwritten questions (four each), eight actual synthetic reviews (four each), then eight real answer/context faithfulness labels (four each) after preliminary runtime capture. Actual names/rolls can be filled into the editable report by the user.
+The user explicitly replied 'accepted all' to synthetic q01-q04 and their source summaries; four genuine user accept decisions are recorded without invented individual reasons. The partner's four synthetic reviews are pending (the user's 'Ok' acknowledged the request, not her decisions). SYNTHETIC-REVIEW.md supplies her q05-q08 packet. Then eight actual answer/context faithfulness labels (four each) are needed after preliminary runtime capture. Actual report names/rolls can be filled by the user.
 
 Fetched origin/feat/m1-ragops again: still 3132046a1e79c64a208f47002af2341e4d2aa60a. M1 needs to reconcile its scaffold-era API/indexer changes with completed A02, supply current identity/vector fingerprints and exact model-request trace evidence, and harden the release helper to consume release_authorized and nested identities. See M1-ADAPTER-REVIEW.md. M2 does not modify partner-owned runtime/release files.
 

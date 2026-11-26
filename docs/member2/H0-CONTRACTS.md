@@ -43,8 +43,9 @@ must establish provenance. The admission function is not a release gate.
 2. Read-only retrieval returns the **same production retrieval path**, ordered contiguous
    ranks starting at 1, unique chunk IDs, stable document ID, version, source, section,
    physical page, text, cosine score and exact filters. Cosine is `1 - distance`, range
-   [-1,1], not a fraction. It must support k=3/5 independently of serving top-k so the
-   suite can measure retrieval without changing generation configuration.
+   [-1,1], not a fraction. The suite requests the effective serving top_k and computes
+   recall@3/@5 over those returned passages, so a low-k candidate cannot hide its
+   retrieval loss by measuring a separate higher-depth retrieval configuration.
 3. Existing ask plus trace access must produce `QueryEvidence`, preserving exact model
    request JSON (roles, instructions, evidence, schema and options), ordered context,
    response/citations, guardrail actions, stage milliseconds, request/trace IDs and cache

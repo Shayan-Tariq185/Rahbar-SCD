@@ -122,18 +122,6 @@
         "doc_id",
         "page"
       ],
-      "anyOf": [
-        {
-          "required": [
-            "section"
-          ]
-        },
-        {
-          "required": [
-            "chunk_id"
-          ]
-        }
-      ],
       "properties": {
         "doc_id": {
           "$ref": "#/$defs/text"
