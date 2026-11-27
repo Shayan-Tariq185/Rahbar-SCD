@@ -87,6 +87,7 @@ def build_trace_record(
     passages: list[Passage],
     prompt: str | None,
     prompt_note: str | None,
+    model_request: dict[str, Any] | None = None,
     response: AskResponse,
     guardrail_actions: list[dict[str, Any]],
     stage_latencies_ms: dict[str, float],
@@ -158,6 +159,7 @@ def build_trace_record(
         "prompt": safe_prompt,
         "prompt_hash": prompt_hash,
         "prompt_note": prompt_note,
+        "model_request": model_request,
         "model_parameters": {
             "temperature": settings.temperature,
             "top_k": settings.top_k,

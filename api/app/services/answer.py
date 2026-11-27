@@ -217,6 +217,7 @@ def answer_question(
     # 5. Abstention or Generation + Citation check
     prompt_text: str | None = None
     prompt_note: str | None = None
+    model_request: dict[str, Any] | None = None
     outcome = "answered"
     err_msg: str | None = None
 
@@ -237,6 +238,16 @@ def answer_question(
         outcome = "abstained"
     else:
         prompt_text = build_exact_prompt(question, passages, settings.prompt_version)
+        model_request = {
+            "model": getattr(provider, "model", settings.llm_model),
+            "messages": [
+                {"role": "user", "content": prompt_text}
+            ],
+            "options": {
+                "temperature": settings.temperature,
+                "top_k": settings.top_k,
+            },
+        }
         t_gen_start = time.perf_counter()
         try:
             answer = generate_and_validate(question, passages, provider, settings)
@@ -296,6 +307,7 @@ def answer_question(
         passages=passages,
         prompt=prompt_text,
         prompt_note=prompt_note,
+        model_request=model_request,
         response=response,
         guardrail_actions=guard.actions,
         stage_latencies_ms=lat_ms,
