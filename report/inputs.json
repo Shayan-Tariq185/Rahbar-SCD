@@ -1,0 +1,25 @@
+{
+  "students": [
+    {"name": "Student 1", "roll": "", "role": "Member 1"},
+    {"name": "Student 2", "roll": "", "role": "Member 2"}
+  ],
+  "artifacts": {
+    "baseline_a": null,
+    "drift_ab": null,
+    "change_baseline": null,
+    "candidate_bad": null,
+    "candidate_good": null,
+    "gate_bad": null,
+    "gate_good": null,
+    "coverage_before": null,
+    "coverage_after": null,
+    "verification_b": null,
+    "post_undo_trace": null,
+    "resource_summary": null
+  },
+  "trace_diagnosis": [],
+  "trace_diagnosis_reviewers": [],
+  "short_answers": {"a": "", "b": "", "c": "", "d": "", "e": "", "f": ""},
+  "screenshots": [],
+  "notes": "Explicit paths only. Never select the newest JSON by glob. Student placeholders are intentional for the editable template."
+}

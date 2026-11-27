@@ -1,0 +1,25 @@
+# Rollout and Rollout Undo Evidence
+# Initial Image: rahbar-api:dev
+
+--- Rollout Status for v2-test ---
+Waiting for deployment "api" rollout to finish: 1 out of 3 new replicas have been updated...
+Waiting for deployment "api" rollout to finish: 1 out of 3 new replicas have been updated...
+Waiting for deployment "api" rollout to finish: 1 out of 3 new replicas have been updated...
+error: timed out waiting for the condition
+
+--- Deployment History ---
+deployment.apps/api 
+REVISION  CHANGE-CAUSE
+1         <none>
+2         <none>
+3         <none>
+4         <none>
+5         <none>
+6         <none>
+
+
+--- Rollout Status after Undo ---
+deployment "api" successfully rolled out
+
+--- Restored Image ---
+Active image after undo: rahbar-api:dev

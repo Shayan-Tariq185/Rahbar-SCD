@@ -24,7 +24,7 @@ patches:
       data:
         RETRIEVER: "chroma"
         LLM_PROVIDER: "stub"
-        EMBED_MODEL: "dummy-768"
+        EMBED_MODEL: "hashing-384"
         RELEVANCE_FLOOR: "0.20"
         TOP_K: "5"
         CACHE_THRESHOLD: "0.88"
@@ -74,7 +74,6 @@ patches:
                   - python
                   - -m
                   - pipeline.run
-                  - --dummy
   # Remove HorizontalPodAutoscaler in CI
   - patch: |-
       $patch: delete

@@ -31,7 +31,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r api/requirements.txt -r api/requirements-dev.txt -r indexer/requirements.txt
+          pip install -r api/requirements.txt -r api/requirements-dev.txt -r indexer/requirements.txt -r indexer/requirements-dev.txt
 
       - name: Run API Tests with Coverage Gate (>= 60%)
         run: |
@@ -99,7 +99,8 @@ jobs:
       - name: Install Kustomize
         run: |
           mkdir -p ~/.local/bin
-          curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash -s -- 5.4.3 ~/.local/bin
+          curl -sSL -f --retry 5 --retry-connrefused "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.4.3/kustomize_v5.4.3_linux_amd64.tar.gz" | tar -xz -C ~/.local/bin kustomize || \
+          wget -qO- --tries=5 "https://github.com/kubernetes-sigs/kustomize/releases/download/kustomize%2Fv5.4.3/kustomize_v5.4.3_linux_amd64.tar.gz" | tar -xz -C ~/.local/bin kustomize
           chmod +x ~/.local/bin/kustomize
           echo "$HOME/.local/bin" >> $GITHUB_PATH
           ~/.local/bin/kustomize version
@@ -159,8 +160,8 @@ jobs:
           echo "1. Probing API liveness (/healthz)..."
           HEALTHZ=$(curl -sSf http://localhost:8000/healthz)
           echo "Healthz response: $HEALTHZ"
-          echo "$HEALTHZ" | grep -q "ok" || {
-            echo "Smoke test failed: /healthz did not return ok"
+          echo "$HEALTHZ" | grep -q -E "alive|ok" || {
+            echo "Smoke test failed: /healthz did not return alive or ok"
             exit 1
           }
 

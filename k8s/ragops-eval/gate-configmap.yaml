@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: release-gate
+  namespace: rahbar
+  annotations:
+    rahbar/policy-sha256: c219a1928e5199c5191e73ff5e6592570dc05d4f0ef14b919ca66990e224442a
+data:
+  gate.yaml: "schema_version: '1.0'\npolicy_mode: release\ndeclared_change: top_k\n\
+    frozen: false\nbaseline_sha256: null\nmax_recall5_drop: 0.02\nmin_faithfulness:\
+    \ 0.90\nmin_citation_validity: 0.95\nmin_abstention_correctness: 1.0\nmax_p95_latency_ms:\
+    \ 30000\nrationale: >-\n  Provisional policy, not release authorization. Two percentage\
+    \ points of recall\n  degradation are allowed; preserve the A02 95 percent citation\
+    \ and 100 percent\n  unanswerable-abstention floors. Faithfulness floor is 90\
+    \ percent. Replace the\n  provisional latency budget with a justified budget from\
+    \ the measured two-run\n  baseline, bind its exact hash and freeze this policy\
+    \ before candidate outcomes.\n"

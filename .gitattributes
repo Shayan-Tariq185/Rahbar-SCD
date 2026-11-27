@@ -1,0 +1,4 @@
+# Member 2 Bash entrypoints must also run from Windows/WSL checkouts.
+scripts/eval_*.sh text eol=lf
+scripts/coverage_*.sh text eol=lf
+scripts/gate_config_demo.sh text eol=lf
