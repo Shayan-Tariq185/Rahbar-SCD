@@ -254,3 +254,56 @@ def test_release_script_refuses_failed_and_synthetic_gates(tmp_path: Path) -> No
         text=True,
     )
     assert r_pass.returncode == 0
+
+    canonical_pass = tmp_path / "canonical_pass.json"
+    canonical_pass.write_text(
+        json.dumps({
+            "schema_version": "1.0",
+            "artifact_type": "gate_decision",
+            "decision": "pass",
+            "exit_code": 0,
+            "release_authorized": True,
+            "policy_mode": "release",
+            "candidate_identity": {
+                "collection": "rahbar_cand_good",
+                "revision": "v2",
+                "api_image": "rahbar-api:latest",
+                "config_json": json.dumps({"top_k": 5}),
+                "embedding": {"model": "nomic-embed-text", "digest": "sha256:abc", "dimension": 768},
+                "provenance": "real",
+            },
+            "errors": [],
+        }),
+        encoding="utf-8",
+    )
+    r_canon = subprocess.run(
+        ["bash", "scripts/release.sh", "--deployment", "api", "--candidate", "rahbar_cand_good", "--decision", str(canonical_pass), "--dry-run"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    assert r_canon.returncode == 0
+
+    demo_gate = tmp_path / "demo.json"
+    demo_gate.write_text(
+        json.dumps({
+            "schema_version": "1.0",
+            "decision": "pass",
+            "exit_code": 0,
+            "release_authorized": False,
+            "policy_mode": "demo",
+            "candidate_identity": {
+                "collection": "rahbar_cand_good",
+                "embedding": {"model": "nomic-embed-text", "digest": "sha256:abc", "dimension": 768},
+            },
+            "errors": [],
+        }),
+        encoding="utf-8",
+    )
+    r_demo = subprocess.run(
+        ["bash", "scripts/release.sh", "--deployment", "api", "--candidate", "rahbar_cand_good", "--decision", str(demo_gate), "--dry-run"],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    assert r_demo.returncode != 0

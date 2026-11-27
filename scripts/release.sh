@@ -53,22 +53,44 @@ expected_cand = sys.argv[2]
 if doc.get("test_only") is True or str(doc.get("provenance", "")).startswith("synthetic"):
     sys.exit("REFUSED: synthetic/test-only gate fixture cannot authorize release")
 
-decision_str = str(doc.get("decision", "")).upper()
-passed_bool = doc.get("passed")
-if not (decision_str == "PASS" or passed_bool is True):
-    sys.exit(f"REFUSED: gate decision is not PASS (decision={doc.get('decision')!r}, passed={passed_bool!r})")
+# Enforce fail-closed gate authorization
+policy_mode = str(doc.get("policy_mode", "release")).lower()
+if policy_mode == "demo":
+    sys.exit("REFUSED: policy_mode is 'demo'; demonstration gates cannot authorize a live release")
 
-cand_info = doc.get("candidate") if isinstance(doc.get("candidate"), dict) else {}
+if "release_authorized" in doc and doc["release_authorized"] is not True:
+    sys.exit("REFUSED: release_authorized is not true")
+
+decision_str = str(doc.get("decision", "")).lower()
+passed_bool = doc.get("passed")
+if not (decision_str == "pass" or passed_bool is True):
+    sys.exit(f"REFUSED: gate decision is not pass (decision={doc.get('decision')!r}, passed={passed_bool!r})")
+
+if doc.get("errors"):
+    sys.exit(f"REFUSED: gate decision contains errors: {doc['errors']}")
+
+cand_info = doc.get("candidate_identity") or doc.get("candidate") or {}
 col = doc.get("collection") or cand_info.get("collection") or ""
 if col != expected_cand:
     sys.exit(f"REFUSED: decision collection {col!r} does not match --candidate {expected_cand!r}")
 
-embed_model = doc.get("embed_model") or cand_info.get("embed_model") or ""
-embed_digest = doc.get("embed_digest") or doc.get("embed_version") or cand_info.get("embed_digest") or ""
-top_k = doc.get("top_k") or (doc.get("config") or {}).get("top_k") or cand_info.get("top_k")
-rev = doc.get("committed_revision") or doc.get("collection_revision") or cand_info.get("committed_revision")
-golden_hash = doc.get("golden_hash") or (doc.get("inputs") or {}).get("golden_hash") or ""
-image_ref = doc.get("image") or cand_info.get("image") or ""
+emb = cand_info.get("embedding") if isinstance(cand_info.get("embedding"), dict) else {}
+embed_model = emb.get("model") or doc.get("embed_model") or cand_info.get("embed_model") or ""
+embed_digest = emb.get("digest") or doc.get("embed_digest") or doc.get("embed_version") or cand_info.get("embed_digest") or ""
+
+top_k = None
+if "config_json" in cand_info:
+    try:
+        cfg = json.loads(cand_info["config_json"])
+        top_k = cfg.get("top_k")
+    except Exception:
+        pass
+if top_k is None:
+    top_k = doc.get("top_k") or (doc.get("config") or {}).get("top_k") or cand_info.get("top_k")
+
+rev = cand_info.get("revision") or doc.get("committed_revision") or doc.get("collection_revision") or cand_info.get("committed_revision")
+golden_hash = doc.get("golden_sha256") or doc.get("golden_hash") or (doc.get("inputs") or {}).get("golden_hash") or ""
+image_ref = cand_info.get("api_image") or doc.get("image") or cand_info.get("image") or ""
 
 if not embed_model or top_k is None:
     sys.exit("REFUSED: decision missing required embed_model or top_k identity")
