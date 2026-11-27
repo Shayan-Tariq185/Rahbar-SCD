@@ -5,6 +5,7 @@
 - **M1.2 (Document Verification & Batch B)**: Implemented `ragops/verify.py` (quality, completeness, recency, uniqueness + quarantine/archive routing + JSON/MD reports) and `scripts/make_batch_b.py`.
 - **M1.3 (Query Tracing & Guardrail)**: Implemented `ragops/trace.py`, `api/app/services/guardrail.py`, `api/app/routes/eval_adapter.py`, additive trace/metric/cache wiring in `api/app/`, `scripts/trace_show.py`, `scripts/trace_summary.py`, and `scripts/query.sh`.
 - **M1.4 (Candidate Release, Rollback & Measurements)**: Implemented `k8s/ragops-runtime/api-candidate.yaml`, `scripts/release.sh`, `scripts/rollback_demo.sh`, `scripts/resource_sample.sh`, `scripts/load_queries.py`, and NetworkPolicy updates.
-- **Pending (Requires Live Minikube Cluster & Human Inputs)**:
+- **M1.5 (Member 2 Integration & Review)**: Merged latest `dev` into `feat/m1-ragops`, connected `/internal/eval/*` (`identity`, `retrieve`, `ask`) with exact H0 evidence schemas, wired `model_request` into trace records, hardened `scripts/release.sh` to enforce `release_authorized == True` and refuse demo/failed gate policies, and recorded Member 1 reviews for synthetic questions q05–q08 in `eval/golden.jsonl`.
+- **Pending (Requires Live Minikube Cluster & Final Labels)**:
   - Live Minikube cluster build/load/apply, Batch A & Batch B ingestion runs, trace collection, candidate rollout/undo screenshots, `kubectl top` measurements.
-  - Member 1 human tasks: 4 handwritten golden questions, 4 synthetic reviews, 4 human faithfulness labels (when M2 templates arrive).
+  - Final human faithfulness labels (4 per member on real generated answers).
