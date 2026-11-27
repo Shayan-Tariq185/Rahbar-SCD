@@ -1,0 +1,4 @@
+# Optional local source-page review tools; corpus PDFs remain outside Git.
+pdfplumber==0.11.6
+fonttools==4.69.1
+pypdfium2==5.15.2

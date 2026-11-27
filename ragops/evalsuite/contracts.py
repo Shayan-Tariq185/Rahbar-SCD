@@ -55,6 +55,7 @@ class RuntimeIdentity:
     pipeline_sha256: str
     embedding: EmbeddingIdentity
     provenance: Provenance
+    vector_sha256: str | None = None
 
     def __post_init__(self) -> None:
         import json
@@ -66,6 +67,10 @@ class RuntimeIdentity:
             value = getattr(self, name)
             if len(value) != 64 or any(c not in "0123456789abcdef" for c in value):
                 raise ValueError(f"{name} must be a lowercase SHA-256")
+        if self.vector_sha256 is not None and (
+            len(self.vector_sha256) != 64 or any(c not in "0123456789abcdef" for c in self.vector_sha256)
+        ):
+            raise ValueError("vector_sha256 must be a lowercase SHA-256")
         if self.provenance not in ("real", "synthetic_fixture"):
             raise ValueError("unknown provenance")
 

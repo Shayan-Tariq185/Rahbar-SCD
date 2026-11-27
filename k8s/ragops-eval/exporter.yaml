@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: eval-results-shell
+  namespace: rahbar
+  labels:
+    app: rahbar-eval-exporter
+spec:
+  restartPolicy: Never
+  serviceAccountName: eval-sa
+  automountServiceAccountToken: false
+  enableServiceLinks: false
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 10001
+    runAsGroup: 10001
+    fsGroup: 10001
+  containers:
+  - name: exporter
+    image: rahbar-eval:build-required
+    imagePullPolicy: IfNotPresent
+    env: []
+    securityContext:
+      readOnlyRootFilesystem: true
+      allowPrivilegeEscalation: false
+      capabilities:
+        drop:
+        - ALL
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+    volumeMounts:
+    - name: results
+      mountPath: /results
+    - name: tmp
+      mountPath: /tmp
+    command:
+    - python
+    - -c
+    - import time; time.sleep(86400)
+  volumes:
+  - name: results
+    persistentVolumeClaim:
+      claimName: rahbar-eval-results-pvc
+  - name: tmp
+    emptyDir: {}

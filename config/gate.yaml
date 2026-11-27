@@ -1,0 +1,16 @@
+schema_version: '1.0'
+policy_mode: release
+declared_change: top_k
+frozen: false
+baseline_sha256: null
+max_recall5_drop: 0.02
+min_faithfulness: 0.90
+min_citation_validity: 0.95
+min_abstention_correctness: 1.0
+max_p95_latency_ms: 30000
+rationale: >-
+  Provisional policy, not release authorization. Two percentage points of recall
+  degradation are allowed; preserve the A02 95 percent citation and 100 percent
+  unanswerable-abstention floors. Faithfulness floor is 90 percent. Replace the
+  provisional latency budget with a justified budget from the measured two-run
+  baseline, bind its exact hash and freeze this policy before candidate outcomes.

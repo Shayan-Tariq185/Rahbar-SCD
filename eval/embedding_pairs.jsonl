@@ -1,0 +1,30 @@
+{"id": "para-01", "label": "paraphrase", "a": "What CGPA triggers academic warning?", "b": "Below which cumulative GPA is a warning issued?", "origin": "synthetic"}
+{"id": "para-02", "label": "paraphrase", "a": "What attendance percentage is required?", "b": "How much class attendance must students maintain?", "origin": "synthetic"}
+{"id": "para-03", "label": "paraphrase", "a": "Who can condone genuine absences?", "b": "Who approves exceptions for a genuine attendance shortfall?", "origin": "synthetic"}
+{"id": "para-04", "label": "paraphrase", "a": "What happens after failing attendance?", "b": "What is the exam consequence of insufficient attendance?", "origin": "synthetic"}
+{"id": "para-05", "label": "paraphrase", "a": "What is the minimum degree duration?", "b": "How long is the shortest allowed bachelor's program?", "origin": "synthetic"}
+{"id": "para-06", "label": "paraphrase", "a": "What CGPA is required for graduation?", "b": "What cumulative GPA must graduates achieve?", "origin": "synthetic"}
+{"id": "para-07", "label": "paraphrase", "a": "Who may change course load?", "b": "Which official can adjust the number of courses I take?", "origin": "synthetic"}
+{"id": "para-08", "label": "paraphrase", "a": "Must prerequisites be passed before registration?", "b": "Can I enroll without completing required prerequisite courses?", "origin": "synthetic"}
+{"id": "para-09", "label": "paraphrase", "a": "How many summer courses are allowed?", "b": "What is the summer enrollment course limit?", "origin": "synthetic"}
+{"id": "para-10", "label": "paraphrase", "a": "How are SGPA and CGPA different?", "b": "How does semester GPA differ from the cumulative average?", "origin": "synthetic"}
+{"id": "para-11", "label": "paraphrase", "a": "How many weekly hours does a lab credit represent?", "b": "What practical workload corresponds to one lab credit?", "origin": "synthetic"}
+{"id": "para-12", "label": "paraphrase", "a": "How much does the final exam normally count?", "b": "What is the usual final examination grade weight?", "origin": "synthetic"}
+{"id": "para-13", "label": "paraphrase", "a": "Who approves assessment-weight changes?", "b": "Who permits a deviation from normal grade component weights?", "origin": "synthetic"}
+{"id": "para-14", "label": "paraphrase", "a": "What does FA mean?", "b": "What is the attendance-related failing grade?", "origin": "synthetic"}
+{"id": "para-15", "label": "paraphrase", "a": "When is the warning count reset?", "b": "When does CGPA recovery clear prior academic warnings?", "origin": "synthetic"}
+{"id": "unrelated-01", "label": "unrelated", "a": "What CGPA triggers academic warning?", "b": "How do I reset a forgotten university email password?", "origin": "synthetic"}
+{"id": "unrelated-02", "label": "unrelated", "a": "What attendance percentage is required?", "b": "My campus Wi-Fi login is locked. How can I unlock it?", "origin": "synthetic"}
+{"id": "unrelated-03", "label": "unrelated", "a": "Who can condone genuine absences?", "b": "How do I register a new laptop for campus wireless access?", "origin": "synthetic"}
+{"id": "unrelated-04", "label": "unrelated", "a": "What happens after failing attendance?", "b": "Where do I change the recovery phone number on my university account?", "origin": "synthetic"}
+{"id": "unrelated-05", "label": "unrelated", "a": "What is the minimum degree duration?", "b": "How do I recover access after losing my multifactor authentication device?", "origin": "synthetic"}
+{"id": "unrelated-06", "label": "unrelated", "a": "What CGPA is required for graduation?", "b": "Can IT restore an email message I accidentally deleted yesterday?", "origin": "synthetic"}
+{"id": "unrelated-07", "label": "unrelated", "a": "Who may change course load?", "b": "How can I connect a Linux laptop to the campus Wi-Fi network?", "origin": "synthetic"}
+{"id": "unrelated-08", "label": "unrelated", "a": "Must prerequisites be passed before registration?", "b": "What is the student helpdesk procedure for a compromised email account?", "origin": "synthetic"}
+{"id": "unrelated-09", "label": "unrelated", "a": "How many summer courses are allowed?", "b": "How do I report a phishing message to campus IT support?", "origin": "synthetic"}
+{"id": "unrelated-10", "label": "unrelated", "a": "How are SGPA and CGPA different?", "b": "What steps restore a disabled learning-portal account?", "origin": "synthetic"}
+{"id": "unrelated-11", "label": "unrelated", "a": "How many weekly hours does a lab credit represent?", "b": "How do I move university authentication to a replacement phone?", "origin": "synthetic"}
+{"id": "unrelated-12", "label": "unrelated", "a": "How much does the final exam normally count?", "b": "Where can I check the current campus email service outage status?", "origin": "synthetic"}
+{"id": "unrelated-13", "label": "unrelated", "a": "Who approves assessment-weight changes?", "b": "How do I bake sourdough bread?", "origin": "synthetic"}
+{"id": "unrelated-14", "label": "unrelated", "a": "What does FA mean?", "b": "What is tomorrow's rainfall forecast?", "origin": "synthetic"}
+{"id": "unrelated-15", "label": "unrelated", "a": "When is the warning count reset?", "b": "How do I replace a bicycle tire?", "origin": "synthetic"}

@@ -1,0 +1,40 @@
+{"id": "live-01", "query": "At what cumulative GPA would I receive an academic warning?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-02", "query": "If my attendance is short, what happens to my final exam eligibility?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-03", "query": "How many years does the undergraduate degree take at minimum?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-04", "query": "Can you explain semester GPA versus cumulative GPA?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-05", "query": "How are course credits used in the semester GPA formula?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-06", "query": "What happens after three semesters of a CGPA below two?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-07", "query": "May I enroll before passing all prerequisites?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-08", "query": "Who decides whether my course load can change?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-09", "query": "What attendance level does the current handbook expect?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-10", "query": "Does clause 1.21 permit genuine medical absences?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-11", "query": "How much absence can the department head condone?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-12", "query": "Does a one-credit lab meet for three practical hours each week?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-13", "query": "What is the maximum number of summer courses?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-14", "query": "What CGPA must I reach for graduation?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-15", "query": "How are the final exam and semester work normally weighted?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-16", "query": "Who can approve a different assessment weight?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-17", "query": "What does the attendance-related FA grade mean?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-18", "query": "Who approves moving a scheduled class?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-19", "query": "Could a faculty member reschedule a class without the academic office?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-20", "query": "What happens to my warning count after my CGPA recovers?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-21", "query": "What grade points correspond to A minus?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-22", "query": "How many grade points does a B plus earn?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-23", "query": "How much weekly practical work does a laboratory credit represent?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-24", "query": "What does a three plus one credit course mean?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-25", "query": "Can prerequisite completion compensate for a shortage of attendance?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-26", "query": "What is the ordinary maximum duration of an undergraduate degree?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-27", "query": "Who can approve an additional year beyond the normal degree time limit?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-28", "query": "When does the degree-duration clock start after readmission with credit exemptions?", "topic": "academic policy", "uncovered_topic": false, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-29", "query": "How do I reset a forgotten university email password?", "topic": "campus IT account recovery", "uncovered_topic": true, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-30", "query": "My campus Wi-Fi login is locked. How can I unlock it?", "topic": "campus IT account recovery", "uncovered_topic": true, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-31", "query": "How do I register a new laptop for campus wireless access?", "topic": "campus IT account recovery", "uncovered_topic": true, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-32", "query": "Where do I change the recovery phone number on my university account?", "topic": "campus IT account recovery", "uncovered_topic": true, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-33", "query": "How do I recover access after losing my multifactor authentication device?", "topic": "campus IT account recovery", "uncovered_topic": true, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-34", "query": "Can IT restore an email message I accidentally deleted yesterday?", "topic": "campus IT account recovery", "uncovered_topic": true, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-35", "query": "How can I connect a Linux laptop to the campus Wi-Fi network?", "topic": "campus IT account recovery", "uncovered_topic": true, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-36", "query": "What is the student helpdesk procedure for a compromised email account?", "topic": "campus IT account recovery", "uncovered_topic": true, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-37", "query": "How do I report a phishing message to campus IT support?", "topic": "campus IT account recovery", "uncovered_topic": true, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-38", "query": "What steps restore a disabled learning-portal account?", "topic": "campus IT account recovery", "uncovered_topic": true, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-39", "query": "How do I move university authentication to a replacement phone?", "topic": "campus IT account recovery", "uncovered_topic": true, "provenance": "simulated", "origin": "synthetic"}
+{"id": "live-40", "query": "Where can I check the current campus email service outage status?", "topic": "campus IT account recovery", "uncovered_topic": true, "provenance": "simulated", "origin": "synthetic"}

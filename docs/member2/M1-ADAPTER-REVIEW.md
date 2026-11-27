@@ -36,3 +36,55 @@ disabled-by-default behavior still need configuration/security verification.
 
 These block real-suite evidence, not independent offline metric development. Publish
 an agreed mapping or minimal additive adapter changes. No external message was sent automatically.
+
+## Implemented M2 HTTP contract and release handoff (2026-11-26)
+
+Fetched origin again: the M1 branch remains at the SHA above. M2 consumes these routes:
+
+- `GET /internal/eval/identity`: `schema_version: "1.0"`, `identity` matching the runtime
+  definition in `config/schemas/h0.schema.json`, and `provider` with actual name/model/version/parameters.
+  Optional `seed_support` must report the provider's actual capability, not an assumed guarantee.
+- `POST /internal/eval/retrieve`: question, top_k, seed, fresh_embedding. Preferred response
+  is `{retrieval: RetrievalEvidence}`. Existing flat responses can be adapted only when
+  collection, committed_revision, embed_digest and effective top_k match observed identity.
+- `POST /internal/eval/ask`: question, bypass_cache, seed, fresh_embedding. Preferred response
+  is `{query_evidence: QueryEvidence}` using the schema. Flat `{response, trace}` requires the
+  complete actual trace and `model_request`, including exact provider messages/options.
+
+Runtime identity binds collection, committed revision, immutable API image, effective config
+JSON, corpus fingerprint, pipeline fingerprint, model/digest/dimension and provenance.
+The top-k experiment additionally requires matching `vector_sha256` across baseline and
+both candidate collections. M1 must generate this fingerprint from the actual immutable
+chunk/vector snapshot. M2 must not guess it from corpus filenames or collection names.
+Only config top_k may differ; the other effective settings must match.
+
+M2 does not import M1 ingestion/indexer modules or write Chroma. API evaluation adapters must
+reuse production logic, report pipeline errors/fallbacks and permit fresh embedding calls.
+Generator answer caches are bypassed; repeated suites must generate actual answers again.
+M1's default superseded filter must be explicit: historical questions need agreed historical
+retrieval support or an expected abstention. The full A02 catalog contains six PDFs, including
+the superseded scanned 2023 rules; the corpus inventory now records all six verified files.
+
+The reviewed M1 release helper checks only PASS/legacy flat keys and therefore cannot yet
+consume the stronger M2 decision safely. Before F3 use, M1 must require:
+
+1. `decision == "pass"`, `release_authorized == true`, original `policy_mode == "release"`.
+2. Exact baseline/candidate/policy/golden hashes, and fresh current candidate identity matching
+   nested `candidate_identity` and its decision fingerprint.
+3. Matching collection/revision/vector/model/config/image; apply the evaluated immutable image
+   and settings to live with rolling maxUnavailable=0. A printed revision check is insufficient.
+4. A failed gate leaves live PodTemplate/revision unchanged; record before/after snapshots.
+5. Undo restores the known-good image/config/collection, then obtain a NEW query trace proving
+   the previous collection and embedding identity. Existing historical traces are insufficient.
+
+The ConfigMap demo always sets release_authorized=false even if thresholds permit a pass.
+Do not add legacy flat decision fields merely to make the old release helper accept it.
+Member 1 remains the owner of release.sh, API/trace changes and runtime manifests.
+
+Evaluation resources live under `k8s/ragops-eval`; M1 integrates namespace/runtime first,
+then the eval PVC/ServiceAccount/network policy. Wrappers apply `k8s/eval-job.yaml` literally
+and use fixed Service names `api`/`api-candidate`. Confirm the actual candidate Pod labels,
+host Ollama egress CIDR, results PVC fsGroup support and single-node RWO placement.
+Do not reapply the entire kustomization during the ConfigMap demo: that would overwrite
+the edited gate. Collect real evaluation Job CPU/memory alongside the M1 sampler and
+justify the initially provisional requests/limits from those measurements.

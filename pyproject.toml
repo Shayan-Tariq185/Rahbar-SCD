@@ -10,3 +10,7 @@ strict = true
 [tool.pytest.ini_options]
 testpaths = ["tests/ragops", "eval"]
 pythonpath = [".", "eval", "tests/ragops/evaluation"]
+
+[[tool.mypy.overrides]]
+module = ["jsonschema.*"]
+ignore_missing_imports = true
