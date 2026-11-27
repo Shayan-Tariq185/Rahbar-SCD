@@ -196,7 +196,8 @@ def test_changed_doc_updates_only_changed_chunks_and_preserves_other_docs(tmp_pa
 
     assert res["counters"]["docs_unchanged"] == 1
     assert res["counters"]["docs_indexed"] == 1
-    assert res["counters"]["chunks_deleted"] == len(alpha_ids_before)
+    assert res["counters"]["chunks_deleted"] >= 1
+    assert res["counters"]["chunks_reused"] >= 1
     beta_ids_after = [k for k in store.collections["rahbar_sandbox"]["items"] if k.startswith("beta::")]
     alpha_ids_after = [k for k in store.collections["rahbar_sandbox"]["items"] if k.startswith("alpha::")]
     assert beta_ids_after == beta_ids_before

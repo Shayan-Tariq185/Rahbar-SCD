@@ -56,14 +56,16 @@ def _log(msg: str, **fields: object) -> None:
 
 
 def _deterministic_vector(text: str, dim: int) -> list[float]:
-    values: list[float] = []
-    seed = text.encode("utf-8")
-    while len(values) < dim:
-        seed = hashlib.sha256(seed).digest()
-        values.extend((b - 127.5) / 127.5 for b in seed)
-    values = values[:dim]
-    norm = math.sqrt(sum(v * v for v in values)) or 1.0
-    return [v / norm for v in values]
+    words = re.findall(r"\w+", text.lower())
+    if not words:
+        return [0.0] * dim
+    vec = [0.0] * dim
+    for w in words:
+        h = int(hashlib.md5(w.encode("utf-8")).hexdigest()[:8], 16) % dim
+        sign = 1.0 if int(hashlib.md5(w.encode("utf-8")).hexdigest()[8:10], 16) % 2 == 0 else -1.0
+        vec[h] += sign
+    norm = math.sqrt(sum(v * v for v in vec)) or 1.0
+    return [v / norm for v in vec]
 
 
 @dataclass
@@ -341,7 +343,7 @@ def _strip_front_matter(text: str) -> tuple[dict[str, str], str]:
             break
         key, sep, value = line.partition(":")
         if sep:
-            meta[key.strip()] = value.strip()
+            meta[key.strip()] = value.strip().strip("\"'")
     if end_idx == 0:
         return {}, text
     return meta, "\n".join(lines[end_idx:])
@@ -795,7 +797,10 @@ def run_ingest(
                     counters["doc_check_embeddings"] += ver_res.doc_check_embeddings
 
                 report_entries.append(ver_res.to_dict())
-                dest_name = f"{doc.doc_id}__{doc.doc_version or 'unknown'}__{doc.source}"
+                safe_ver = re.sub(r'["<>:|?*\\/]', '_', str(doc.doc_version or 'unknown')).strip()
+                safe_doc_id = re.sub(r'["<>:|?*\\/]', '_', str(doc.doc_id)).strip()
+                safe_source = re.sub(r'["<>:|?*\\/]', '_', str(doc.source)).strip()
+                dest_name = f"{safe_doc_id}__{safe_ver}__{safe_source}"
 
                 if ver_res.decision == "quarantine":
                     q_dir = state.quarantine_dir / collection
