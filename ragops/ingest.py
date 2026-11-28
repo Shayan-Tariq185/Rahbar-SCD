@@ -310,7 +310,9 @@ class ChromaVectorStore:
         client = self._get_client()
         try:
             col = client.get_collection(collection)
-            col.modify(metadata=metadata)
+            # Chroma rejects hnsw:space in modify(), even when unchanged.
+            # The index metric was fixed at creation; only update audit pins.
+            col.modify(metadata={key: value for key, value in metadata.items() if key != "hnsw:space"})
         except Exception as exc:
             raise InfrastructureError(f"Chroma set_collection_metadata failed: {exc}") from exc
 
@@ -686,7 +688,7 @@ def run_ingest(
                 # Compare hashes & fingerprint BEFORE any extraction or embedding call!
                 if (
                     existing is not None
-                    and existing.status == "active"
+                    and existing.status in {"active", "superseded"}
                     and existing.raw_hash == raw_hash
                     and existing.pipeline_fingerprint == fp
                 ):
