@@ -1,0 +1,9 @@
+{
+  "run_id": "eval-20261128t171225z-34704131",
+  "started_at": "2026-11-28T17:13:01+00:00",
+  "exit_code": 0,
+  "image": "rahbar-eval:837ab482ab37-m2",
+  "suite": "/results/runs/eval-20261128t171225z-34704131/suite-20261128T171302Z-4a1712d2.json",
+  "decision": null,
+  "finished_at": "2026-11-28T17:30:22+00:00"
+}

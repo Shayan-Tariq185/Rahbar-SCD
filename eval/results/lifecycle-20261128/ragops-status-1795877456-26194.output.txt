@@ -1,0 +1,78 @@
+{
+  "collection": "rahbar_sandbox_deleted",
+  "revision": {
+    "collection": "rahbar_sandbox_deleted",
+    "committed_revision": 1,
+    "pending_revision": null,
+    "index_id": "rahbar_sandbox_deleted-rev1-run-1795877447-1",
+    "embed_model": "nomic-embed-text",
+    "embed_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+    "dimension": 768,
+    "pipeline_fingerprint": "39ec2961a01623cc69381a5eaf4de689e7e008d1937449fac538b649803669e0",
+    "updated_at": "2026-11-28T14:50:51Z"
+  },
+  "counts": {
+    "active": 2,
+    "superseded": 0,
+    "quarantined": 0,
+    "deleted": 0
+  },
+  "active_chunks": 2,
+  "documents": [
+    {
+      "doc_id": "sandbox-alpha",
+      "doc_version": "2026-01",
+      "family_id": "sandbox-alpha",
+      "status": "active",
+      "superseded": false,
+      "chunks": 1,
+      "source": "sandbox_alpha.md"
+    },
+    {
+      "doc_id": "sandbox-beta",
+      "doc_version": "2026-01",
+      "family_id": "sandbox-beta",
+      "status": "active",
+      "superseded": false,
+      "chunks": 1,
+      "source": "sandbox_beta.md"
+    }
+  ],
+  "recent_events": [
+    {
+      "ts": "2026-11-28T14:50:51Z",
+      "run_id": "run-1795877447-1",
+      "action": "commit",
+      "doc_id": null,
+      "doc_version": null,
+      "details": {
+        "committed_revision": 1,
+        "index_id": "rahbar_sandbox_deleted-rev1-run-1795877447-1"
+      }
+    },
+    {
+      "ts": "2026-11-28T14:50:51Z",
+      "run_id": "run-1795877447-1",
+      "action": "ingest",
+      "doc_id": "sandbox-beta",
+      "doc_version": "2026-01",
+      "details": {
+        "chunks_deleted": 0,
+        "chunks_total": 1,
+        "chunks_upserted": 1
+      }
+    },
+    {
+      "ts": "2026-11-28T14:50:50Z",
+      "run_id": "run-1795877447-1",
+      "action": "ingest",
+      "doc_id": "sandbox-alpha",
+      "doc_version": "2026-01",
+      "details": {
+        "chunks_deleted": 0,
+        "chunks_total": 1,
+        "chunks_upserted": 1
+      }
+    }
+  ]
+}

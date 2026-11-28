@@ -1,0 +1,13 @@
+{
+  "collection": "rahbar_sandbox_changed",
+  "doc_id": "sandbox-alpha",
+  "chroma_chunks": 2,
+  "state_records": [
+    {
+      "doc_version": "2026-01",
+      "status": "active",
+      "superseded": false,
+      "chunks": 2
+    }
+  ]
+}

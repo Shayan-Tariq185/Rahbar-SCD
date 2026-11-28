@@ -1,0 +1,227 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+        "annotations": {
+            "cni.projectcalico.org/containerID": "0c7fdeaefc4f2c7b4ac089b187e4ac0bb104745c56017e02dd20e131f8e5ad48",
+            "cni.projectcalico.org/podIP": "10.244.120.92/32",
+            "cni.projectcalico.org/podIPs": "10.244.120.92/32",
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"v1\",\"kind\":\"Pod\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"rahbar-eval-exporter\"},\"name\":\"eval-results-shell\",\"namespace\":\"rahbar\"},\"spec\":{\"automountServiceAccountToken\":false,\"containers\":[{\"command\":[\"python\",\"-c\",\"import time; time.sleep(86400)\"],\"env\":[],\"image\":\"rahbar-eval:b0fceb3c4898-m2\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"exporter\",\"resources\":{\"limits\":{\"cpu\":\"100m\",\"memory\":\"128Mi\"},\"requests\":{\"cpu\":\"10m\",\"memory\":\"32Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"readOnlyRootFilesystem\":true},\"volumeMounts\":[{\"mountPath\":\"/results\",\"name\":\"results\"},{\"mountPath\":\"/tmp\",\"name\":\"tmp\"}]}],\"enableServiceLinks\":false,\"restartPolicy\":\"Never\",\"securityContext\":{\"fsGroup\":10001,\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"serviceAccountName\":\"eval-sa\",\"volumes\":[{\"name\":\"results\",\"persistentVolumeClaim\":{\"claimName\":\"rahbar-eval-results-pvc\"}},{\"emptyDir\":{},\"name\":\"tmp\"}]}}\n"
+        },
+        "creationTimestamp": "2026-11-28T14:16:39Z",
+        "generation": 1,
+        "labels": {
+            "app": "rahbar-eval-exporter"
+        },
+        "name": "eval-results-shell",
+        "namespace": "rahbar",
+        "resourceVersion": "19772",
+        "uid": "3139d6c5-79be-406f-a254-8185d0ad9c97"
+    },
+    "spec": {
+        "automountServiceAccountToken": false,
+        "containers": [
+            {
+                "command": [
+                    "python",
+                    "-c",
+                    "import time; time.sleep(86400)"
+                ],
+                "image": "rahbar-eval:b0fceb3c4898-m2",
+                "imagePullPolicy": "IfNotPresent",
+                "name": "exporter",
+                "resources": {
+                    "limits": {
+                        "cpu": "100m",
+                        "memory": "128Mi"
+                    },
+                    "requests": {
+                        "cpu": "10m",
+                        "memory": "32Mi"
+                    }
+                },
+                "securityContext": {
+                    "allowPrivilegeEscalation": false,
+                    "capabilities": {
+                        "drop": [
+                            "ALL"
+                        ]
+                    },
+                    "readOnlyRootFilesystem": true
+                },
+                "terminationMessagePath": "/dev/termination-log",
+                "terminationMessagePolicy": "File",
+                "volumeMounts": [
+                    {
+                        "mountPath": "/results",
+                        "name": "results"
+                    },
+                    {
+                        "mountPath": "/tmp",
+                        "name": "tmp"
+                    }
+                ]
+            }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": false,
+        "nodeName": "minikube",
+        "preemptionPolicy": "PreemptLowerPriority",
+        "priority": 0,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {
+            "fsGroup": 10001,
+            "runAsGroup": 10001,
+            "runAsNonRoot": true,
+            "runAsUser": 10001
+        },
+        "serviceAccount": "eval-sa",
+        "serviceAccountName": "eval-sa",
+        "terminationGracePeriodSeconds": 30,
+        "tolerations": [
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/not-ready",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            },
+            {
+                "effect": "NoExecute",
+                "key": "node.kubernetes.io/unreachable",
+                "operator": "Exists",
+                "tolerationSeconds": 300
+            }
+        ],
+        "volumes": [
+            {
+                "name": "results",
+                "persistentVolumeClaim": {
+                    "claimName": "rahbar-eval-results-pvc"
+                }
+            },
+            {
+                "emptyDir": {},
+                "name": "tmp"
+            }
+        ]
+    },
+    "status": {
+        "allocatedResources": {
+            "cpu": "10m",
+            "memory": "32Mi"
+        },
+        "conditions": [
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-11-28T14:16:41Z",
+                "observedGeneration": 1,
+                "status": "True",
+                "type": "PodReadyToStartContainers"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-11-28T14:16:39Z",
+                "observedGeneration": 1,
+                "status": "True",
+                "type": "Initialized"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-11-28T14:16:41Z",
+                "observedGeneration": 1,
+                "status": "True",
+                "type": "Ready"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-11-28T14:16:41Z",
+                "observedGeneration": 1,
+                "status": "True",
+                "type": "ContainersReady"
+            },
+            {
+                "lastProbeTime": null,
+                "lastTransitionTime": "2026-11-28T14:16:39Z",
+                "observedGeneration": 1,
+                "status": "True",
+                "type": "PodScheduled"
+            }
+        ],
+        "containerStatuses": [
+            {
+                "allocatedResources": {
+                    "cpu": "10m",
+                    "memory": "32Mi"
+                },
+                "containerID": "containerd://c59eb6b2e804028855aa7f133f90c95cf2314e4897e3801d20dce300f2554cff",
+                "image": "docker.io/library/rahbar-eval:b0fceb3-m2",
+                "imageID": "sha256:b9ecbe2e2da5b9fd6828a1bed31f79570afa73e3e791012e4cb3db68e7878f5c",
+                "lastState": {},
+                "name": "exporter",
+                "ready": true,
+                "resources": {
+                    "limits": {
+                        "cpu": "100m",
+                        "memory": "128Mi"
+                    },
+                    "requests": {
+                        "cpu": "10m",
+                        "memory": "32Mi"
+                    }
+                },
+                "restartCount": 0,
+                "started": true,
+                "state": {
+                    "running": {
+                        "startedAt": "2026-11-28T14:16:41Z"
+                    }
+                },
+                "user": {
+                    "linux": {
+                        "gid": 10001,
+                        "supplementalGroups": [
+                            10001
+                        ],
+                        "uid": 10001
+                    }
+                },
+                "volumeMounts": [
+                    {
+                        "mountPath": "/results",
+                        "name": "results"
+                    },
+                    {
+                        "mountPath": "/tmp",
+                        "name": "tmp"
+                    }
+                ]
+            }
+        ],
+        "hostIP": "192.168.49.2",
+        "hostIPs": [
+            {
+                "ip": "192.168.49.2"
+            }
+        ],
+        "observedGeneration": 1,
+        "phase": "Running",
+        "podIP": "10.244.120.92",
+        "podIPs": [
+            {
+                "ip": "10.244.120.92"
+            }
+        ],
+        "qosClass": "Burstable",
+        "resources": {
+            "limits": {
+                "cpu": "100m",
+                "memory": "128Mi"
+            },
+            "requests": {
+                "memory": "32Mi"
+            }
+        },
+        "startTime": "2026-11-28T14:16:39Z"
+    }
+}

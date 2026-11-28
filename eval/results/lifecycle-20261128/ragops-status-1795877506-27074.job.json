@@ -1,0 +1,168 @@
+{
+  "apiVersion": "batch/v1",
+  "kind": "Job",
+  "metadata": {
+    "annotations": {
+      "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"batch/v1\",\"kind\":\"Job\",\"metadata\":{\"annotations\":{},\"labels\":{\"app\":\"rahbar-indexer\",\"ragops/writer\":\"true\"},\"name\":\"ragops-status-1795877506-27074\",\"namespace\":\"rahbar\"},\"spec\":{\"backoffLimit\":1,\"template\":{\"metadata\":{\"labels\":{\"app\":\"rahbar-indexer\",\"ragops/writer\":\"true\"}},\"spec\":{\"automountServiceAccountToken\":false,\"containers\":[{\"args\":[\"python\",\"-m\",\"ragops.ingest\",\"status\",\"--collection\",\"rahbar_sandbox_restore\"],\"env\":[{\"name\":\"RAGOPS_EXTRACT_TIMEOUT\",\"value\":\"600\"}],\"envFrom\":[{\"configMapRef\":{\"name\":\"rahbar-config\"}}],\"image\":\"rahbar-indexer:cc6e0ee65463-a03\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"indexer\",\"resources\":{\"limits\":{\"cpu\":\"1000m\",\"memory\":\"1536Mi\"},\"requests\":{\"cpu\":\"250m\",\"memory\":\"512Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"readOnlyRootFilesystem\":true},\"volumeMounts\":[{\"mountPath\":\"/datalake\",\"name\":\"datalake\"},{\"mountPath\":\"/results\",\"name\":\"results\"},{\"mountPath\":\"/tmp\",\"name\":\"tmp\"}]}],\"enableServiceLinks\":false,\"restartPolicy\":\"Never\",\"securityContext\":{\"fsGroup\":10001,\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"serviceAccountName\":\"indexer-sa\",\"volumes\":[{\"name\":\"datalake\",\"persistentVolumeClaim\":{\"claimName\":\"rahbar-datalake-pvc\"}},{\"name\":\"results\",\"persistentVolumeClaim\":{\"claimName\":\"rahbar-results-pvc\"}},{\"emptyDir\":{},\"name\":\"tmp\"}]}}}}\n"
+    },
+    "creationTimestamp": "2026-11-28T14:51:46Z",
+    "generation": 1,
+    "labels": {
+      "app": "rahbar-indexer",
+      "ragops/writer": "true"
+    },
+    "name": "ragops-status-1795877506-27074",
+    "namespace": "rahbar",
+    "resourceVersion": "22817",
+    "uid": "30953a00-4b1f-422a-8845-4bf971e543d7"
+  },
+  "spec": {
+    "backoffLimit": 1,
+    "completionMode": "NonIndexed",
+    "completions": 1,
+    "manualSelector": false,
+    "parallelism": 1,
+    "podReplacementPolicy": "TerminatingOrFailed",
+    "selector": {
+      "matchLabels": {
+        "batch.kubernetes.io/controller-uid": "30953a00-4b1f-422a-8845-4bf971e543d7"
+      }
+    },
+    "suspend": false,
+    "template": {
+      "metadata": {
+        "labels": {
+          "app": "rahbar-indexer",
+          "batch.kubernetes.io/controller-uid": "30953a00-4b1f-422a-8845-4bf971e543d7",
+          "batch.kubernetes.io/job-name": "ragops-status-1795877506-27074",
+          "controller-uid": "30953a00-4b1f-422a-8845-4bf971e543d7",
+          "job-name": "ragops-status-1795877506-27074",
+          "ragops/writer": "true"
+        }
+      },
+      "spec": {
+        "automountServiceAccountToken": false,
+        "containers": [
+          {
+            "args": [
+              "python",
+              "-m",
+              "ragops.ingest",
+              "status",
+              "--collection",
+              "rahbar_sandbox_restore"
+            ],
+            "env": [
+              {
+                "name": "RAGOPS_EXTRACT_TIMEOUT",
+                "value": "600"
+              }
+            ],
+            "envFrom": [
+              {
+                "configMapRef": {
+                  "name": "rahbar-config"
+                }
+              }
+            ],
+            "image": "rahbar-indexer:cc6e0ee65463-a03",
+            "imagePullPolicy": "IfNotPresent",
+            "name": "indexer",
+            "resources": {
+              "limits": {
+                "cpu": "1",
+                "memory": "1536Mi"
+              },
+              "requests": {
+                "cpu": "250m",
+                "memory": "512Mi"
+              }
+            },
+            "securityContext": {
+              "allowPrivilegeEscalation": false,
+              "capabilities": {
+                "drop": [
+                  "ALL"
+                ]
+              },
+              "readOnlyRootFilesystem": true
+            },
+            "terminationMessagePath": "/dev/termination-log",
+            "terminationMessagePolicy": "File",
+            "volumeMounts": [
+              {
+                "mountPath": "/datalake",
+                "name": "datalake"
+              },
+              {
+                "mountPath": "/results",
+                "name": "results"
+              },
+              {
+                "mountPath": "/tmp",
+                "name": "tmp"
+              }
+            ]
+          }
+        ],
+        "dnsPolicy": "ClusterFirst",
+        "enableServiceLinks": false,
+        "restartPolicy": "Never",
+        "schedulerName": "default-scheduler",
+        "securityContext": {
+          "fsGroup": 10001,
+          "runAsGroup": 10001,
+          "runAsNonRoot": true,
+          "runAsUser": 10001
+        },
+        "serviceAccount": "indexer-sa",
+        "serviceAccountName": "indexer-sa",
+        "terminationGracePeriodSeconds": 30,
+        "volumes": [
+          {
+            "name": "datalake",
+            "persistentVolumeClaim": {
+              "claimName": "rahbar-datalake-pvc"
+            }
+          },
+          {
+            "name": "results",
+            "persistentVolumeClaim": {
+              "claimName": "rahbar-results-pvc"
+            }
+          },
+          {
+            "emptyDir": {},
+            "name": "tmp"
+          }
+        ]
+      }
+    }
+  },
+  "status": {
+    "completionTime": "2026-11-28T14:51:50Z",
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:51:50Z",
+        "lastTransitionTime": "2026-11-28T14:51:50Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:51:50Z",
+        "lastTransitionTime": "2026-11-28T14:51:50Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "ready": 0,
+    "startTime": "2026-11-28T14:51:46Z",
+    "succeeded": 1,
+    "terminating": 0,
+    "uncountedTerminatedPods": {}
+  }
+}

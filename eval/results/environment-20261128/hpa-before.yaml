@@ -1,0 +1,62 @@
+﻿apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"autoscaling/v2","kind":"HorizontalPodAutoscaler","metadata":{"annotations":{},"labels":{"app":"rahbar-api"},"name":"api-hpa","namespace":"rahbar"},"spec":{"maxReplicas":8,"metrics":[{"resource":{"name":"cpu","target":{"averageUtilization":70,"type":"Utilization"}},"type":"Resource"}],"minReplicas":3,"scaleTargetRef":{"apiVersion":"apps/v1","kind":"Deployment","name":"api"}}}
+  creationTimestamp: "2026-11-15T20:44:58Z"
+  generation: 1
+  labels:
+    app: rahbar-api
+  name: api-hpa
+  namespace: rahbar
+  resourceVersion: "18726"
+  uid: 57164341-87f1-4071-9c43-bc1c7a332c9f
+spec:
+  maxReplicas: 8
+  metrics:
+  - resource:
+      name: cpu
+      target:
+        averageUtilization: 70
+        type: Utilization
+    type: Resource
+  minReplicas: 3
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api
+status:
+  conditions:
+  - lastTransitionTime: "2026-11-28T06:57:54Z"
+    message: the HPA controller was able to update the target scale to 4
+    reason: SucceededRescale
+    status: "True"
+    type: AbleToScale
+  - lastTransitionTime: "2026-11-28T13:49:26Z"
+    message: the HPA was able to successfully calculate a replica count from cpu resource
+      utilization (percentage of request)
+    reason: ValidMetricFound
+    status: "True"
+    type: ScalingActive
+  - lastTransitionTime: "2026-11-28T14:06:12Z"
+    message: the desired count is within the acceptable range
+    reason: DesiredWithinRange
+    status: "False"
+    type: ScalingLimited
+  - lastTransitionTime: "2026-11-15T21:23:00Z"
+    message: the HPA controller did not scale the workload to zero
+    reason: NotScaledToZero
+    status: "False"
+    type: ScaledToZero
+  currentMetrics:
+  - resource:
+      current:
+        averageUtilization: 24
+        averageValue: 24m
+      name: cpu
+    type: Resource
+  currentReplicas: 8
+  desiredReplicas: 4
+  lastScaleTime: "2026-11-28T14:06:12Z"
+  observedGeneration: 1

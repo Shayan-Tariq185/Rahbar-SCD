@@ -1,0 +1,95 @@
+{
+    "spec":  {
+                 "template":  {
+                                  "spec":  {
+                                               "containers":  [
+                                                                  {
+                                                                      "env":  [
+                                                                                  {
+                                                                                      "name":  "EMBED_MODEL",
+                                                                                      "value":  "nomic-embed-text"
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "TRACES_DIR",
+                                                                                      "value":  "/traces"
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "EVAL_INTERNAL_ENABLED",
+                                                                                      "value":  "true"
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "LLM_API_KEY",
+                                                                                      "valueFrom":  {
+                                                                                                        "secretKeyRef":  {
+                                                                                                                             "key":  "LLM_API_KEY",
+                                                                                                                             "name":  "rahbar-secret-alt",
+                                                                                                                             "optional":  false
+                                                                                                                         }
+                                                                                                    }
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "CHROMA_COLLECTION",
+                                                                                      "value":  "rahbar_a"
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "TOP_K",
+                                                                                      "value":  "5"
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "API_IMAGE",
+                                                                                      "value":  "rahbar-api:2124c3713328-a03"
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "EMBED_VERSION",
+                                                                                      "value":  "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f"
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "OLLAMA_URL",
+                                                                                      "value":  "http://host.docker.internal:11434"
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "RETRIEVER",
+                                                                                      "value":  "chroma"
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "LLM_PROVIDER",
+                                                                                      "value":  "hosted"
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "LLM_MODEL",
+                                                                                      "value":  "qwen/qwen3.8-27b"
+                                                                                  },
+                                                                                  {
+                                                                                      "name":  "HOSTED_BASE_URL",
+                                                                                      "value":  "https://api.groq.com/openai/v1"
+                                                                                  }
+                                                                              ],
+                                                                      "name":  "api",
+                                                                      "volumeMounts":  [
+                                                                                           {
+                                                                                               "mountPath":  "/traces",
+                                                                                               "name":  "traces"
+                                                                                           }
+                                                                                       ],
+                                                                      "image":  "rahbar-api:2124c3713328-a03"
+                                                                  }
+                                                              ],
+                                               "volumes":  [
+                                                               {
+                                                                   "persistentVolumeClaim":  {
+                                                                                                 "claimName":  "rahbar-traces-pvc"
+                                                                                             },
+                                                                   "name":  "traces"
+                                                               }
+                                                           ]
+                                           }
+                              },
+                 "strategy":  {
+                                  "rollingUpdate":  {
+                                                        "maxUnavailable":  0,
+                                                        "maxSurge":  1
+                                                    },
+                                  "type":  "RollingUpdate"
+                              }
+             }
+}

@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run-1795877497-1",
+  "generated_at": "2026-11-28T14:51:42Z",
+  "collection": "rahbar_sandbox_restore",
+  "batch_dir": "/datalake/inbox/rahbar_sandbox_restore-20261128T145134Z",
+  "counters": {
+    "docs_seen": 2,
+    "docs_unchanged": 0,
+    "docs_indexed": 2,
+    "docs_quarantined": 0,
+    "docs_archived": 0,
+    "chunks_seen": 2,
+    "chunks_embedded": 2,
+    "chunks_reused": 0,
+    "chunks_deleted": 0,
+    "doc_check_embeddings": 2,
+    "chunk_embeddings": 2,
+    "total_embeddings": 4
+  },
+  "documents": [
+    {
+      "doc_id": "sandbox-alpha",
+      "doc_version": "2026-01",
+      "family_id": "sandbox-alpha",
+      "source": "sandbox_alpha.md",
+      "content_hash": "2137f5bee39334fe56c17f995214bd0cbc358367220fb3a26e79d3b0dc207779",
+      "checks": {
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "first_version_in_family"
+        },
+        "uniqueness": {
+          "passed": true,
+          "reason": "unique"
+        }
+      },
+      "decision": "index",
+      "superseded": false,
+      "reasons": [
+        "all_checks_passed"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 1,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    },
+    {
+      "doc_id": "sandbox-beta",
+      "doc_version": "2026-01",
+      "family_id": "sandbox-beta",
+      "source": "sandbox_beta.md",
+      "content_hash": "32d664d55c4c34db3bde8d6bcce3071d571a57e64a9d9c0e4cedf0544da0db8f",
+      "checks": {
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "first_version_in_family"
+        },
+        "uniqueness": {
+          "passed": true,
+          "reason": "unique"
+        }
+      },
+      "decision": "index",
+      "superseded": false,
+      "reasons": [
+        "all_checks_passed"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 1,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    }
+  ]
+}
