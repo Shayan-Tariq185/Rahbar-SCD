@@ -242,19 +242,27 @@ def test_release_script_refuses_failed_and_synthetic_gates(tmp_path: Path) -> No
     )
     assert r_synth.returncode != 0
 
-    good_gate = tmp_path / "pass.json"
-    good_gate.write_text(
-        json.dumps({"decision": "PASS", "collection": "rahbar_cand_good", "embed_model": "nomic-embed-text", "embed_digest": "sha256:abc", "top_k": 5}),
+    # Negative test: missing release_authorized must fail
+    missing_auth_gate = tmp_path / "missing_auth.json"
+    missing_auth_gate.write_text(
+        json.dumps({
+            "decision": "pass",
+            "collection": "rahbar_cand_good",
+            "embed_model": "nomic-embed-text",
+            "embed_digest": "sha256:abc",
+            "top_k": 5,
+        }),
         encoding="utf-8",
     )
-    r_pass = subprocess.run(
-        ["bash", "scripts/release.sh", "--deployment", "api", "--candidate", "rahbar_cand_good", "--decision", str(good_gate), "--dry-run"],
+    r_no_auth = subprocess.run(
+        ["bash", "scripts/release.sh", "--deployment", "api", "--candidate", "rahbar_cand_good", "--decision", str(missing_auth_gate), "--dry-run"],
         cwd=ROOT,
         capture_output=True,
         text=True,
     )
-    assert r_pass.returncode == 0
+    assert r_no_auth.returncode != 0
 
+    h64 = "a" * 64
     canonical_pass = tmp_path / "canonical_pass.json"
     canonical_pass.write_text(
         json.dumps({
@@ -264,6 +272,10 @@ def test_release_script_refuses_failed_and_synthetic_gates(tmp_path: Path) -> No
             "exit_code": 0,
             "release_authorized": True,
             "policy_mode": "release",
+            "baseline_sha256": h64,
+            "candidate_sha256": h64,
+            "policy_sha256": h64,
+            "golden_sha256": h64,
             "candidate_identity": {
                 "collection": "rahbar_cand_good",
                 "revision": "v2",
@@ -292,6 +304,10 @@ def test_release_script_refuses_failed_and_synthetic_gates(tmp_path: Path) -> No
             "exit_code": 0,
             "release_authorized": False,
             "policy_mode": "demo",
+            "baseline_sha256": h64,
+            "candidate_sha256": h64,
+            "policy_sha256": h64,
+            "golden_sha256": h64,
             "candidate_identity": {
                 "collection": "rahbar_cand_good",
                 "embedding": {"model": "nomic-embed-text", "digest": "sha256:abc", "dimension": 768},
