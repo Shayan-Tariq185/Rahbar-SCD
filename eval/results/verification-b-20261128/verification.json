@@ -1,0 +1,480 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run-1795878890-1",
+  "generated_at": "2026-11-28T15:14:58Z",
+  "collection": "rahbar_b_verify",
+  "batch_dir": "/datalake/inbox/rahbar_b_verify-20261128T151447Z",
+  "counters": {
+    "docs_seen": 13,
+    "docs_unchanged": 0,
+    "docs_indexed": 5,
+    "docs_quarantined": 7,
+    "docs_archived": 1,
+    "chunks_seen": 13,
+    "chunks_embedded": 13,
+    "chunks_reused": 0,
+    "chunks_deleted": 0,
+    "doc_check_embeddings": 6,
+    "chunk_embeddings": 13,
+    "total_embeddings": 19
+  },
+  "documents": [
+    {
+      "doc_id": "academic-rules",
+      "doc_version": "2027",
+      "family_id": "academic-rules",
+      "source": "b01_academic_rules_2027.md",
+      "content_hash": "3a910a5c1b96703b1a1535da566ec5e0080b1c49253563b83a292c4a86950090",
+      "checks": {
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "newer_version_supersedes:2026-06"
+        },
+        "uniqueness": {
+          "passed": true,
+          "reason": "unique"
+        }
+      },
+      "decision": "index",
+      "superseded": false,
+      "reasons": [
+        "all_checks_passed"
+      ],
+      "supersedes_versions": [
+        "2026-06"
+      ],
+      "doc_check_embeddings": 1,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    },
+    {
+      "doc_id": "lab-safety-a",
+      "doc_version": "2026-09",
+      "family_id": "lab-safety-a",
+      "source": "b02_lab_safety_a.md",
+      "content_hash": "10281efcd19ae6adffade14c58d041d5efb9ec38952d0d098b022ca837b31b89",
+      "checks": {
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "first_version_in_family"
+        },
+        "uniqueness": {
+          "passed": true,
+          "reason": "unique"
+        }
+      },
+      "decision": "index",
+      "superseded": false,
+      "reasons": [
+        "all_checks_passed"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 1,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    },
+    {
+      "doc_id": "lab-safety-copy",
+      "doc_version": "2026-09",
+      "family_id": "lab-safety-copy",
+      "source": "b03_lab_safety_copy.md",
+      "content_hash": "10281efcd19ae6adffade14c58d041d5efb9ec38952d0d098b022ca837b31b89",
+      "checks": {
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "first_version_in_family"
+        },
+        "uniqueness": {
+          "passed": false,
+          "reason": "exact_duplicate_of:lab-safety-a@2026-09"
+        }
+      },
+      "decision": "quarantine",
+      "superseded": false,
+      "reasons": [
+        "uniqueness:exact_duplicate_of:lab-safety-a@2026-09"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 0,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    },
+    {
+      "doc_id": "lab-safety-near-dup",
+      "doc_version": "2026-09",
+      "family_id": "lab-safety-near-dup",
+      "source": "b04_lab_safety_near_dup.md",
+      "content_hash": "42faea80e7c9c5599d8b56560bce2d10792266efafbb43d50b72446346b3e41c",
+      "checks": {
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "first_version_in_family"
+        },
+        "uniqueness": {
+          "passed": false,
+          "reason": "near_duplicate_of:lab-safety-a@2026-09 (cosine=0.9839 >= 0.95)"
+        }
+      },
+      "decision": "quarantine",
+      "superseded": false,
+      "reasons": [
+        "uniqueness:near_duplicate_of:lab-safety-a@2026-09 (cosine=0.9839 >= 0.95)"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 1,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    },
+    {
+      "doc_id": "corrupt-scan-doc",
+      "doc_version": "2026-10",
+      "family_id": "corrupt-scan-doc",
+      "source": "b05_corrupt_scan.pdf",
+      "content_hash": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "checks": {
+        "quality": {
+          "passed": false,
+          "reason": "extraction_failed: PdfminerException: No /Root object! - Is this really a PDF?"
+        },
+        "completeness": {
+          "passed": false,
+          "reason": "not_executable: upstream quality/extraction check failed"
+        },
+        "recency": {
+          "passed": false,
+          "reason": "not_executable: upstream quality/completeness check failed"
+        },
+        "uniqueness": {
+          "passed": false,
+          "reason": "skipped: upstream quality/completeness check failed"
+        }
+      },
+      "decision": "quarantine",
+      "superseded": false,
+      "reasons": [
+        "quality:extraction_failed: PdfminerException: No /Root object! - Is this really a PDF?"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 0,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    },
+    {
+      "doc_id": "garbled-text-doc",
+      "doc_version": "2026-10",
+      "family_id": "garbled-text-doc",
+      "source": "b06_garbled_text.md",
+      "content_hash": "c6a6ec5146dc0fa3fdf4ab4e61262f3dae6e46dba674ed5fb2b4cb75a4a866d4",
+      "checks": {
+        "quality": {
+          "passed": false,
+          "reason": "too_short (18 chars < 30)"
+        },
+        "completeness": {
+          "passed": false,
+          "reason": "not_executable: upstream quality/extraction check failed"
+        },
+        "recency": {
+          "passed": false,
+          "reason": "not_executable: upstream quality/completeness check failed"
+        },
+        "uniqueness": {
+          "passed": false,
+          "reason": "skipped: upstream quality/completeness check failed"
+        }
+      },
+      "decision": "quarantine",
+      "superseded": false,
+      "reasons": [
+        "quality:too_short (18 chars < 30)"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 0,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    },
+    {
+      "doc_id": "missing-meta-doc",
+      "doc_version": "",
+      "family_id": "missing-meta-doc",
+      "source": "b07_missing_metadata.md",
+      "content_hash": "ce7505e69f6f72e00a93fc67ac93c0adc29d3d14581cb439f8258b139b717c3f",
+      "checks": {
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "completeness": {
+          "passed": false,
+          "reason": "missing_required_metadata: title, date_or_version"
+        },
+        "recency": {
+          "passed": false,
+          "reason": "not_executable: upstream quality/completeness check failed"
+        },
+        "uniqueness": {
+          "passed": false,
+          "reason": "skipped: upstream quality/completeness check failed"
+        }
+      },
+      "decision": "quarantine",
+      "superseded": false,
+      "reasons": [
+        "completeness:missing_required_metadata: title, date_or_version"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 0,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    },
+    {
+      "doc_id": "truncated-hostel-doc",
+      "doc_version": "2026-10",
+      "family_id": "truncated-hostel-doc",
+      "source": "b08_truncated_policy.md",
+      "content_hash": "0a62e4706c4baf97c47b96a6b0b7d9d2af083b006fab7b2ca7c52b94833ecc20",
+      "checks": {
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "completeness": {
+          "passed": false,
+          "reason": "truncated_page_count: got 1, expected 4"
+        },
+        "recency": {
+          "passed": false,
+          "reason": "not_executable: upstream quality/completeness check failed"
+        },
+        "uniqueness": {
+          "passed": false,
+          "reason": "skipped: upstream quality/completeness check failed"
+        }
+      },
+      "decision": "quarantine",
+      "superseded": false,
+      "reasons": [
+        "completeness:truncated_page_count: got 1, expected 4"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 0,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    },
+    {
+      "doc_id": "academic-rules",
+      "doc_version": "2021",
+      "family_id": "academic-rules",
+      "source": "b09_academic_rules_2021.md",
+      "content_hash": "b21e406a268d220b21fcfe22a258ccbdf4515d0b6b7e7d68a34134a2773824c2",
+      "checks": {
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": false,
+          "reason": "older_than_active_version:2027 (candidate=2021); routed to archive with superseded=true"
+        },
+        "uniqueness": {
+          "passed": false,
+          "reason": "skipped: recency rejected older version to archive"
+        }
+      },
+      "decision": "archive",
+      "superseded": true,
+      "reasons": [
+        "recency:older_than_active_version:2027 (candidate=2021); routed to archive with superseded=true"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 0,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    },
+    {
+      "doc_id": "campus-network-policy",
+      "doc_version": "2027-01",
+      "family_id": "campus-network-policy",
+      "source": "b10_campus_network_injected.md",
+      "content_hash": "4f92049ba0e4a03a878eb284b972c4c40199c289a187e9baa5c5eb414dd0603d",
+      "checks": {
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "first_version_in_family"
+        },
+        "uniqueness": {
+          "passed": true,
+          "reason": "unique"
+        }
+      },
+      "decision": "index",
+      "superseded": false,
+      "reasons": [
+        "all_checks_passed"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 1,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    },
+    {
+      "doc_id": "library-loan-policy",
+      "doc_version": "2027-01",
+      "family_id": "library-loan-policy",
+      "source": "b11_library_loan_2027.md",
+      "content_hash": "cb7237b2f4e7ece7a7f573e56579527ec908a40af8b137d7f68298206bd22301",
+      "checks": {
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "first_version_in_family"
+        },
+        "uniqueness": {
+          "passed": true,
+          "reason": "unique"
+        }
+      },
+      "decision": "index",
+      "superseded": false,
+      "reasons": [
+        "all_checks_passed"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 1,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    },
+    {
+      "doc_id": "exam-conduct-policy",
+      "doc_version": "2027-01",
+      "family_id": "exam-conduct-policy",
+      "source": "b12_exam_conduct_2027.md",
+      "content_hash": "42b89e7a14387c20d64ce0740a353b66147d6a08b9bde6c298dc45690d6dc3bf",
+      "checks": {
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "first_version_in_family"
+        },
+        "uniqueness": {
+          "passed": true,
+          "reason": "unique"
+        }
+      },
+      "decision": "index",
+      "superseded": false,
+      "reasons": [
+        "all_checks_passed"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 1,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    },
+    {
+      "doc_id": "lab-safety-second-copy",
+      "doc_version": "2026-09",
+      "family_id": "lab-safety-second-copy",
+      "source": "b13_lab_safety_second_copy.md",
+      "content_hash": "10281efcd19ae6adffade14c58d041d5efb9ec38952d0d098b022ca837b31b89",
+      "checks": {
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "first_version_in_family"
+        },
+        "uniqueness": {
+          "passed": false,
+          "reason": "exact_duplicate_of:lab-safety-a@2026-09"
+        }
+      },
+      "decision": "quarantine",
+      "superseded": false,
+      "reasons": [
+        "uniqueness:exact_duplicate_of:lab-safety-a@2026-09"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 0,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: chroma
+  namespace: rahbar
+spec:
+  template:
+    spec:
+      containers:
+        - name: chroma
+          # The former 512Mi limit produced observed OOMKilled events.
+          resources:
+            requests: {cpu: 200m, memory: 512Mi}
+            limits: {cpu: 1000m, memory: 1536Mi}

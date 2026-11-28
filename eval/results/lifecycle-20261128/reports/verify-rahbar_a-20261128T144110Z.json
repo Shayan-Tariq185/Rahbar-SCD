@@ -1,0 +1,191 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run-1795876863-1",
+  "generated_at": "2026-11-28T14:41:10Z",
+  "collection": "rahbar_a",
+  "batch_dir": "/datalake/inbox/rahbar_a-20261128T144053Z",
+  "counters": {
+    "docs_seen": 6,
+    "docs_unchanged": 6,
+    "docs_indexed": 0,
+    "docs_quarantined": 0,
+    "docs_archived": 0,
+    "chunks_seen": 527,
+    "chunks_embedded": 0,
+    "chunks_reused": 527,
+    "chunks_deleted": 0,
+    "doc_check_embeddings": 0,
+    "chunk_embeddings": 0,
+    "total_embeddings": 0
+  },
+  "documents": [
+    {
+      "doc_id": "academic-rules-handbook-jun-2026",
+      "doc_version": "2026-06",
+      "family_id": "academic-rules",
+      "source": "academic-rules-handbook-jun-2026.pdf",
+      "decision": "unchanged_skipped",
+      "checks": {
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "current_version_update"
+        },
+        "uniqueness": {
+          "passed": true,
+          "reason": "unique"
+        }
+      },
+      "reasons": [
+        "unchanged_hash_and_fingerprint"
+      ]
+    },
+    {
+      "doc_id": "student-handbook-jun-2026",
+      "doc_version": "2026-06",
+      "family_id": "student-handbook-jun-2026",
+      "source": "student-handbook-jun-2026.pdf",
+      "decision": "unchanged_skipped",
+      "checks": {
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "current_version_update"
+        },
+        "uniqueness": {
+          "passed": true,
+          "reason": "unique"
+        }
+      },
+      "reasons": [
+        "unchanged_hash_and_fingerprint"
+      ]
+    },
+    {
+      "doc_id": "annual-report-2019-20",
+      "doc_version": "2019-20",
+      "family_id": "annual-report",
+      "source": "annual-report-2019-20.pdf",
+      "decision": "unchanged_skipped",
+      "checks": {
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": false,
+          "reason": "older_than_active_version:2023-24 (candidate=2019-20); routed to archive with superseded=true"
+        },
+        "uniqueness": {
+          "passed": false,
+          "reason": "skipped: recency rejected older version to archive"
+        }
+      },
+      "reasons": [
+        "unchanged_hash_and_fingerprint"
+      ]
+    },
+    {
+      "doc_id": "faculty-entrepreneurship-and-technical-start-ups-policy",
+      "doc_version": "2022-05",
+      "family_id": "faculty-entrepreneurship-and-technical-start-ups-policy",
+      "source": "faculty-entrepreneurship-and-technical-start-ups-policy.pdf",
+      "decision": "unchanged_skipped",
+      "checks": {
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "current_version_update"
+        },
+        "uniqueness": {
+          "passed": true,
+          "reason": "unique"
+        }
+      },
+      "reasons": [
+        "unchanged_hash_and_fingerprint"
+      ]
+    },
+    {
+      "doc_id": "undergraduate-academic-rules-aug-2023",
+      "doc_version": "2023-08",
+      "family_id": "academic-rules",
+      "source": "undergraduate-academic-rules-aug-2023.pdf",
+      "decision": "unchanged_skipped",
+      "checks": {
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": false,
+          "reason": "older_than_active_version:2026-06 (candidate=2023-08); routed to archive with superseded=true"
+        },
+        "uniqueness": {
+          "passed": false,
+          "reason": "skipped: recency rejected older version to archive"
+        }
+      },
+      "reasons": [
+        "unchanged_hash_and_fingerprint"
+      ]
+    },
+    {
+      "doc_id": "annual-report-2023-24",
+      "doc_version": "2023-24",
+      "family_id": "annual-report",
+      "source": "annual-report-2023-24.pdf",
+      "decision": "unchanged_skipped",
+      "checks": {
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "current_version_update"
+        },
+        "uniqueness": {
+          "passed": true,
+          "reason": "unique"
+        }
+      },
+      "reasons": [
+        "unchanged_hash_and_fingerprint"
+      ]
+    }
+  ]
+}

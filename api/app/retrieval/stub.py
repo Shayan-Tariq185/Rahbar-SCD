@@ -5,6 +5,7 @@ Switch to RETRIEVER=chroma in the ConfigMap once your index exists.
 """
 
 from __future__ import annotations
+from typing import Any
 
 from ..schemas import Passage
 
@@ -42,5 +43,8 @@ _PASSAGES = [
 class StubRetriever:
     name = "stub"
 
-    def retrieve(self, question: str, k: int) -> list[Passage]:
+    def get_collection_metadata(self, collection_name: str | None = None) -> dict[str, Any]:
+        return {}
+
+    def retrieve(self, question: str, k: int, fresh: bool = False, strict: bool = False) -> list[Passage]:
         return [p.model_copy() for p in _PASSAGES[:k]]

@@ -1,0 +1,154 @@
+# Additive least-privilege NetworkPolicies for A03 runtime workloads.
+# Preserves A02 default-deny-all and allow-dns-egress.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-api-from-eval
+  namespace: rahbar
+spec:
+  podSelector:
+    matchLabels:
+      app: rahbar-api
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: rahbar-eval
+      ports:
+        - protocol: TCP
+          port: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-api-candidate
+  namespace: rahbar
+spec:
+  podSelector:
+    matchLabels:
+      app: rahbar-api-candidate
+  policyTypes:
+    - Ingress
+    - Egress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: rahbar-eval
+      ports:
+        - protocol: TCP
+          port: 8000
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: rahbar-chroma
+      ports:
+        - protocol: TCP
+          port: 8000
+    - to:
+        - podSelector:
+            matchLabels:
+              app: rahbar-redis
+      ports:
+        - protocol: TCP
+          port: 6379
+    - to:
+        - ipBlock:
+            cidr: 192.168.65.254/32
+      ports:
+        - protocol: TCP
+          port: 11434
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16]
+      ports:
+        - protocol: TCP
+          port: 443
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-chroma-from-candidate
+  namespace: rahbar
+spec:
+  podSelector:
+    matchLabels:
+      app: rahbar-chroma
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: rahbar-api-candidate
+      ports:
+        - protocol: TCP
+          port: 8000
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-redis-from-candidate
+  namespace: rahbar
+spec:
+  podSelector:
+    matchLabels:
+      app: rahbar-redis
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: rahbar-api-candidate
+      ports:
+        - protocol: TCP
+          port: 6379
+---
+# Evaluation/coverage Jobs can call API/candidate + Ollama/hosted judge, never write Chroma/Redis.
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-eval-job
+  namespace: rahbar
+spec:
+  podSelector:
+    matchLabels:
+      app: rahbar-eval
+  policyTypes:
+    - Egress
+  egress:
+    - to:
+        - podSelector:
+            matchLabels:
+              app: rahbar-api
+      ports:
+        - protocol: TCP
+          port: 8000
+    - to:
+        - podSelector:
+            matchLabels:
+              app: rahbar-api-candidate
+      ports:
+        - protocol: TCP
+          port: 8000
+    - to:
+        - ipBlock:
+            cidr: 192.168.65.254/32
+      ports:
+        - protocol: TCP
+          port: 11434
+    - to:
+        - ipBlock:
+            cidr: 0.0.0.0/0
+            except:
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+              - 192.168.0.0/16
+      ports:
+        - protocol: TCP
+          port: 443

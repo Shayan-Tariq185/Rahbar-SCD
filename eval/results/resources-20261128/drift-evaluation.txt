@@ -1,0 +1,157 @@
+# Resource Sampling Report (drift-evaluation)
+# Namespace: rahbar | Duration: 120s | Interval: 10s
+# Limitation: kubectl top reports periodic cAdvisor windowed samples, not exact instantaneous peak RSS.
+
+=== Sample 1 (2026-11-28T15:50:52Z) ===
+POD                              NAME       CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg             api        15m          135Mi           
+api-84bdc9f94d-cpdzt             api        14m          160Mi           
+api-84bdc9f94d-jgfpg             api        15m          123Mi           
+api-candidate-6b88b4cbf8-4wclt   api        91m          70Mi            
+chroma-0                         chroma     6m           1054Mi          
+eval-results-shell               exporter   0m           5Mi             
+redis-7c7cd5794-p82b4            redis      8m           11Mi            
+runtime-shell                    shell      0m           25Mi            
+ui-7f85985784-8vbx2              ui         1m           3Mi             
+
+=== Sample 2 (2026-11-28T15:51:02Z) ===
+POD                              NAME       CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg             api        15m          135Mi           
+api-84bdc9f94d-cpdzt             api        14m          160Mi           
+api-84bdc9f94d-jgfpg             api        15m          123Mi           
+api-candidate-6b88b4cbf8-4wclt   api        91m          70Mi            
+chroma-0                         chroma     6m           1054Mi          
+eval-results-shell               exporter   0m           5Mi             
+redis-7c7cd5794-p82b4            redis      8m           11Mi            
+runtime-shell                    shell      0m           25Mi            
+ui-7f85985784-8vbx2              ui         1m           3Mi             
+
+=== Sample 3 (2026-11-28T15:51:13Z) ===
+POD                              NAME       CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg             api        15m          135Mi           
+api-84bdc9f94d-cpdzt             api        14m          160Mi           
+api-84bdc9f94d-jgfpg             api        15m          123Mi           
+api-candidate-6b88b4cbf8-4wclt   api        91m          70Mi            
+chroma-0                         chroma     6m           1054Mi          
+eval-results-shell               exporter   0m           5Mi             
+redis-7c7cd5794-p82b4            redis      8m           11Mi            
+runtime-shell                    shell      0m           25Mi            
+ui-7f85985784-8vbx2              ui         1m           3Mi             
+
+=== Sample 4 (2026-11-28T15:51:23Z) ===
+POD                              NAME         CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg             api          44m          153Mi           
+api-84bdc9f94d-cpdzt             api          43m          177Mi           
+api-84bdc9f94d-jgfpg             api          44m          136Mi           
+api-candidate-6b88b4cbf8-4wclt   api          8m           70Mi            
+chroma-0                         chroma       27m          1053Mi          
+eval-results-shell               exporter     2m           6Mi             
+rahbar-eval-d4kjl                evaluation   1m           45Mi            
+redis-7c7cd5794-p82b4            redis        20m          11Mi            
+runtime-shell                    shell        0m           25Mi            
+ui-7f85985784-8vbx2              ui           1m           3Mi             
+
+=== Sample 5 (2026-11-28T15:51:33Z) ===
+POD                              NAME         CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg             api          44m          153Mi           
+api-84bdc9f94d-cpdzt             api          43m          177Mi           
+api-84bdc9f94d-jgfpg             api          44m          136Mi           
+api-candidate-6b88b4cbf8-4wclt   api          8m           70Mi            
+chroma-0                         chroma       27m          1053Mi          
+eval-results-shell               exporter     2m           6Mi             
+rahbar-eval-d4kjl                evaluation   1m           45Mi            
+redis-7c7cd5794-p82b4            redis        20m          11Mi            
+runtime-shell                    shell        0m           25Mi            
+ui-7f85985784-8vbx2              ui           1m           3Mi             
+
+=== Sample 6 (2026-11-28T15:51:43Z) ===
+POD                              NAME         CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg             api          44m          153Mi           
+api-84bdc9f94d-cpdzt             api          43m          177Mi           
+api-84bdc9f94d-jgfpg             api          44m          136Mi           
+api-candidate-6b88b4cbf8-4wclt   api          8m           70Mi            
+chroma-0                         chroma       27m          1053Mi          
+eval-results-shell               exporter     2m           6Mi             
+rahbar-eval-d4kjl                evaluation   1m           45Mi            
+redis-7c7cd5794-p82b4            redis        20m          11Mi            
+runtime-shell                    shell        0m           25Mi            
+ui-7f85985784-8vbx2              ui           1m           3Mi             
+
+=== Sample 7 (2026-11-28T15:51:53Z) ===
+POD                              NAME         CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg             api          44m          153Mi           
+api-84bdc9f94d-cpdzt             api          43m          177Mi           
+api-84bdc9f94d-jgfpg             api          44m          136Mi           
+api-candidate-6b88b4cbf8-4wclt   api          8m           70Mi            
+chroma-0                         chroma       27m          1053Mi          
+eval-results-shell               exporter     2m           6Mi             
+rahbar-eval-d4kjl                evaluation   1m           45Mi            
+redis-7c7cd5794-p82b4            redis        20m          11Mi            
+runtime-shell                    shell        0m           25Mi            
+ui-7f85985784-8vbx2              ui           1m           3Mi             
+
+=== Sample 8 (2026-11-28T15:52:04Z) ===
+POD                              NAME         CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg             api          44m          153Mi           
+api-84bdc9f94d-cpdzt             api          43m          177Mi           
+api-84bdc9f94d-jgfpg             api          44m          136Mi           
+api-candidate-6b88b4cbf8-4wclt   api          8m           70Mi            
+chroma-0                         chroma       27m          1053Mi          
+eval-results-shell               exporter     2m           6Mi             
+rahbar-eval-d4kjl                evaluation   1m           45Mi            
+redis-7c7cd5794-p82b4            redis        20m          11Mi            
+runtime-shell                    shell        0m           25Mi            
+ui-7f85985784-8vbx2              ui           1m           3Mi             
+
+=== Sample 9 (2026-11-28T15:52:14Z) ===
+POD                              NAME         CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg             api          41m          168Mi           
+api-84bdc9f94d-cpdzt             api          36m          195Mi           
+api-84bdc9f94d-jgfpg             api          40m          156Mi           
+api-candidate-6b88b4cbf8-4wclt   api          10m          73Mi            
+chroma-0                         chroma       27m          1054Mi          
+eval-results-shell               exporter     0m           6Mi             
+rahbar-eval-d4kjl                evaluation   1m           45Mi            
+redis-7c7cd5794-p82b4            redis        15m          11Mi            
+runtime-shell                    shell        0m           25Mi            
+ui-7f85985784-8vbx2              ui           1m           3Mi             
+
+=== Sample 10 (2026-11-28T15:52:24Z) ===
+POD                              NAME         CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg             api          41m          168Mi           
+api-84bdc9f94d-cpdzt             api          36m          195Mi           
+api-84bdc9f94d-jgfpg             api          40m          156Mi           
+api-candidate-6b88b4cbf8-4wclt   api          10m          73Mi            
+chroma-0                         chroma       27m          1054Mi          
+eval-results-shell               exporter     0m           6Mi             
+rahbar-eval-d4kjl                evaluation   1m           45Mi            
+redis-7c7cd5794-p82b4            redis        15m          11Mi            
+runtime-shell                    shell        0m           25Mi            
+ui-7f85985784-8vbx2              ui           1m           3Mi             
+
+=== Sample 11 (2026-11-28T15:52:34Z) ===
+POD                              NAME         CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg             api          41m          168Mi           
+api-84bdc9f94d-cpdzt             api          36m          195Mi           
+api-84bdc9f94d-jgfpg             api          40m          156Mi           
+api-candidate-6b88b4cbf8-4wclt   api          10m          73Mi            
+chroma-0                         chroma       27m          1054Mi          
+eval-results-shell               exporter     0m           6Mi             
+rahbar-eval-d4kjl                evaluation   1m           45Mi            
+redis-7c7cd5794-p82b4            redis        15m          11Mi            
+runtime-shell                    shell        0m           25Mi            
+ui-7f85985784-8vbx2              ui           1m           3Mi             
+
+=== Sample 12 (2026-11-28T15:52:45Z) ===
+POD                              NAME         CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg             api          41m          168Mi           
+api-84bdc9f94d-cpdzt             api          36m          195Mi           
+api-84bdc9f94d-jgfpg             api          40m          156Mi           
+api-candidate-6b88b4cbf8-4wclt   api          10m          73Mi            
+chroma-0                         chroma       27m          1054Mi          
+eval-results-shell               exporter     0m           6Mi             
+rahbar-eval-d4kjl                evaluation   1m           45Mi            
+redis-7c7cd5794-p82b4            redis        15m          11Mi            
+runtime-shell                    shell        0m           25Mi            
+ui-7f85985784-8vbx2              ui           1m           3Mi             
+

@@ -1,0 +1,76 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: rahbar-eval
+  namespace: rahbar
+  annotations:
+    rahbar/run-id: eval-20261128t151516z-a0b6d1c6
+    rahbar/resources: provisional; measure workload before final report
+spec:
+  backoffLimit: 0
+  activeDeadlineSeconds: 7200
+  template:
+    metadata:
+      labels:
+        app: rahbar-eval
+    spec:
+      restartPolicy: Never
+      serviceAccountName: eval-sa
+      automountServiceAccountToken: false
+      enableServiceLinks: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+      - name: evaluation
+        image: rahbar-eval:52989146143d-m2
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: EVAL_RUN_ID
+          value: eval-20261128t151516z-a0b6d1c6
+        - name: EVAL_MODE
+          value: suite
+        - name: EVAL_REPEAT
+          value: '2'
+        - name: EVAL_BASELINE_MODE
+          value: 'true'
+        - name: RAGOPS_EVAL_IMAGE
+          value: rahbar-eval:52989146143d-m2
+        - name: TARGET_API
+          value: http://api-candidate.rahbar.svc.cluster.local:8000
+        - name: OLLAMA_URL
+          value: http://host.docker.internal:11434
+        - name: JUDGE_MODEL
+          value: llama3.2:3b
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop:
+            - ALL
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 1000m
+            memory: 512Mi
+        volumeMounts:
+        - name: results
+          mountPath: /results
+        - name: tmp
+          mountPath: /tmp
+        - name: gate
+          mountPath: /config
+          readOnly: true
+      volumes:
+      - name: results
+        persistentVolumeClaim:
+          claimName: rahbar-eval-results-pvc
+      - name: tmp
+        emptyDir: {}
+      - name: gate
+        configMap:
+          name: release-gate

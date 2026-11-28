@@ -158,7 +158,7 @@ def _cached_pdf(path: Path) -> list[Page]:
     if not cache_dir:
         return _extract_pdf(path)
     stat = path.stat()
-    key = hashlib.sha1(f"{path.name}:{stat.st_size}:{int(stat.st_mtime)}".encode()).hexdigest()[:16]
+    key = hashlib.sha1(f"visible-v2:{path.name}:{stat.st_size}:{int(stat.st_mtime)}".encode()).hexdigest()[:16]
     cached = Path(cache_dir) / f"{path.stem}-{key}.json"
     if cached.exists():
         return [Page(**p) for p in json.loads(cached.read_text(encoding="utf-8"))]
@@ -174,11 +174,15 @@ def _extract_pdf(path: Path) -> list[Page]:
     pages: list[Page] = []
     with pdfplumber.open(str(path)) as pdf:
         for number, page in enumerate(pdf.pages, start=1):
-            text = _page_text(page)
+            # These handbooks retain text outside the physical page bounds.
+            # Extract only visible objects to avoid copying the facing page's
+            # clauses into the wrong page and corrupting citation metadata.
+            text = _page_text(page.crop(page.bbox))
             if len(re.sub(r"\s", "", text)) < MIN_TEXT_CHARS:
                 pages.append(Page(path.name, number, ocr_page(str(path), number), ocr=True))
             else:
                 pages.append(Page(path.name, number, text))
+            page.close()
     return pages
 
 

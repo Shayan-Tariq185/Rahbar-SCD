@@ -16,6 +16,7 @@ EOF
 TARGET=live; OUT=""; BASELINE=""; BASELINE_MODE=0; USE_CLUSTER_GATE=0
 GATE=config/gate.yaml; GATE_EXPLICIT=0; GOLDEN=eval/golden.v1.jsonl; PAIRS=eval/embedding_pairs.jsonl
 LABELS=eval/human_faithfulness.jsonl; INVENTORY=config/corpus-inventory.json
+JOB_OVERRIDE=""; GOLDEN_VERSION=v1
 IMAGE="${RAGOPS_EVAL_IMAGE:-}"; REPEAT=2; CONTEXT=rahbar-a03; TIMEOUT=7200
 EMBEDDING_URL="${OLLAMA_URL:-http://host.minikube.internal:11434}"
 MODE="${RAGOPS_JOB_MODE:-suite}"; LIVE=""; COVERAGE_CONFIG=""
@@ -35,6 +36,8 @@ while [[ $# -gt 0 ]]; do
     --labels) LABELS="$2"; shift 2 ;;
     --inventory) INVENTORY="$2"; shift 2 ;;
     --image) IMAGE="$2"; shift 2 ;;
+    --job-name) JOB_OVERRIDE="$2"; shift 2 ;;
+    --golden-version) GOLDEN_VERSION="$2"; shift 2 ;;
     --repeat) REPEAT="$2"; shift 2 ;;
     --context) CONTEXT="$2"; shift 2 ;;
     --embedding-url) EMBEDDING_URL="$2"; shift 2 ;;
@@ -62,13 +65,15 @@ fi
 [[ "$(kubectl config current-context)" == "$CONTEXT" ]] || { echo "Refusing unexpected context; select the intended local cluster explicitly" >&2; exit 2; }
 # Both modes share the exporter and results PVC. Do not replace those inputs while
 # another evaluation/coverage Job is active, even when its fixed name differs.
-if ! kubectl get jobs -n rahbar -o json | "$PY" -c 'import json,sys; jobs=json.load(sys.stdin)["items"]; active=[j["metadata"]["name"] for j in jobs if j["metadata"]["name"] in {"rahbar-eval","rahbar-coverage"} and not any(c["type"] in {"Complete","Failed"} and c["status"]=="True" for c in j.get("status",{}).get("conditions",[]))]; print("Existing active evaluation Jobs:", active); sys.exit(1 if active else 0)'; then
+if ! kubectl get jobs -n rahbar -o json | "$PY" -c 'import json,sys; jobs=json.load(sys.stdin)["items"]; active=[j["metadata"]["name"] for j in jobs if (j["metadata"].get("labels",{}).get("app")=="rahbar-eval" or j.get("spec",{}).get("template",{}).get("metadata",{}).get("labels",{}).get("app")=="rahbar-eval") and not any(c["type"] in {"Complete","Failed"} and c["status"]=="True" for c in j.get("status",{}).get("conditions",[]))]; print("Existing active evaluation Jobs:", active); sys.exit(1 if active else 0)'; then
   echo 'Wait for the existing evaluation/coverage Job before changing shared evaluation resources' >&2
   exit 2
 fi
 run() { { printf '+'; printf ' %q' "$@"; printf '\n'; } >&2; "$@"; }
 JOB=rahbar-eval; MANIFEST=k8s/eval-job.yaml
 if [[ "$MODE" == coverage ]]; then JOB=rahbar-coverage; MANIFEST=k8s/coverage-job.yaml; fi
+if [[ -n "$JOB_OVERRIDE" ]]; then JOB="$JOB_OVERRIDE"; fi
+[[ "$JOB" =~ ^[a-z0-9][a-z0-9-]*[a-z0-9]$ && ${#JOB} -le 63 && "$GOLDEN_VERSION" =~ ^v[12]$ ]] || exit 2
 mkdir -p "$OUT"
 RUN_ID="$("$PY" -c 'from ragops.evalsuite.io import run_id; print(run_id("eval").lower())')"
 HOST_OUT="$OUT/$RUN_ID-host"
@@ -80,7 +85,7 @@ if kubectl get job "$JOB" -n rahbar -o json > "$HOST_OUT/predecessor-job.json" 2
   run kubectl logs "job/$JOB" -n rahbar > "$HOST_OUT/predecessor-job.log"
   run kubectl delete job "$JOB" -n rahbar --wait=true
 fi
-RENDER=("$PY" scripts/eval_render_job.py --image "$IMAGE" --run-id "$RUN_ID" --target "$TARGET" --mode "$MODE" --repeat "$REPEAT" --embedding-url "$EMBEDDING_URL")
+RENDER=("$PY" scripts/eval_render_job.py --image "$IMAGE" --run-id "$RUN_ID" --target "$TARGET" --mode "$MODE" --job-name "$JOB" --golden-version "$GOLDEN_VERSION" --repeat "$REPEAT" --embedding-url "$EMBEDDING_URL")
 if [[ "$BASELINE_MODE" -eq 1 ]]; then RENDER+=(--baseline-mode); fi
 run "${RENDER[@]}"
 run kubectl apply -f k8s/ragops-eval/pvc.yaml -f k8s/ragops-eval/serviceaccount.yaml -f k8s/ragops-eval/networkpolicy.yaml

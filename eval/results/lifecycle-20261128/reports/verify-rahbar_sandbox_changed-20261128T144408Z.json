@@ -1,0 +1,86 @@
+{
+  "schema_version": "1.0",
+  "run_id": "run-1795877042-1",
+  "generated_at": "2026-11-28T14:44:08Z",
+  "collection": "rahbar_sandbox_changed",
+  "batch_dir": "/datalake/inbox/rahbar_sandbox_changed-20261128T144358Z",
+  "counters": {
+    "docs_seen": 2,
+    "docs_unchanged": 1,
+    "docs_indexed": 1,
+    "docs_quarantined": 0,
+    "docs_archived": 0,
+    "chunks_seen": 3,
+    "chunks_embedded": 1,
+    "chunks_reused": 2,
+    "chunks_deleted": 0,
+    "doc_check_embeddings": 1,
+    "chunk_embeddings": 1,
+    "total_embeddings": 2
+  },
+  "documents": [
+    {
+      "doc_id": "sandbox-alpha",
+      "doc_version": "2026-01",
+      "family_id": "sandbox-alpha",
+      "source": "sandbox_alpha.md",
+      "content_hash": "42cbbd169d39a45ec347da097b908accf9c2094d02e87d1a6b2261eb75e32345",
+      "checks": {
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "current_version_update"
+        },
+        "uniqueness": {
+          "passed": true,
+          "reason": "unique"
+        }
+      },
+      "decision": "index",
+      "superseded": false,
+      "reasons": [
+        "all_checks_passed"
+      ],
+      "supersedes_versions": [],
+      "doc_check_embeddings": 1,
+      "notes": [
+        "Truncation detection is heuristic (markers, empty multi-page ratio, expected_pages); missing trailing punctuation alone is not treated as truncation."
+      ]
+    },
+    {
+      "doc_id": "sandbox-beta",
+      "doc_version": "2026-01",
+      "family_id": "sandbox-beta",
+      "source": "sandbox_beta.md",
+      "decision": "unchanged_skipped",
+      "checks": {
+        "completeness": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "quality": {
+          "passed": true,
+          "reason": "ok"
+        },
+        "recency": {
+          "passed": true,
+          "reason": "first_version_in_family"
+        },
+        "uniqueness": {
+          "passed": true,
+          "reason": "unique"
+        }
+      },
+      "reasons": [
+        "unchanged_hash_and_fingerprint"
+      ]
+    }
+  ]
+}

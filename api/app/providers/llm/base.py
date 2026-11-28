@@ -10,6 +10,6 @@ from ...schemas import Answer, Passage
 class LLMProvider(Protocol):
     name: str
 
-    def generate(self, question: str, passages: list[Passage]) -> Answer:
+    def generate(self, question: str, passages: list[Passage], seed: int | None = None) -> Answer:
         """Answer the question from the passages, as an `Answer`."""
         ...

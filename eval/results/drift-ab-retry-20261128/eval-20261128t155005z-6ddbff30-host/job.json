@@ -1,0 +1,188 @@
+{
+    "apiVersion": "batch/v1",
+    "kind": "Job",
+    "metadata": {
+        "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"batch/v1\",\"kind\":\"Job\",\"metadata\":{\"annotations\":{\"rahbar/resources\":\"provisional; measure workload before final report\",\"rahbar/run-id\":\"eval-20261128t155005z-6ddbff30\"},\"name\":\"rahbar-eval\",\"namespace\":\"rahbar\"},\"spec\":{\"activeDeadlineSeconds\":7200,\"backoffLimit\":0,\"template\":{\"metadata\":{\"labels\":{\"app\":\"rahbar-eval\"}},\"spec\":{\"automountServiceAccountToken\":false,\"containers\":[{\"env\":[{\"name\":\"EVAL_RUN_ID\",\"value\":\"eval-20261128t155005z-6ddbff30\"},{\"name\":\"EVAL_MODE\",\"value\":\"suite\"},{\"name\":\"EVAL_REPEAT\",\"value\":\"2\"},{\"name\":\"EVAL_BASELINE_MODE\",\"value\":\"true\"},{\"name\":\"RAGOPS_EVAL_IMAGE\",\"value\":\"rahbar-eval:52989146143d-m2\"},{\"name\":\"TARGET_API\",\"value\":\"http://api-candidate.rahbar.svc.cluster.local:8000\"},{\"name\":\"OLLAMA_URL\",\"value\":\"http://host.docker.internal:11434\"},{\"name\":\"JUDGE_MODEL\",\"value\":\"llama3.2:3b\"}],\"image\":\"rahbar-eval:52989146143d-m2\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"evaluation\",\"resources\":{\"limits\":{\"cpu\":\"1000m\",\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"128Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"readOnlyRootFilesystem\":true},\"volumeMounts\":[{\"mountPath\":\"/results\",\"name\":\"results\"},{\"mountPath\":\"/tmp\",\"name\":\"tmp\"},{\"mountPath\":\"/config\",\"name\":\"gate\",\"readOnly\":true}]}],\"enableServiceLinks\":false,\"restartPolicy\":\"Never\",\"securityContext\":{\"fsGroup\":10001,\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"serviceAccountName\":\"eval-sa\",\"volumes\":[{\"name\":\"results\",\"persistentVolumeClaim\":{\"claimName\":\"rahbar-eval-results-pvc\"}},{\"emptyDir\":{},\"name\":\"tmp\"},{\"configMap\":{\"name\":\"release-gate\"},\"name\":\"gate\"}]}}}}\n",
+            "rahbar/resources": "provisional; measure workload before final report",
+            "rahbar/run-id": "eval-20261128t155005z-6ddbff30"
+        },
+        "creationTimestamp": "2026-11-28T15:50:08Z",
+        "generation": 1,
+        "labels": {
+            "app": "rahbar-eval",
+            "batch.kubernetes.io/controller-uid": "f5fc0ce9-986c-4928-9f80-67de925437ca",
+            "batch.kubernetes.io/job-name": "rahbar-eval",
+            "controller-uid": "f5fc0ce9-986c-4928-9f80-67de925437ca",
+            "job-name": "rahbar-eval"
+        },
+        "name": "rahbar-eval",
+        "namespace": "rahbar",
+        "resourceVersion": "28355",
+        "uid": "f5fc0ce9-986c-4928-9f80-67de925437ca"
+    },
+    "spec": {
+        "activeDeadlineSeconds": 7200,
+        "backoffLimit": 0,
+        "completionMode": "NonIndexed",
+        "completions": 1,
+        "manualSelector": false,
+        "parallelism": 1,
+        "podReplacementPolicy": "TerminatingOrFailed",
+        "selector": {
+            "matchLabels": {
+                "batch.kubernetes.io/controller-uid": "f5fc0ce9-986c-4928-9f80-67de925437ca"
+            }
+        },
+        "suspend": false,
+        "template": {
+            "metadata": {
+                "labels": {
+                    "app": "rahbar-eval",
+                    "batch.kubernetes.io/controller-uid": "f5fc0ce9-986c-4928-9f80-67de925437ca",
+                    "batch.kubernetes.io/job-name": "rahbar-eval",
+                    "controller-uid": "f5fc0ce9-986c-4928-9f80-67de925437ca",
+                    "job-name": "rahbar-eval"
+                }
+            },
+            "spec": {
+                "automountServiceAccountToken": false,
+                "containers": [
+                    {
+                        "env": [
+                            {
+                                "name": "EVAL_RUN_ID",
+                                "value": "eval-20261128t155005z-6ddbff30"
+                            },
+                            {
+                                "name": "EVAL_MODE",
+                                "value": "suite"
+                            },
+                            {
+                                "name": "EVAL_REPEAT",
+                                "value": "2"
+                            },
+                            {
+                                "name": "EVAL_BASELINE_MODE",
+                                "value": "true"
+                            },
+                            {
+                                "name": "RAGOPS_EVAL_IMAGE",
+                                "value": "rahbar-eval:52989146143d-m2"
+                            },
+                            {
+                                "name": "TARGET_API",
+                                "value": "http://api-candidate.rahbar.svc.cluster.local:8000"
+                            },
+                            {
+                                "name": "OLLAMA_URL",
+                                "value": "http://host.docker.internal:11434"
+                            },
+                            {
+                                "name": "JUDGE_MODEL",
+                                "value": "llama3.2:3b"
+                            }
+                        ],
+                        "image": "rahbar-eval:52989146143d-m2",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "evaluation",
+                        "resources": {
+                            "limits": {
+                                "cpu": "1",
+                                "memory": "512Mi"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "allowPrivilegeEscalation": false,
+                            "capabilities": {
+                                "drop": [
+                                    "ALL"
+                                ]
+                            },
+                            "readOnlyRootFilesystem": true
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/results",
+                                "name": "results"
+                            },
+                            {
+                                "mountPath": "/tmp",
+                                "name": "tmp"
+                            },
+                            {
+                                "mountPath": "/config",
+                                "name": "gate",
+                                "readOnly": true
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": false,
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {
+                    "fsGroup": 10001,
+                    "runAsGroup": 10001,
+                    "runAsNonRoot": true,
+                    "runAsUser": 10001
+                },
+                "serviceAccount": "eval-sa",
+                "serviceAccountName": "eval-sa",
+                "terminationGracePeriodSeconds": 30,
+                "volumes": [
+                    {
+                        "name": "results",
+                        "persistentVolumeClaim": {
+                            "claimName": "rahbar-eval-results-pvc"
+                        }
+                    },
+                    {
+                        "emptyDir": {},
+                        "name": "tmp"
+                    },
+                    {
+                        "configMap": {
+                            "defaultMode": 420,
+                            "name": "release-gate"
+                        },
+                        "name": "gate"
+                    }
+                ]
+            }
+        }
+    },
+    "status": {
+        "completionTime": "2026-11-28T16:05:39Z",
+        "conditions": [
+            {
+                "lastProbeTime": "2026-11-28T16:05:39Z",
+                "lastTransitionTime": "2026-11-28T16:05:39Z",
+                "message": "Reached expected number of succeeded pods",
+                "reason": "CompletionsReached",
+                "status": "True",
+                "type": "SuccessCriteriaMet"
+            },
+            {
+                "lastProbeTime": "2026-11-28T16:05:39Z",
+                "lastTransitionTime": "2026-11-28T16:05:39Z",
+                "message": "Reached expected number of succeeded pods",
+                "reason": "CompletionsReached",
+                "status": "True",
+                "type": "Complete"
+            }
+        ],
+        "ready": 0,
+        "startTime": "2026-11-28T15:50:08Z",
+        "succeeded": 1,
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+    }
+}

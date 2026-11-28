@@ -1,0 +1,175 @@
+{
+    "apiVersion": "batch/v1",
+    "kind": "Job",
+    "metadata": {
+        "annotations": {
+            "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"batch/v1\",\"kind\":\"Job\",\"metadata\":{\"annotations\":{\"rahbar/resources\":\"provisional; measure workload before final report\",\"rahbar/run-id\":\"eval-20261128t171041z-a30234b6\"},\"labels\":{\"app\":\"rahbar-eval\"},\"name\":\"rahbar-coverage-before\",\"namespace\":\"rahbar\"},\"spec\":{\"activeDeadlineSeconds\":7200,\"backoffLimit\":0,\"template\":{\"metadata\":{\"labels\":{\"app\":\"rahbar-eval\"}},\"spec\":{\"automountServiceAccountToken\":false,\"containers\":[{\"env\":[{\"name\":\"EVAL_RUN_ID\",\"value\":\"eval-20261128t171041z-a30234b6\"},{\"name\":\"EVAL_MODE\",\"value\":\"coverage\"},{\"name\":\"EVAL_REPEAT\",\"value\":\"2\"},{\"name\":\"EVAL_BASELINE_MODE\",\"value\":\"false\"},{\"name\":\"RAGOPS_EVAL_IMAGE\",\"value\":\"rahbar-eval:52989146143d-m2\"},{\"name\":\"EVAL_GOLDEN_VERSION\",\"value\":\"v1\"},{\"name\":\"TARGET_API\",\"value\":\"http://api.rahbar.svc.cluster.local:8000\"},{\"name\":\"OLLAMA_URL\",\"value\":\"http://host.docker.internal:11434\"},{\"name\":\"JUDGE_MODEL\",\"value\":\"llama3.2:3b\"}],\"image\":\"rahbar-eval:52989146143d-m2\",\"imagePullPolicy\":\"IfNotPresent\",\"name\":\"evaluation\",\"resources\":{\"limits\":{\"cpu\":\"1000m\",\"memory\":\"512Mi\"},\"requests\":{\"cpu\":\"100m\",\"memory\":\"128Mi\"}},\"securityContext\":{\"allowPrivilegeEscalation\":false,\"capabilities\":{\"drop\":[\"ALL\"]},\"readOnlyRootFilesystem\":true},\"volumeMounts\":[{\"mountPath\":\"/results\",\"name\":\"results\"},{\"mountPath\":\"/tmp\",\"name\":\"tmp\"}]}],\"enableServiceLinks\":false,\"restartPolicy\":\"Never\",\"securityContext\":{\"fsGroup\":10001,\"runAsGroup\":10001,\"runAsNonRoot\":true,\"runAsUser\":10001},\"serviceAccountName\":\"eval-sa\",\"volumes\":[{\"name\":\"results\",\"persistentVolumeClaim\":{\"claimName\":\"rahbar-eval-results-pvc\"}},{\"emptyDir\":{},\"name\":\"tmp\"}]}}}}\n",
+            "rahbar/resources": "provisional; measure workload before final report",
+            "rahbar/run-id": "eval-20261128t171041z-a30234b6"
+        },
+        "creationTimestamp": "2026-11-28T17:10:46Z",
+        "generation": 1,
+        "labels": {
+            "app": "rahbar-eval"
+        },
+        "name": "rahbar-coverage-before",
+        "namespace": "rahbar",
+        "resourceVersion": "32609",
+        "uid": "dcc34673-71b0-4b4d-8f93-320cb89ac200"
+    },
+    "spec": {
+        "activeDeadlineSeconds": 7200,
+        "backoffLimit": 0,
+        "completionMode": "NonIndexed",
+        "completions": 1,
+        "manualSelector": false,
+        "parallelism": 1,
+        "podReplacementPolicy": "TerminatingOrFailed",
+        "selector": {
+            "matchLabels": {
+                "batch.kubernetes.io/controller-uid": "dcc34673-71b0-4b4d-8f93-320cb89ac200"
+            }
+        },
+        "suspend": false,
+        "template": {
+            "metadata": {
+                "labels": {
+                    "app": "rahbar-eval",
+                    "batch.kubernetes.io/controller-uid": "dcc34673-71b0-4b4d-8f93-320cb89ac200",
+                    "batch.kubernetes.io/job-name": "rahbar-coverage-before",
+                    "controller-uid": "dcc34673-71b0-4b4d-8f93-320cb89ac200",
+                    "job-name": "rahbar-coverage-before"
+                }
+            },
+            "spec": {
+                "automountServiceAccountToken": false,
+                "containers": [
+                    {
+                        "env": [
+                            {
+                                "name": "EVAL_RUN_ID",
+                                "value": "eval-20261128t171041z-a30234b6"
+                            },
+                            {
+                                "name": "EVAL_MODE",
+                                "value": "coverage"
+                            },
+                            {
+                                "name": "EVAL_REPEAT",
+                                "value": "2"
+                            },
+                            {
+                                "name": "EVAL_BASELINE_MODE",
+                                "value": "false"
+                            },
+                            {
+                                "name": "RAGOPS_EVAL_IMAGE",
+                                "value": "rahbar-eval:52989146143d-m2"
+                            },
+                            {
+                                "name": "EVAL_GOLDEN_VERSION",
+                                "value": "v1"
+                            },
+                            {
+                                "name": "TARGET_API",
+                                "value": "http://api.rahbar.svc.cluster.local:8000"
+                            },
+                            {
+                                "name": "OLLAMA_URL",
+                                "value": "http://host.docker.internal:11434"
+                            },
+                            {
+                                "name": "JUDGE_MODEL",
+                                "value": "llama3.2:3b"
+                            }
+                        ],
+                        "image": "rahbar-eval:52989146143d-m2",
+                        "imagePullPolicy": "IfNotPresent",
+                        "name": "evaluation",
+                        "resources": {
+                            "limits": {
+                                "cpu": "1",
+                                "memory": "512Mi"
+                            },
+                            "requests": {
+                                "cpu": "100m",
+                                "memory": "128Mi"
+                            }
+                        },
+                        "securityContext": {
+                            "allowPrivilegeEscalation": false,
+                            "capabilities": {
+                                "drop": [
+                                    "ALL"
+                                ]
+                            },
+                            "readOnlyRootFilesystem": true
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "terminationMessagePolicy": "File",
+                        "volumeMounts": [
+                            {
+                                "mountPath": "/results",
+                                "name": "results"
+                            },
+                            {
+                                "mountPath": "/tmp",
+                                "name": "tmp"
+                            }
+                        ]
+                    }
+                ],
+                "dnsPolicy": "ClusterFirst",
+                "enableServiceLinks": false,
+                "restartPolicy": "Never",
+                "schedulerName": "default-scheduler",
+                "securityContext": {
+                    "fsGroup": 10001,
+                    "runAsGroup": 10001,
+                    "runAsNonRoot": true,
+                    "runAsUser": 10001
+                },
+                "serviceAccount": "eval-sa",
+                "serviceAccountName": "eval-sa",
+                "terminationGracePeriodSeconds": 30,
+                "volumes": [
+                    {
+                        "name": "results",
+                        "persistentVolumeClaim": {
+                            "claimName": "rahbar-eval-results-pvc"
+                        }
+                    },
+                    {
+                        "emptyDir": {},
+                        "name": "tmp"
+                    }
+                ]
+            }
+        }
+    },
+    "status": {
+        "conditions": [
+            {
+                "lastProbeTime": "2026-11-28T17:11:01Z",
+                "lastTransitionTime": "2026-11-28T17:11:01Z",
+                "message": "Job has reached the specified backoff limit",
+                "reason": "BackoffLimitExceeded",
+                "status": "True",
+                "type": "FailureTarget"
+            },
+            {
+                "lastProbeTime": "2026-11-28T17:11:01Z",
+                "lastTransitionTime": "2026-11-28T17:11:01Z",
+                "message": "Job has reached the specified backoff limit",
+                "reason": "BackoffLimitExceeded",
+                "status": "True",
+                "type": "Failed"
+            }
+        ],
+        "failed": 1,
+        "ready": 0,
+        "startTime": "2026-11-28T17:10:46Z",
+        "terminating": 0,
+        "uncountedTerminatedPods": {}
+    }
+}

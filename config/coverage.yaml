@@ -1,9 +1,9 @@
 schema_version: '1.0'
 frozen: false
-embedding_url: http://host.minikube.internal:11434
+embedding_url: http://host.docker.internal:11434
 embedding:
   model: nomic-embed-text
-  digest: null
+  digest: 0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f
   dimension: 768
 similarity_cutoff: 0.75
 coverage_floor: 0.85

@@ -1,0 +1,1253 @@
+[
+  {
+    "job": "ragops-count-1795877054-23632",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "count",
+      "--collection",
+      "rahbar_sandbox_changed",
+      "--doc-id",
+      "sandbox-alpha"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:44:26Z",
+        "lastTransitionTime": "2026-11-28T14:44:26Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:44:26Z",
+        "lastTransitionTime": "2026-11-28T14:44:26Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "collection": "rahbar_sandbox_changed",
+      "doc_id": "sandbox-alpha",
+      "chroma_chunks": 2,
+      "state_records": [
+        {
+          "doc_version": "2026-01",
+          "status": "active",
+          "superseded": false,
+          "chunks": 2
+        }
+      ]
+    }
+  },
+  {
+    "job": "ragops-count-1795877066-23893",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "count",
+      "--collection",
+      "rahbar_sandbox_changed",
+      "--doc-id",
+      "sandbox-beta"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:44:37Z",
+        "lastTransitionTime": "2026-11-28T14:44:37Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:44:37Z",
+        "lastTransitionTime": "2026-11-28T14:44:37Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "collection": "rahbar_sandbox_changed",
+      "doc_id": "sandbox-beta",
+      "chroma_chunks": 1,
+      "state_records": [
+        {
+          "doc_version": "2026-01",
+          "status": "active",
+          "superseded": false,
+          "chunks": 1
+        }
+      ]
+    }
+  },
+  {
+    "job": "ragops-count-1795877463-26318",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "count",
+      "--collection",
+      "rahbar_sandbox_deleted",
+      "--doc-id",
+      "sandbox-alpha"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:51:10Z",
+        "lastTransitionTime": "2026-11-28T14:51:10Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:51:10Z",
+        "lastTransitionTime": "2026-11-28T14:51:10Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "collection": "rahbar_sandbox_deleted",
+      "doc_id": "sandbox-alpha",
+      "chroma_chunks": 1,
+      "state_records": [
+        {
+          "doc_version": "2026-01",
+          "status": "active",
+          "superseded": false,
+          "chunks": 1
+        }
+      ]
+    }
+  },
+  {
+    "job": "ragops-count-1795877478-26565",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "count",
+      "--collection",
+      "rahbar_sandbox_deleted",
+      "--doc-id",
+      "sandbox-alpha"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:51:25Z",
+        "lastTransitionTime": "2026-11-28T14:51:25Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:51:25Z",
+        "lastTransitionTime": "2026-11-28T14:51:25Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "collection": "rahbar_sandbox_deleted",
+      "doc_id": "sandbox-alpha",
+      "chroma_chunks": 0,
+      "state_records": [
+        {
+          "doc_version": "2026-01",
+          "status": "deleted",
+          "superseded": true,
+          "chunks": 0
+        }
+      ]
+    }
+  },
+  {
+    "job": "ragops-count-1795877485-26688",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "count",
+      "--collection",
+      "rahbar_sandbox_deleted",
+      "--doc-id",
+      "sandbox-beta"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:51:32Z",
+        "lastTransitionTime": "2026-11-28T14:51:32Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:51:32Z",
+        "lastTransitionTime": "2026-11-28T14:51:32Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "collection": "rahbar_sandbox_deleted",
+      "doc_id": "sandbox-beta",
+      "chroma_chunks": 1,
+      "state_records": [
+        {
+          "doc_version": "2026-01",
+          "status": "active",
+          "superseded": false,
+          "chunks": 1
+        }
+      ]
+    }
+  },
+  {
+    "job": "ragops-ingest-1795877010-22645",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "run",
+      "--collection",
+      "rahbar_sandbox_changed",
+      "--batch-dir",
+      "/datalake/inbox/rahbar_sandbox_changed-20261128T144329Z"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:43:45Z",
+        "lastTransitionTime": "2026-11-28T14:43:45Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:43:45Z",
+        "lastTransitionTime": "2026-11-28T14:43:45Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "ts": "2026-11-28T14:43:41Z",
+      "logger": "ragops.ingest",
+      "msg": "ingest_completed",
+      "run_id": "run-1795877014-1",
+      "collection": "rahbar_sandbox_changed",
+      "committed_revision": 1,
+      "embed_model": "nomic-embed-text",
+      "embed_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+      "dimension": 768,
+      "pipeline_fingerprint": "39ec2961a01623cc69381a5eaf4de689e7e008d1937449fac538b649803669e0",
+      "counters": {
+        "docs_seen": 2,
+        "docs_unchanged": 0,
+        "docs_indexed": 2,
+        "docs_quarantined": 0,
+        "docs_archived": 0,
+        "chunks_seen": 2,
+        "chunks_embedded": 2,
+        "chunks_reused": 0,
+        "chunks_deleted": 0,
+        "doc_check_embeddings": 2,
+        "chunk_embeddings": 2,
+        "total_embeddings": 4
+      },
+      "report_json": "/results/verify-rahbar_sandbox_changed-20261128T144341Z.json",
+      "report_md": "/results/verify-rahbar_sandbox_changed-20261128T144341Z.md"
+    }
+  },
+  {
+    "job": "ragops-ingest-1795877039-23240",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "run",
+      "--collection",
+      "rahbar_sandbox_changed",
+      "--batch-dir",
+      "/datalake/inbox/rahbar_sandbox_changed-20261128T144358Z"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:44:11Z",
+        "lastTransitionTime": "2026-11-28T14:44:11Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:44:11Z",
+        "lastTransitionTime": "2026-11-28T14:44:11Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "ts": "2026-11-28T14:44:08Z",
+      "logger": "ragops.ingest",
+      "msg": "ingest_completed",
+      "run_id": "run-1795877042-1",
+      "collection": "rahbar_sandbox_changed",
+      "committed_revision": 2,
+      "embed_model": "nomic-embed-text",
+      "embed_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+      "dimension": 768,
+      "pipeline_fingerprint": "39ec2961a01623cc69381a5eaf4de689e7e008d1937449fac538b649803669e0",
+      "counters": {
+        "docs_seen": 2,
+        "docs_unchanged": 1,
+        "docs_indexed": 1,
+        "docs_quarantined": 0,
+        "docs_archived": 0,
+        "chunks_seen": 3,
+        "chunks_embedded": 1,
+        "chunks_reused": 2,
+        "chunks_deleted": 0,
+        "doc_check_embeddings": 1,
+        "chunk_embeddings": 1,
+        "total_embeddings": 2
+      },
+      "report_json": "/results/verify-rahbar_sandbox_changed-20261128T144408Z.json",
+      "report_md": "/results/verify-rahbar_sandbox_changed-20261128T144408Z.md"
+    }
+  },
+  {
+    "job": "ragops-ingest-1795877446-26027",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "run",
+      "--collection",
+      "rahbar_sandbox_deleted",
+      "--batch-dir",
+      "/datalake/inbox/rahbar_sandbox_deleted-20261128T145045Z"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:50:54Z",
+        "lastTransitionTime": "2026-11-28T14:50:54Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:50:54Z",
+        "lastTransitionTime": "2026-11-28T14:50:54Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "ts": "2026-11-28T14:50:51Z",
+      "logger": "ragops.ingest",
+      "msg": "ingest_completed",
+      "run_id": "run-1795877447-1",
+      "collection": "rahbar_sandbox_deleted",
+      "committed_revision": 1,
+      "embed_model": "nomic-embed-text",
+      "embed_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+      "dimension": 768,
+      "pipeline_fingerprint": "39ec2961a01623cc69381a5eaf4de689e7e008d1937449fac538b649803669e0",
+      "counters": {
+        "docs_seen": 2,
+        "docs_unchanged": 0,
+        "docs_indexed": 2,
+        "docs_quarantined": 0,
+        "docs_archived": 0,
+        "chunks_seen": 2,
+        "chunks_embedded": 2,
+        "chunks_reused": 0,
+        "chunks_deleted": 0,
+        "doc_check_embeddings": 2,
+        "chunk_embeddings": 2,
+        "total_embeddings": 4
+      },
+      "report_json": "/results/verify-rahbar_sandbox_deleted-20261128T145051Z.json",
+      "report_md": "/results/verify-rahbar_sandbox_deleted-20261128T145051Z.md"
+    }
+  },
+  {
+    "job": "ragops-ingest-1795877495-26833",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "run",
+      "--collection",
+      "rahbar_sandbox_restore",
+      "--batch-dir",
+      "/datalake/inbox/rahbar_sandbox_restore-20261128T145134Z"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:51:45Z",
+        "lastTransitionTime": "2026-11-28T14:51:45Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:51:45Z",
+        "lastTransitionTime": "2026-11-28T14:51:45Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "ts": "2026-11-28T14:51:42Z",
+      "logger": "ragops.ingest",
+      "msg": "ingest_completed",
+      "run_id": "run-1795877497-1",
+      "collection": "rahbar_sandbox_restore",
+      "committed_revision": 1,
+      "embed_model": "nomic-embed-text",
+      "embed_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+      "dimension": 768,
+      "pipeline_fingerprint": "39ec2961a01623cc69381a5eaf4de689e7e008d1937449fac538b649803669e0",
+      "counters": {
+        "docs_seen": 2,
+        "docs_unchanged": 0,
+        "docs_indexed": 2,
+        "docs_quarantined": 0,
+        "docs_archived": 0,
+        "chunks_seen": 2,
+        "chunks_embedded": 2,
+        "chunks_reused": 0,
+        "chunks_deleted": 0,
+        "doc_check_embeddings": 2,
+        "chunk_embeddings": 2,
+        "total_embeddings": 4
+      },
+      "report_json": "/results/verify-rahbar_sandbox_restore-20261128T145142Z.json",
+      "report_md": "/results/verify-rahbar_sandbox_restore-20261128T145142Z.md"
+    }
+  },
+  {
+    "job": "ragops-ingest-1795877511-27206",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "run",
+      "--collection",
+      "rahbar_sandbox_restore",
+      "--batch-dir",
+      "/datalake/inbox/rahbar_sandbox_restore-20261128T145151Z"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:51:59Z",
+        "lastTransitionTime": "2026-11-28T14:51:59Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:51:59Z",
+        "lastTransitionTime": "2026-11-28T14:51:59Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "ts": "2026-11-28T14:51:55Z",
+      "logger": "ragops.ingest",
+      "msg": "ingest_completed",
+      "run_id": "run-1795877513-1",
+      "collection": "rahbar_sandbox_restore",
+      "committed_revision": 2,
+      "embed_model": "nomic-embed-text",
+      "embed_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+      "dimension": 768,
+      "pipeline_fingerprint": "39ec2961a01623cc69381a5eaf4de689e7e008d1937449fac538b649803669e0",
+      "counters": {
+        "docs_seen": 2,
+        "docs_unchanged": 1,
+        "docs_indexed": 1,
+        "docs_quarantined": 0,
+        "docs_archived": 0,
+        "chunks_seen": 2,
+        "chunks_embedded": 1,
+        "chunks_reused": 1,
+        "chunks_deleted": 0,
+        "doc_check_embeddings": 1,
+        "chunk_embeddings": 1,
+        "total_embeddings": 2
+      },
+      "report_json": "/results/verify-rahbar_sandbox_restore-20261128T145155Z.json",
+      "report_md": "/results/verify-rahbar_sandbox_restore-20261128T145155Z.md"
+    }
+  },
+  {
+    "job": "ragops-restore-1795877527-27497",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "restore",
+      "--collection",
+      "rahbar_sandbox_restore",
+      "--doc-id",
+      "sandbox-alpha",
+      "--version",
+      "2026-01"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:52:14Z",
+        "lastTransitionTime": "2026-11-28T14:52:14Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:52:14Z",
+        "lastTransitionTime": "2026-11-28T14:52:14Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": null
+  },
+  {
+    "job": "ragops-status-1795877028-23015",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "status",
+      "--collection",
+      "rahbar_sandbox_changed"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:43:55Z",
+        "lastTransitionTime": "2026-11-28T14:43:55Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:43:55Z",
+        "lastTransitionTime": "2026-11-28T14:43:55Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "collection": "rahbar_sandbox_changed",
+      "revision": {
+        "collection": "rahbar_sandbox_changed",
+        "committed_revision": 1,
+        "pending_revision": null,
+        "index_id": "rahbar_sandbox_changed-rev1-run-1795877014-1",
+        "embed_model": "nomic-embed-text",
+        "embed_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+        "dimension": 768,
+        "pipeline_fingerprint": "39ec2961a01623cc69381a5eaf4de689e7e008d1937449fac538b649803669e0",
+        "updated_at": "2026-11-28T14:43:41Z"
+      },
+      "counts": {
+        "active": 2,
+        "superseded": 0,
+        "quarantined": 0,
+        "deleted": 0
+      },
+      "active_chunks": 2,
+      "documents": [
+        {
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2026-01",
+          "family_id": "sandbox-alpha",
+          "status": "active",
+          "superseded": false,
+          "chunks": 1,
+          "source": "sandbox_alpha.md"
+        },
+        {
+          "doc_id": "sandbox-beta",
+          "doc_version": "2026-01",
+          "family_id": "sandbox-beta",
+          "status": "active",
+          "superseded": false,
+          "chunks": 1,
+          "source": "sandbox_beta.md"
+        }
+      ],
+      "recent_events": [
+        {
+          "ts": "2026-11-28T14:43:41Z",
+          "run_id": "run-1795877014-1",
+          "action": "commit",
+          "doc_id": null,
+          "doc_version": null,
+          "details": {
+            "committed_revision": 1,
+            "index_id": "rahbar_sandbox_changed-rev1-run-1795877014-1"
+          }
+        },
+        {
+          "ts": "2026-11-28T14:43:41Z",
+          "run_id": "run-1795877014-1",
+          "action": "ingest",
+          "doc_id": "sandbox-beta",
+          "doc_version": "2026-01",
+          "details": {
+            "chunks_deleted": 0,
+            "chunks_total": 1,
+            "chunks_upserted": 1
+          }
+        },
+        {
+          "ts": "2026-11-28T14:43:40Z",
+          "run_id": "run-1795877014-1",
+          "action": "ingest",
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2026-01",
+          "details": {
+            "chunks_deleted": 0,
+            "chunks_total": 1,
+            "chunks_upserted": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "job": "ragops-status-1795877456-26194",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "status",
+      "--collection",
+      "rahbar_sandbox_deleted"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:51:01Z",
+        "lastTransitionTime": "2026-11-28T14:51:01Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:51:01Z",
+        "lastTransitionTime": "2026-11-28T14:51:01Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "collection": "rahbar_sandbox_deleted",
+      "revision": {
+        "collection": "rahbar_sandbox_deleted",
+        "committed_revision": 1,
+        "pending_revision": null,
+        "index_id": "rahbar_sandbox_deleted-rev1-run-1795877447-1",
+        "embed_model": "nomic-embed-text",
+        "embed_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+        "dimension": 768,
+        "pipeline_fingerprint": "39ec2961a01623cc69381a5eaf4de689e7e008d1937449fac538b649803669e0",
+        "updated_at": "2026-11-28T14:50:51Z"
+      },
+      "counts": {
+        "active": 2,
+        "superseded": 0,
+        "quarantined": 0,
+        "deleted": 0
+      },
+      "active_chunks": 2,
+      "documents": [
+        {
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2026-01",
+          "family_id": "sandbox-alpha",
+          "status": "active",
+          "superseded": false,
+          "chunks": 1,
+          "source": "sandbox_alpha.md"
+        },
+        {
+          "doc_id": "sandbox-beta",
+          "doc_version": "2026-01",
+          "family_id": "sandbox-beta",
+          "status": "active",
+          "superseded": false,
+          "chunks": 1,
+          "source": "sandbox_beta.md"
+        }
+      ],
+      "recent_events": [
+        {
+          "ts": "2026-11-28T14:50:51Z",
+          "run_id": "run-1795877447-1",
+          "action": "commit",
+          "doc_id": null,
+          "doc_version": null,
+          "details": {
+            "committed_revision": 1,
+            "index_id": "rahbar_sandbox_deleted-rev1-run-1795877447-1"
+          }
+        },
+        {
+          "ts": "2026-11-28T14:50:51Z",
+          "run_id": "run-1795877447-1",
+          "action": "ingest",
+          "doc_id": "sandbox-beta",
+          "doc_version": "2026-01",
+          "details": {
+            "chunks_deleted": 0,
+            "chunks_total": 1,
+            "chunks_upserted": 1
+          }
+        },
+        {
+          "ts": "2026-11-28T14:50:50Z",
+          "run_id": "run-1795877447-1",
+          "action": "ingest",
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2026-01",
+          "details": {
+            "chunks_deleted": 0,
+            "chunks_total": 1,
+            "chunks_upserted": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "job": "ragops-status-1795877506-27074",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "status",
+      "--collection",
+      "rahbar_sandbox_restore"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:51:50Z",
+        "lastTransitionTime": "2026-11-28T14:51:50Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:51:50Z",
+        "lastTransitionTime": "2026-11-28T14:51:50Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "collection": "rahbar_sandbox_restore",
+      "revision": {
+        "collection": "rahbar_sandbox_restore",
+        "committed_revision": 1,
+        "pending_revision": null,
+        "index_id": "rahbar_sandbox_restore-rev1-run-1795877497-1",
+        "embed_model": "nomic-embed-text",
+        "embed_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+        "dimension": 768,
+        "pipeline_fingerprint": "39ec2961a01623cc69381a5eaf4de689e7e008d1937449fac538b649803669e0",
+        "updated_at": "2026-11-28T14:51:42Z"
+      },
+      "counts": {
+        "active": 2,
+        "superseded": 0,
+        "quarantined": 0,
+        "deleted": 0
+      },
+      "active_chunks": 2,
+      "documents": [
+        {
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2026-01",
+          "family_id": "sandbox-alpha",
+          "status": "active",
+          "superseded": false,
+          "chunks": 1,
+          "source": "sandbox_alpha.md"
+        },
+        {
+          "doc_id": "sandbox-beta",
+          "doc_version": "2026-01",
+          "family_id": "sandbox-beta",
+          "status": "active",
+          "superseded": false,
+          "chunks": 1,
+          "source": "sandbox_beta.md"
+        }
+      ],
+      "recent_events": [
+        {
+          "ts": "2026-11-28T14:51:42Z",
+          "run_id": "run-1795877497-1",
+          "action": "commit",
+          "doc_id": null,
+          "doc_version": null,
+          "details": {
+            "committed_revision": 1,
+            "index_id": "rahbar_sandbox_restore-rev1-run-1795877497-1"
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:42Z",
+          "run_id": "run-1795877497-1",
+          "action": "ingest",
+          "doc_id": "sandbox-beta",
+          "doc_version": "2026-01",
+          "details": {
+            "chunks_deleted": 0,
+            "chunks_total": 1,
+            "chunks_upserted": 1
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:42Z",
+          "run_id": "run-1795877497-1",
+          "action": "ingest",
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2026-01",
+          "details": {
+            "chunks_deleted": 0,
+            "chunks_total": 1,
+            "chunks_upserted": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "job": "ragops-status-1795877521-27397",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "status",
+      "--collection",
+      "rahbar_sandbox_restore"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:52:06Z",
+        "lastTransitionTime": "2026-11-28T14:52:06Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:52:06Z",
+        "lastTransitionTime": "2026-11-28T14:52:06Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "collection": "rahbar_sandbox_restore",
+      "revision": {
+        "collection": "rahbar_sandbox_restore",
+        "committed_revision": 2,
+        "pending_revision": null,
+        "index_id": "rahbar_sandbox_restore-rev2-run-1795877513-1",
+        "embed_model": "nomic-embed-text",
+        "embed_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+        "dimension": 768,
+        "pipeline_fingerprint": "39ec2961a01623cc69381a5eaf4de689e7e008d1937449fac538b649803669e0",
+        "updated_at": "2026-11-28T14:51:55Z"
+      },
+      "counts": {
+        "active": 2,
+        "superseded": 1,
+        "quarantined": 0,
+        "deleted": 0
+      },
+      "active_chunks": 2,
+      "documents": [
+        {
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2026-01",
+          "family_id": "sandbox-alpha",
+          "status": "superseded",
+          "superseded": true,
+          "chunks": 1,
+          "source": "sandbox_alpha.md"
+        },
+        {
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2027-01",
+          "family_id": "sandbox-alpha",
+          "status": "active",
+          "superseded": false,
+          "chunks": 1,
+          "source": "sandbox_alpha.md"
+        },
+        {
+          "doc_id": "sandbox-beta",
+          "doc_version": "2026-01",
+          "family_id": "sandbox-beta",
+          "status": "active",
+          "superseded": false,
+          "chunks": 1,
+          "source": "sandbox_beta.md"
+        }
+      ],
+      "recent_events": [
+        {
+          "ts": "2026-11-28T14:51:55Z",
+          "run_id": "run-1795877513-1",
+          "action": "commit",
+          "doc_id": null,
+          "doc_version": null,
+          "details": {
+            "committed_revision": 2,
+            "index_id": "rahbar_sandbox_restore-rev2-run-1795877513-1"
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:55Z",
+          "run_id": "run-1795877513-1",
+          "action": "skip_unchanged",
+          "doc_id": "sandbox-beta",
+          "doc_version": "2026-01",
+          "details": {
+            "raw_hash": "5b3c47b43df07f32a37b3d3fb9a53e4e94bcf21affe57627206c18e0e5dc6d64"
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:55Z",
+          "run_id": "run-1795877513-1",
+          "action": "ingest",
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2027-01",
+          "details": {
+            "chunks_deleted": 0,
+            "chunks_total": 1,
+            "chunks_upserted": 1
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:55Z",
+          "run_id": "run-1795877513-1",
+          "action": "archive_superseded",
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2026-01",
+          "details": {
+            "superseded_by": "2027-01"
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:42Z",
+          "run_id": "run-1795877497-1",
+          "action": "commit",
+          "doc_id": null,
+          "doc_version": null,
+          "details": {
+            "committed_revision": 1,
+            "index_id": "rahbar_sandbox_restore-rev1-run-1795877497-1"
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:42Z",
+          "run_id": "run-1795877497-1",
+          "action": "ingest",
+          "doc_id": "sandbox-beta",
+          "doc_version": "2026-01",
+          "details": {
+            "chunks_deleted": 0,
+            "chunks_total": 1,
+            "chunks_upserted": 1
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:42Z",
+          "run_id": "run-1795877497-1",
+          "action": "ingest",
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2026-01",
+          "details": {
+            "chunks_deleted": 0,
+            "chunks_total": 1,
+            "chunks_upserted": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "job": "ragops-status-1795877535-27622",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "status",
+      "--collection",
+      "rahbar_sandbox_restore"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:52:20Z",
+        "lastTransitionTime": "2026-11-28T14:52:20Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:52:20Z",
+        "lastTransitionTime": "2026-11-28T14:52:20Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": {
+      "collection": "rahbar_sandbox_restore",
+      "revision": {
+        "collection": "rahbar_sandbox_restore",
+        "committed_revision": 3,
+        "pending_revision": null,
+        "index_id": "rahbar_sandbox_restore-rev3-restore-1795877529-1",
+        "embed_model": "nomic-embed-text",
+        "embed_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+        "dimension": 768,
+        "pipeline_fingerprint": "39ec2961a01623cc69381a5eaf4de689e7e008d1937449fac538b649803669e0",
+        "updated_at": "2026-11-28T14:52:12Z"
+      },
+      "counts": {
+        "active": 2,
+        "superseded": 1,
+        "quarantined": 0,
+        "deleted": 0
+      },
+      "active_chunks": 2,
+      "documents": [
+        {
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2026-01",
+          "family_id": "sandbox-alpha",
+          "status": "active",
+          "superseded": false,
+          "chunks": 1,
+          "source": "sandbox_alpha.md"
+        },
+        {
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2027-01",
+          "family_id": "sandbox-alpha",
+          "status": "superseded",
+          "superseded": true,
+          "chunks": 1,
+          "source": "sandbox_alpha.md"
+        },
+        {
+          "doc_id": "sandbox-beta",
+          "doc_version": "2026-01",
+          "family_id": "sandbox-beta",
+          "status": "active",
+          "superseded": false,
+          "chunks": 1,
+          "source": "sandbox_beta.md"
+        }
+      ],
+      "recent_events": [
+        {
+          "ts": "2026-11-28T14:52:12Z",
+          "run_id": "restore-1795877529-1",
+          "action": "commit",
+          "doc_id": null,
+          "doc_version": null,
+          "details": {
+            "committed_revision": 3,
+            "index_id": "rahbar_sandbox_restore-rev3-restore-1795877529-1"
+          }
+        },
+        {
+          "ts": "2026-11-28T14:52:12Z",
+          "run_id": "restore-1795877529-1",
+          "action": "restore",
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2026-01",
+          "details": {
+            "chunks_restored": 1
+          }
+        },
+        {
+          "ts": "2026-11-28T14:52:11Z",
+          "run_id": "restore-1795877529-1",
+          "action": "archive_superseded",
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2027-01",
+          "details": {
+            "superseded_by": "2026-01"
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:55Z",
+          "run_id": "run-1795877513-1",
+          "action": "commit",
+          "doc_id": null,
+          "doc_version": null,
+          "details": {
+            "committed_revision": 2,
+            "index_id": "rahbar_sandbox_restore-rev2-run-1795877513-1"
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:55Z",
+          "run_id": "run-1795877513-1",
+          "action": "skip_unchanged",
+          "doc_id": "sandbox-beta",
+          "doc_version": "2026-01",
+          "details": {
+            "raw_hash": "5b3c47b43df07f32a37b3d3fb9a53e4e94bcf21affe57627206c18e0e5dc6d64"
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:55Z",
+          "run_id": "run-1795877513-1",
+          "action": "ingest",
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2027-01",
+          "details": {
+            "chunks_deleted": 0,
+            "chunks_total": 1,
+            "chunks_upserted": 1
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:55Z",
+          "run_id": "run-1795877513-1",
+          "action": "archive_superseded",
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2026-01",
+          "details": {
+            "superseded_by": "2027-01"
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:42Z",
+          "run_id": "run-1795877497-1",
+          "action": "commit",
+          "doc_id": null,
+          "doc_version": null,
+          "details": {
+            "committed_revision": 1,
+            "index_id": "rahbar_sandbox_restore-rev1-run-1795877497-1"
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:42Z",
+          "run_id": "run-1795877497-1",
+          "action": "ingest",
+          "doc_id": "sandbox-beta",
+          "doc_version": "2026-01",
+          "details": {
+            "chunks_deleted": 0,
+            "chunks_total": 1,
+            "chunks_upserted": 1
+          }
+        },
+        {
+          "ts": "2026-11-28T14:51:42Z",
+          "run_id": "run-1795877497-1",
+          "action": "ingest",
+          "doc_id": "sandbox-alpha",
+          "doc_version": "2026-01",
+          "details": {
+            "chunks_deleted": 0,
+            "chunks_total": 1,
+            "chunks_upserted": 1
+          }
+        }
+      ]
+    }
+  },
+  {
+    "job": "ragops-tombstone-1795877471-26440",
+    "args": [
+      "python",
+      "-m",
+      "ragops.ingest",
+      "tombstone",
+      "--collection",
+      "rahbar_sandbox_deleted",
+      "--doc-id",
+      "sandbox-alpha"
+    ],
+    "conditions": [
+      {
+        "lastProbeTime": "2026-11-28T14:51:18Z",
+        "lastTransitionTime": "2026-11-28T14:51:18Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "SuccessCriteriaMet"
+      },
+      {
+        "lastProbeTime": "2026-11-28T14:51:18Z",
+        "lastTransitionTime": "2026-11-28T14:51:18Z",
+        "message": "Reached expected number of succeeded pods",
+        "reason": "CompletionsReached",
+        "status": "True",
+        "type": "Complete"
+      }
+    ],
+    "result": null
+  }
+]

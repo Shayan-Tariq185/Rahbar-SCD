@@ -1,0 +1,28 @@
+{"ts": "2026-11-28T14:51:41Z", "logger": "ragops.ingest", "msg": "document_started", "collection": "rahbar_sandbox_restore", "doc_id": "sandbox-alpha", "source": "sandbox_alpha.md"}
+{"ts": "2026-11-28T14:51:42Z", "logger": "ragops.ingest", "msg": "document_started", "collection": "rahbar_sandbox_restore", "doc_id": "sandbox-beta", "source": "sandbox_beta.md"}
+{"ts": "2026-11-28T14:51:42Z", "logger": "ragops.ingest", "msg": "ingest_completed", "run_id": "run-1795877497-1", "collection": "rahbar_sandbox_restore", "committed_revision": 1, "embed_model": "nomic-embed-text", "embed_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f", "dimension": 768, "pipeline_fingerprint": "39ec2961a01623cc69381a5eaf4de689e7e008d1937449fac538b649803669e0", "counters": {"docs_seen": 2, "docs_unchanged": 0, "docs_indexed": 2, "docs_quarantined": 0, "docs_archived": 0, "chunks_seen": 2, "chunks_embedded": 2, "chunks_reused": 0, "chunks_deleted": 0, "doc_check_embeddings": 2, "chunk_embeddings": 2, "total_embeddings": 4}, "report_json": "/results/verify-rahbar_sandbox_restore-20261128T145142Z.json", "report_md": "/results/verify-rahbar_sandbox_restore-20261128T145142Z.md"}
+{
+  "run_id": "run-1795877497-1",
+  "collection": "rahbar_sandbox_restore",
+  "committed_revision": 1,
+  "embed_model": "nomic-embed-text",
+  "embed_digest": "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f",
+  "dimension": 768,
+  "pipeline_fingerprint": "39ec2961a01623cc69381a5eaf4de689e7e008d1937449fac538b649803669e0",
+  "counters": {
+    "docs_seen": 2,
+    "docs_unchanged": 0,
+    "docs_indexed": 2,
+    "docs_quarantined": 0,
+    "docs_archived": 0,
+    "chunks_seen": 2,
+    "chunks_embedded": 2,
+    "chunks_reused": 0,
+    "chunks_deleted": 0,
+    "doc_check_embeddings": 2,
+    "chunk_embeddings": 2,
+    "total_embeddings": 4
+  },
+  "report_json": "/results/verify-rahbar_sandbox_restore-20261128T145142Z.json",
+  "report_md": "/results/verify-rahbar_sandbox_restore-20261128T145142Z.md"
+}

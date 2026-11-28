@@ -1,0 +1,8 @@
+{"ts": "2026-11-28T14:52:12Z", "logger": "ragops.ingest", "msg": "restore_completed", "run_id": "restore-1795877529-1", "collection": "rahbar_sandbox_restore", "restored_doc_id": "sandbox-alpha", "restored_version": "2026-01", "chunks_restored": 1}
+{
+  "run_id": "restore-1795877529-1",
+  "collection": "rahbar_sandbox_restore",
+  "restored_doc_id": "sandbox-alpha",
+  "restored_version": "2026-01",
+  "chunks_restored": 1
+}

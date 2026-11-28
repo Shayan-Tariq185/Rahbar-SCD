@@ -21,6 +21,8 @@ def main() -> int:
     parser.add_argument("--cutoff", required=True, type=float)
     parser.add_argument("--floor", required=True, type=float)
     parser.add_argument("--rationale", required=True)
+    parser.add_argument("--topic-reviewer", help="actual human who confirmed the listed gap topics")
+    parser.add_argument("--confirmed-topic", action="append", default=[])
     args = parser.parse_args()
     report = read_json(args.calibration)
     schema_check("coverage_report", report)
@@ -33,6 +35,13 @@ def main() -> int:
         raise ValueError("calibration must use this unchanged provisional configuration")
     if not args.rationale.strip():
         raise ValueError("explain inspected near-match/non-match examples and the aggregate coverage target")
+    known_topics = {group["topic"] for group in report["topic_groups"]}
+    if args.confirmed_topic and (not args.topic_reviewer or not args.topic_reviewer.strip()):
+        raise ValueError("confirmed gap topics require the actual human reviewer")
+    if set(args.confirmed_topic) - known_topics:
+        raise ValueError("confirmed topic absent from the measured calibration")
+    reviewers = dict(config.get("topic_reviewers", {}))
+    reviewers.update({topic: args.topic_reviewer.strip() for topic in args.confirmed_topic})
     if config["embedding"] != report["embedding"]:
         # A resolved :latest suffix is equivalent only with the same pinned digest and dimension.
         configured = config["embedding"]
@@ -41,6 +50,7 @@ def main() -> int:
                 or any(configured[key] != resolved[key] for key in ("digest", "dimension"))):
             raise ValueError("calibration embedding identity differs from the configured pin")
     config.update({"frozen": True, "similarity_cutoff": finite(args.cutoff, minimum=-1, maximum=1),
+                   "topic_reviewers": reviewers,
                    "coverage_floor": finite(args.floor, minimum=0, maximum=1),
                    "rationale": args.rationale.strip(), "calibration_sha256": digest(args.calibration),
                    "live_sha256": report["live_sha256"]})

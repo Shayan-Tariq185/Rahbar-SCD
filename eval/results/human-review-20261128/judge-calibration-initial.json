@@ -1,0 +1,95 @@
+{
+  "provenance": "real",
+  "judge": {
+    "method": "ollama_llm",
+    "model": "llama3.2:3b",
+    "version": "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+    "rubric_sha256": "2a04e04bc2bb5f5629a0ead7b62e2e0558756ffd6220dab37dcca9998b0cf597",
+    "temperature": 0
+  },
+  "calibration": {
+    "complete": true,
+    "agreement": {
+      "value": 0.0,
+      "unit": "fraction",
+      "samples": 8,
+      "na_reason": null
+    },
+    "rows": [
+      {
+        "trace_id": "bf368f24615549cc8a510457919678e5",
+        "evidence_sha256": "ff33236a28c9a81a6e22150fdd4965e30be321716037adefa3561d2bda024dfd",
+        "reviewer": "Shayan-Tariq185",
+        "human": true,
+        "judge": false,
+        "agree": false
+      },
+      {
+        "trace_id": "7efd094a13244c8db62216d5f72b1f20",
+        "evidence_sha256": "5047b48b7ad0b7053de09e4b7fde4a4f9ae9b6b3328bf4887c0b1640b87ebc7a",
+        "reviewer": "Shayan-Tariq185",
+        "human": true,
+        "judge": false,
+        "agree": false
+      },
+      {
+        "trace_id": "bc46603ee8f64ddebb2a65ee1d907cd3",
+        "evidence_sha256": "c37e6f9d52b14cac487af52a9ed240573d563a32504e13fbcaf6b42c43284c1d",
+        "reviewer": "Shayan-Tariq185",
+        "human": true,
+        "judge": false,
+        "agree": false
+      },
+      {
+        "trace_id": "f4e396cc04e2430f99ca6441d14756ad",
+        "evidence_sha256": "e545cb433088ff2492f6ee91fcc2c5a78a822a564a5277eeb6ea17c20a3ffe8f",
+        "reviewer": "Shayan-Tariq185",
+        "human": true,
+        "judge": false,
+        "agree": false
+      },
+      {
+        "trace_id": "7420dcc4f11346b9895e2f607c1a5669",
+        "evidence_sha256": "5774c454535abbd0b70d990760c52358d337ae52fad08feec64042051e030602",
+        "reviewer": "Mahrukh Masroor",
+        "human": true,
+        "judge": false,
+        "agree": false
+      },
+      {
+        "trace_id": "a244a92cc2ba4d6fa37a7819ac439f0e",
+        "evidence_sha256": "a305a18c82472a001a83ef03025fda5d1a95d144d98c4a9c8e1f77d15961fafa",
+        "reviewer": "Mahrukh Masroor",
+        "human": true,
+        "judge": false,
+        "agree": false
+      },
+      {
+        "trace_id": "10eba0ab5cc54f46bbc2a9bc6e067beb",
+        "evidence_sha256": "027116837416d7d6fff8be944ee3436bf991025676173a3f41b78ceeceb64b17",
+        "reviewer": "Mahrukh Masroor",
+        "human": true,
+        "judge": false,
+        "agree": false
+      },
+      {
+        "trace_id": "04758e08ade64eefb2888863a8d6e35b",
+        "evidence_sha256": "df0a0b3cdc803e7ee78cd041aee8db4f5f17d72a06421c8bd2f9124093e6a9b0",
+        "reviewer": "Mahrukh Masroor",
+        "human": true,
+        "judge": false,
+        "agree": false
+      }
+    ],
+    "confusion": {
+      "true_positive": 0,
+      "true_negative": 0,
+      "false_positive": 0,
+      "false_negative": 8
+    },
+    "reviewer_counts": {
+      "Shayan-Tariq185": 4,
+      "Mahrukh Masroor": 4
+    }
+  }
+}

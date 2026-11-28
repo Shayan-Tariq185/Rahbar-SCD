@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: rahbar
+spec:
+  template:
+    spec:
+      containers:
+        - name: api
+          env:
+            # Explicit PodTemplate pins so kubectl rollout undo restores all release values together
+            - name: CHROMA_COLLECTION
+              value: "rahbar_a"
+            - name: EMBED_MODEL
+              value: "nomic-embed-text"
+            - name: EMBED_VERSION
+              value: "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f"
+            - name: API_IMAGE
+              value: "rahbar-api:2124c3713328-a03"
+            - name: TOP_K
+              value: "5"
+            - name: TRACES_DIR
+              value: "/traces"
+            - name: EVAL_INTERNAL_ENABLED
+              value: "true"
+          volumeMounts:
+            - name: traces
+              mountPath: /traces
+      volumes:
+        - name: traces
+          persistentVolumeClaim:
+            claimName: rahbar-traces-pvc

@@ -37,6 +37,20 @@ def test_text_pdf_is_not_ocrd(tmp_path: Path) -> None:
     assert "100% attendance" in doc.pages[0].text
 
 
+def test_text_outside_physical_pdf_page_is_not_cited_on_this_page(tmp_path: Path) -> None:
+    from reportlab.pdfgen import canvas
+
+    path = tmp_path / "facing-page-bleed.pdf"
+    pdf = canvas.Canvas(str(path), pagesize=(300, 400))
+    pdf.drawString(20, 350, "1.18 Visible course load policy belongs to page one.")
+    pdf.drawString(350, 350, "9.99 Hidden facing-page text must not appear here.")
+    pdf.showPage()
+    pdf.save()
+    text = extract(str(path), "test", False).pages[0].text
+    assert "Visible course load policy" in text
+    assert "Hidden facing-page" not in text
+
+
 def test_pdf_table_is_rendered_as_labelled_rows(tmp_path: Path) -> None:
     rows = [["Patron Group", "Loan Limit", "Fine Ceiling"], ["PhD", "07", "PKR 5,000"],
             ["Graduate", "05", "PKR 5,000"]]

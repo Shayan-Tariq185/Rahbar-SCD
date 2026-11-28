@@ -1,0 +1,26 @@
+{
+    "images":  {
+                   "api":  {
+                               "source_git_sha":  "2124c371332851ad981fd0973c748835d2f4dc2d",
+                               "image":  "rahbar-api:2124c3713328-a03"
+                           },
+                   "indexer":  {
+                                   "source_git_sha":  "09ac8a21351a5026324b66df3901748eb3fb5564",
+                                   "image":  "rahbar-indexer:09ac8a21351a-a03"
+                               },
+                   "eval":  {
+                                "source_git_sha":  "837ab482ab37ef724f323199e9ee5552c1376572",
+                                "image":  "rahbar-eval:837ab482ab37-m2"
+                            }
+               },
+    "judge":  {
+                  "digest":  "a80c4f17acd55265feec403c7aef86be0c25983ab279d83f3bcd3abbcb5b8b72",
+                  "model":  "llama3.2:3b"
+              },
+    "note":  "Recorded runtime source pins. Corpus inputs are staged on the data-lake PVC; baked image fixtures are not the measured corpus.",
+    "embedding":  {
+                      "dimension":  768,
+                      "model":  "nomic-embed-text",
+                      "digest":  "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f"
+                  }
+}

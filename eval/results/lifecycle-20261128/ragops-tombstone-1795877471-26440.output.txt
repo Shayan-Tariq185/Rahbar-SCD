@@ -1,0 +1,10 @@
+{"ts": "2026-11-28T14:51:14Z", "logger": "ragops.ingest", "msg": "tombstone_completed", "run_id": "tombstone-1795877473-1", "collection": "rahbar_sandbox_deleted", "doc_id": "sandbox-alpha", "deleted_versions": ["2026-01"], "deleted_chunks": 1}
+{
+  "run_id": "tombstone-1795877473-1",
+  "collection": "rahbar_sandbox_deleted",
+  "doc_id": "sandbox-alpha",
+  "deleted_versions": [
+    "2026-01"
+  ],
+  "deleted_chunks": 1
+}

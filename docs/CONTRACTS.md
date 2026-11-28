@@ -101,3 +101,57 @@ Track B appends new settings to `config.py` and informs Track A to add them to t
 * **CI Fixture Baseline**: `eval/fixtures/golden.fixture.yaml` and `eval/fixtures/baseline.fixture.json`.
 * **Gate Enforcement**: `python eval/run_eval.py --golden ... --baseline ... --out /tmp/results.json` (Exit code 0 = pass, 1 = gate failed, 2 = not implemented).
 
+---
+
+## 8. Assignment 03 RAGOps Contracts (H0 — Member 1 & Member 2)
+
+These additive contracts extend A02 without breaking existing endpoints, schemas, or CI behavior.
+
+### 8.1 Collections & Candidate Experiment Policy
+| Collection | Purpose | Mutability |
+| :--- | :--- | :--- |
+| `rahbar_a` | Frozen Batch A baseline snapshot | Immutable once frozen at H2 |
+| `rahbar_ab` | Batch A + Batch B data-drift snapshot | Built via `--snapshot-from rahbar_a` then Batch B ingest |
+| `rahbar_cand_bad` | Deliberately poor candidate (e.g. `TOP_K=1`) | Cloned via `--snapshot-from` without re-embedding |
+| `rahbar_cand_good` | Passing candidate (e.g. `TOP_K=5` or tuned value) | Cloned via `--snapshot-from` without re-embedding |
+| `rahbar_sandbox` | Disposable sandbox for change/delete/restore/rollback demos | Never used for frozen baseline or final gate pass |
+
+### 8.2 Document, Version & Pipeline Identity
+- **Logical Identity**: `doc_id` (stable logical document id), `family_id` (version family id, preferring explicit metadata over filename heuristics), `doc_version` (version string).
+- **Scoped State Key**: `(collection, doc_id, doc_version)` in `/datalake/state/state.db`.
+- **Chunk ID Format**: `<doc_id>::<doc_version>::<idx:04d>::<sha256_12>`.
+- **Pipeline Fingerprint**: SHA-256 of `(extractor_version, chunk_size, chunk_overlap, embed_model, embed_digest)`. Changing any setting invalidates cached unchanged-skip state and forces re-evaluation.
+- **Collection Pin Metadata**: `embed_model`, `embed_digest` (resolved from Ollama `GET /api/tags` when using Ollama, or deterministic pin digest for `hashing-384` / `dummy-768`), `dimension`, `pipeline_fingerprint`, `committed_revision`, `index_id`.
+
+### 8.3 Verification Interface (`ragops/verify.py`)
+Runs **after extraction and before chunking**:
+- **Input**: extracted document pages, real metadata (`source`, `title`, `date_or_version`, `page_count`), `extraction_error`, existing family versions, existing active documents. Missing metadata is never fabricated.
+- **Checks** (each emits `{passed: bool, reason: str}`):
+  1. `quality`: empty/garbled/extraction failure/timeout.
+  2. `completeness`: required metadata (`source`, `title`, `date` or `doc_version`, `page_count >= 1`) and truncation heuristics.
+  3. `recency`: evaluated **before** near-duplicate check using `family_id` lineage. Older valid versions fail `recency` and route to **`archive`** (`superseded=True`), not `quarantine`.
+  4. `uniqueness`: exact SHA-256 hash match and document-level embedding near-duplicate check against active documents outside the same `family_id`.
+- **Final Decision**: `index` | `archive` | `quarantine`.
+
+### 8.4 Source Deletion, Writer Access & Serialization
+- **Inbox Semantics**: `/datalake/inbox` is an append staging queue; moving files `inbox -> raw` is NOT deletion. Deletions require explicit `tombstone --doc-id ID [--version V]`.
+- **Single-Writer Path**: Only `ragops-ingest` Jobs/CronJob write to Chroma and `/datalake/state/state.db`. Legacy A02 `cronjob/reindex` is suspended in runtime overlays to prevent dual writers.
+- **Serialization Lock**: File lock `/datalake/state/writer.lock` (`flock` + stale-lock metadata) serializes manual, CronJob, restore, tombstone, and `--snapshot-from` Jobs on single-node minikube RWO storage. Multi-node clusters require RWX + distributed lease.
+
+### 8.5 Query, Trace & Internal Evaluation Adapter
+- **Public Ask Route**: `POST /api/ask` accepts `{"question": str}`, returns `AskResponse` with additive `trace_id: str | None` and `X-Trace-ID` response header. Private model `reasoning` is never exposed to the public UI.
+- **Internal Evaluation Adapter** (cluster-only, disabled on Ingress which only routes `/api` and `/`):
+  - `POST /internal/eval/retrieve`: returns `{trace_id, query, collection, committed_revision, embed_model, embed_digest, top_k, retrieved: [{chunk_id, doc_id, doc_version, source, section, page, score, text}], filters, rerank_order}`.
+  - `POST /internal/eval/ask`: runs the full production query pipeline with optional `bypass_cache: bool = true`, returning `AskResponse` plus `trace_id` and `prompt_hash`.
+- **Trace JSON Schema** (`ragops/trace.py`, written to stdout and `/traces/traces-<host>-<pid>.jsonl`):
+  - `schema_version`, `trace_id`, `request_id`, `timestamp`, `query`, `rewrite`, `model` (`provider`, `name`, `version`, `digest`), `collection` (`name`, `committed_revision`, `index_id`, `embed_model`, `embed_digest`), `config`, `filters`, `retrieved_chunks` (full text, `doc_id`, `doc_version`, `page`, `score`, `rank`, `rerank_order`), `rerank_order`, `prompt`, `prompt_hash`, `model_parameters`, `response`, `citations`, `guardrail_actions`, `stage_latencies_ms`, `stage_status`, `cache_status`, `cache_origin_trace_id`, `outcome`.
+
+### 8.6 Cache Namespace & Volumes
+- **Cache Key**: `rahbar:cache:{collection}:{index_id}:{embed_model}:k{top_k}:{q_hash}`.
+- **Volumes**:
+  - `/datalake` (`rahbar-datalake-pvc`): `inbox/`, `raw/`, `archive/`, `quarantine/`, `state/state.db`
+  - `/results` (`rahbar-results-pvc`): verification JSON/MD reports, evaluation JSON/MD outputs
+  - `/traces` (`rahbar-traces-pvc`): per-process JSONL trace logs
+- **CLI Exit Codes**: `0` = success/pass, `1` = measured gate/coverage/job failure, `2` = invalid input/runtime/infrastructure error.
+
+

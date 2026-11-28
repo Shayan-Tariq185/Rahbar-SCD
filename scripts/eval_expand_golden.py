@@ -43,8 +43,15 @@ def main() -> int:
               "expected_behavior": "abstain", "relevant": [], "reviews": [], "batches": ["A", "AB"],
               "notes": f"Gap draft from real coverage {digest(args.before)}; corpus IT procedure absent; human topic/scope review pending."}
              for i, question in enumerate(questions, 1)]
+    added.append({"schema_version": "1.0", "id": "gap-credit-01",
+                  "question": "What do the two numbers in a 3+1 course credit notation represent?",
+                  "origin": "synthetic", "author": "Codex", "answerable": True, "hard": False,
+                  "expected_behavior": "answer",
+                  "relevant": [{"doc_id": "academic-rules-handbook-jun-2026", "doc_version": "2026-06",
+                                "page": 8, "section": "1.12"}], "reviews": [], "batches": ["A"],
+                  "notes": "AI source-checked against physical PDF p8, rule 1.12: three theory credits plus one lab credit, four total. User confirmed this test gap. Valid for the A-based production/experiment snapshot; the synthetic B policy supersedes this document in AB. No additional human question review is claimed."})
     write_jsonl(args.out, read_jsonl(args.golden_v1) + added)
-    print(f"Drafted six synthetic gap questions into {args.out}; preserve v1 and review them before the final run.")
+    print(f"Drafted seven synthetic gap questions into {args.out}; preserve v1. Six IT recovery questions expect abstention; one source-checked credit question expects an answer on the A-based snapshot.")
     return 0
 
 

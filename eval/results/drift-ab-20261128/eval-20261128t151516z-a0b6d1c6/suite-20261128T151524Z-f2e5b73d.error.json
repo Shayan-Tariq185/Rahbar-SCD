@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0",
+  "artifact_type": "suite_error",
+  "run_id": "suite-20261128T151524Z-f2e5b73d",
+  "timestamp": "2026-11-28T15:30:04+00:00",
+  "errors": [
+    "service request exhausted retries: ReadTimeout"
+  ],
+  "metrics": null
+}

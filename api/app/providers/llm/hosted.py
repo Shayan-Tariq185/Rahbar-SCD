@@ -8,6 +8,9 @@ from __future__ import annotations
 
 import json
 import logging
+import re
+import time
+import threading
 
 import httpx
 
@@ -23,13 +26,37 @@ class HostedProvider:
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings   # hosted_base_url, llm_model, llm_api_key, temperature
+        self._request_state = threading.local()
+        self.last_request: dict | None = None
+        self.last_error: str | None = None
 
-    def generate(self, question: str, passages: list[Passage]) -> Answer:
+    @property
+    def last_request(self) -> dict | None:
+        return getattr(self._request_state, "request", None)
+
+    @last_request.setter
+    def last_request(self, value: dict | None) -> None:
+        self._request_state.request = value
+
+    @property
+    def last_error(self) -> str | None:
+        return getattr(self._request_state, "error", None)
+
+    @last_error.setter
+    def last_error(self, value: str | None) -> None:
+        self._request_state.error = value
+
+    def generate(self, question: str, passages: list[Passage], seed: int | None = None) -> Answer:
+        self.last_error = None
         if not self.settings.llm_api_key:
+            self.last_error = "Hosted generation key is missing; substitute response is not a measured model answer"
             log.warning("LLM_API_KEY is empty! Falling back to StubProvider.")
             from .stub import StubProvider
 
-            return StubProvider().generate(question, passages)
+            sub = StubProvider()
+            ans = sub.generate(question, passages)
+            self.last_request = getattr(sub, "last_request", None)
+            return ans
 
         evidence = "\n\n".join(
             f"[{index}] {passage.source} / {passage.section} / page {passage.page}\n"
@@ -54,12 +81,15 @@ class HostedProvider:
             "temperature": self.settings.temperature,
             "response_format": {"type": "json_object"},
         }
+        if seed is not None:
+            payload["seed"] = seed
+        self.last_request = dict(payload)
         headers = {
             "Authorization": f"Bearer {self.settings.llm_api_key.strip()}",
             "Content-Type": "application/json",
         }
         with httpx.Client(timeout=60.0) as client:
-            for attempt in range(2):
+            for attempt in range(4):
                 try:
                     response = client.post(
                         f"{self.settings.hosted_base_url.rstrip('/')}/chat/completions",
@@ -67,6 +97,17 @@ class HostedProvider:
                         headers=headers,
                     )
                     status = getattr(response, "status_code", 200)
+                    if status == 429 and attempt < 3:
+                        retry_after = getattr(response, "headers", {}).get("retry-after", "")
+                        try:
+                            delay = float(retry_after)
+                        except (TypeError, ValueError):
+                            match = re.search(r"try again in ([0-9.]+)(ms|s|m)", getattr(response, "text", ""))
+                            delay = float(match[1]) * {"ms": .001, "s": 1, "m": 60}[match[2]] if match else 10.0
+                        delay = min(30.0, max(1.0, delay + .5))
+                        log.warning("Hosted rate limit; retrying after %.2f seconds", delay)
+                        time.sleep(delay)
+                        continue
                     if status != 200:
                         log.error("Hosted LLM API returned status %s: %s", status, getattr(response, "text", ""))
                     response.raise_for_status()
@@ -79,8 +120,11 @@ class HostedProvider:
                             lines = lines[:-1]
                         content = "\n".join(lines).strip()
                     parsed = json.loads(content)
-                    return parse_answer(parsed)
+                    answer = parse_answer(parsed)
+                    self.last_error = None
+                    return answer
                 except Exception as exc:
+                    self.last_error = f"Hosted generation failed: {type(exc).__name__}"
                     log.error("Hosted LLM attempt %d failed: %s", attempt + 1, exc)
                     continue
         return fallback_answer()

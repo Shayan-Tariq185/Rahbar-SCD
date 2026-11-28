@@ -40,6 +40,8 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--image", required=True)
     parser.add_argument("--run-id", required=True)
+    parser.add_argument("--job-name", help="retain distinct completed experiment Jobs")
+    parser.add_argument("--golden-version", choices=["v1", "v2"], default="v1")
     parser.add_argument("--target", choices=["live", "candidate"], default="live")
     parser.add_argument("--mode", choices=["suite", "coverage"], default="suite")
     parser.add_argument("--baseline-mode", action="store_true")
@@ -52,12 +54,16 @@ def main() -> int:
         raise ValueError("use an immutable digest or unique source-SHA-m2 image tag")
     if not re.fullmatch(r"[a-z0-9-]+", args.run_id) or args.repeat < 2:
         raise ValueError("safe run ID and repeat>=2 required")
+    job_name = args.job_name or ("rahbar-eval" if args.mode == "suite" else "rahbar-coverage")
+    if not re.fullmatch(r"[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?", job_name):
+        raise ValueError("safe Kubernetes Job name required")
     env = {"EVAL_RUN_ID": args.run_id, "EVAL_MODE": args.mode, "EVAL_REPEAT": str(args.repeat),
            "EVAL_BASELINE_MODE": str(args.baseline_mode).lower(), "RAGOPS_EVAL_IMAGE": args.image,
+           "EVAL_GOLDEN_VERSION": args.golden_version,
            "TARGET_API": f"http://{'api' if args.target == 'live' else 'api-candidate'}.rahbar.svc.cluster.local:8000",
            "OLLAMA_URL": args.embedding_url, "JUDGE_MODEL": args.judge_model}
     job = {"apiVersion": "batch/v1", "kind": "Job", "metadata": {
-        "name": "rahbar-eval" if args.mode == "suite" else "rahbar-coverage", "namespace": "rahbar",
+        "name": job_name, "namespace": "rahbar", "labels": {"app": "rahbar-eval"},
         "annotations": {"rahbar/run-id": args.run_id,
                         "rahbar/resources": "provisional; measure workload before final report"}},
         "spec": {"backoffLimit": 0, "activeDeadlineSeconds": 7200,

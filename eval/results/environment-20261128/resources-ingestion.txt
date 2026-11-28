@@ -1,0 +1,126 @@
+# Resource Sampling Report (batch-a-ingestion)
+# Namespace: rahbar | Duration: 60s | Interval: 5s
+# Limitation: kubectl top reports periodic cAdvisor windowed samples, not exact instantaneous peak RSS.
+
+=== Sample 1 (2026-11-28T14:08:44Z) ===
+POD                                   NAME      CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg                  api       27m          192Mi           
+api-84bdc9f94d-cpdzt                  api       28m          192Mi           
+api-84bdc9f94d-jgfpg                  api       27m          192Mi           
+chroma-0                              chroma    6m           195Mi           
+ragops-ingest-1795874614-2201-gb5pc   indexer   501m         462Mi           
+redis-7c7cd5794-p82b4                 redis     12m          10Mi            
+runtime-shell                         shell     0m           15Mi            
+ui-7f85985784-8vbx2                   ui        1m           4Mi             
+
+=== Sample 2 (2026-11-28T14:08:50Z) ===
+POD                                   NAME      CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg                  api       27m          192Mi           
+api-84bdc9f94d-cpdzt                  api       28m          192Mi           
+api-84bdc9f94d-jgfpg                  api       27m          192Mi           
+chroma-0                              chroma    6m           195Mi           
+ragops-ingest-1795874614-2201-gb5pc   indexer   501m         462Mi           
+redis-7c7cd5794-p82b4                 redis     12m          10Mi            
+runtime-shell                         shell     0m           15Mi            
+ui-7f85985784-8vbx2                   ui        1m           4Mi             
+
+=== Sample 3 (2026-11-28T14:08:55Z) ===
+POD                     NAME     CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg    api      27m          192Mi           
+api-84bdc9f94d-cpdzt    api      28m          192Mi           
+api-84bdc9f94d-jgfpg    api      27m          192Mi           
+chroma-0                chroma   6m           195Mi           
+redis-7c7cd5794-p82b4   redis    12m          10Mi            
+runtime-shell           shell    0m           15Mi            
+ui-7f85985784-8vbx2     ui       1m           4Mi             
+
+=== Sample 4 (2026-11-28T14:09:00Z) ===
+POD                     NAME     CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg    api      27m          192Mi           
+api-84bdc9f94d-cpdzt    api      28m          192Mi           
+api-84bdc9f94d-jgfpg    api      27m          192Mi           
+chroma-0                chroma   6m           195Mi           
+redis-7c7cd5794-p82b4   redis    12m          10Mi            
+runtime-shell           shell    0m           15Mi            
+ui-7f85985784-8vbx2     ui       1m           4Mi             
+
+=== Sample 5 (2026-11-28T14:09:05Z) ===
+POD                     NAME     CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg    api      27m          192Mi           
+api-84bdc9f94d-cpdzt    api      28m          192Mi           
+api-84bdc9f94d-jgfpg    api      27m          192Mi           
+chroma-0                chroma   6m           195Mi           
+redis-7c7cd5794-p82b4   redis    12m          10Mi            
+runtime-shell           shell    0m           15Mi            
+ui-7f85985784-8vbx2     ui       1m           4Mi             
+
+=== Sample 6 (2026-11-28T14:09:10Z) ===
+POD                     NAME     CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg    api      27m          192Mi           
+api-84bdc9f94d-cpdzt    api      28m          192Mi           
+api-84bdc9f94d-jgfpg    api      27m          192Mi           
+chroma-0                chroma   6m           195Mi           
+redis-7c7cd5794-p82b4   redis    12m          10Mi            
+runtime-shell           shell    0m           15Mi            
+ui-7f85985784-8vbx2     ui       1m           4Mi             
+
+=== Sample 7 (2026-11-28T14:09:16Z) ===
+POD                     NAME     CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg    api      24m          209Mi           
+api-84bdc9f94d-cpdzt    api      26m          210Mi           
+api-84bdc9f94d-jgfpg    api      25m          206Mi           
+chroma-0                chroma   6m           263Mi           
+redis-7c7cd5794-p82b4   redis    13m          10Mi            
+runtime-shell           shell    0m           15Mi            
+ui-7f85985784-8vbx2     ui       1m           4Mi             
+
+=== Sample 8 (2026-11-28T14:09:21Z) ===
+POD                     NAME     CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg    api      24m          209Mi           
+api-84bdc9f94d-cpdzt    api      26m          210Mi           
+api-84bdc9f94d-jgfpg    api      25m          206Mi           
+chroma-0                chroma   6m           263Mi           
+redis-7c7cd5794-p82b4   redis    13m          10Mi            
+runtime-shell           shell    0m           15Mi            
+ui-7f85985784-8vbx2     ui       1m           4Mi             
+
+=== Sample 9 (2026-11-28T14:09:26Z) ===
+POD                     NAME     CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg    api      24m          209Mi           
+api-84bdc9f94d-cpdzt    api      26m          210Mi           
+api-84bdc9f94d-jgfpg    api      25m          206Mi           
+chroma-0                chroma   6m           263Mi           
+redis-7c7cd5794-p82b4   redis    13m          10Mi            
+runtime-shell           shell    0m           15Mi            
+ui-7f85985784-8vbx2     ui       1m           4Mi             
+
+=== Sample 10 (2026-11-28T14:09:31Z) ===
+POD                     NAME     CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg    api      24m          209Mi           
+api-84bdc9f94d-cpdzt    api      26m          210Mi           
+api-84bdc9f94d-jgfpg    api      25m          206Mi           
+chroma-0                chroma   6m           263Mi           
+redis-7c7cd5794-p82b4   redis    13m          10Mi            
+runtime-shell           shell    0m           15Mi            
+ui-7f85985784-8vbx2     ui       1m           4Mi             
+
+=== Sample 11 (2026-11-28T14:09:37Z) ===
+POD                     NAME     CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg    api      24m          209Mi           
+api-84bdc9f94d-cpdzt    api      26m          210Mi           
+api-84bdc9f94d-jgfpg    api      25m          206Mi           
+chroma-0                chroma   6m           263Mi           
+redis-7c7cd5794-p82b4   redis    13m          10Mi            
+runtime-shell           shell    0m           15Mi            
+ui-7f85985784-8vbx2     ui       1m           4Mi             
+
+=== Sample 12 (2026-11-28T14:09:42Z) ===
+POD                     NAME     CPU(cores)   MEMORY(bytes)   
+api-84bdc9f94d-6qgdg    api      24m          209Mi           
+api-84bdc9f94d-cpdzt    api      26m          210Mi           
+api-84bdc9f94d-jgfpg    api      25m          206Mi           
+chroma-0                chroma   6m           263Mi           
+redis-7c7cd5794-p82b4   redis    13m          10Mi            
+runtime-shell           shell    0m           15Mi            
+ui-7f85985784-8vbx2     ui       1m           4Mi             
+

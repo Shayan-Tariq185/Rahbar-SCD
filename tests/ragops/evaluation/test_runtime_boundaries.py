@@ -98,3 +98,63 @@ def test_suite_setup_error_still_exports_diagnostic_exit_file(tmp_path: Path, mo
     assert job.main(results_root=tmp_path, config_root=tmp_path / "missing-config") == 2
     status = read_json(tmp_path / "runs/test-only/job_exit.json")
     assert status["exit_code"] == 2 and status["error"]
+
+
+def test_suite_job_forwards_expanded_golden_version_without_relabelling_v1(tmp_path, monkeypatch):
+    monkeypatch.setenv("EVAL_RUN_ID", "version-check")
+    monkeypatch.setenv("EVAL_MODE", "suite")
+    monkeypatch.setenv("EVAL_GOLDEN_VERSION", "v2")
+    monkeypatch.setenv("TARGET_API", "http://candidate")
+    monkeypatch.setenv("OLLAMA_URL", "http://embedding")
+    config = tmp_path / "config"
+    config.mkdir()
+    (config / "gate.yaml").write_text("policy_mode: release\n")
+    calls = []
+
+    def stopped_command(args):
+        calls.append(args)
+        return 2, "intentional fixture stop before external calls"
+
+    monkeypatch.setattr(job, "command", stopped_command)
+    assert job.main(results_root=tmp_path, config_root=config) == 2
+    assert calls[0][calls[0].index("--golden-version") + 1] == "v2"
+
+
+def test_release_refuses_changed_generator_before_any_kubernetes_mutation(tmp_path, monkeypatch):
+    import importlib
+    import json
+    import sys
+
+    monkeypatch.syspath_prepend(str(Path(__file__).resolve().parents[3] / "scripts"))
+    release = importlib.import_module("release_validated")
+    provider = {"name": "hosted", "model": "measured-model", "version": "v1", "parameters": {"temperature": 0}}
+    paths = {}
+    for name, content in (("baseline", {}), ("suite", {"provider": provider}), ("policy", {}), ("golden", [])):
+        paths[name] = tmp_path / (name + ".json")
+        paths[name].write_text(json.dumps(content))
+    decision = {"release_authorized": True, "test_only": False}
+    for key, name in (("baseline_sha256", "baseline"), ("candidate_sha256", "suite"),
+                      ("policy_sha256", "policy"), ("golden_sha256", "golden")):
+        decision[key] = release.digest(paths[name])
+    decision_path = tmp_path / "decision.json"
+    decision_path.write_text(json.dumps(decision))
+
+    class ChangedProviderClient:
+        def __init__(self, url):
+            self.metadata = {"provider": {**provider, "model": "unmeasured-model"}}
+
+        def identity(self):
+            return fixture_query().retrieval.identity
+
+    def forbidden_mutation(*args):
+        raise AssertionError("unmeasured generator reached Kubernetes mutation")
+
+    monkeypatch.setattr(release, "HttpApiClient", ChangedProviderClient)
+    monkeypatch.setattr(release, "kubectl", forbidden_mutation)
+    argv = ["release_validated.py", "--candidate", "test_only", "--decision", str(decision_path),
+            "--current-api", "http://fixture"]
+    for name, path in paths.items():
+        argv.extend(["--" + name, str(path)])
+    monkeypatch.setattr(sys, "argv", argv)
+    with pytest.raises(ValueError, match="current generator provider"):
+        release.main()

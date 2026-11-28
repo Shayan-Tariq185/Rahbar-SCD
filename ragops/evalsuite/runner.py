@@ -95,7 +95,8 @@ def calibration(judge: Judge, labels: list[dict[str, Any]], seed: int) -> dict[s
             "false_negative" if human else "true_negative")
         confusion[category] += 1
         rows.append({"trace_id": evidence.trace_id, "evidence_sha256": key,
-                     "reviewer": reviewer, "human": human, "judge": predicted, "agree": human == predicted})
+                     "reviewer": reviewer, "human": human, "judge": predicted, "agree": human == predicted,
+                     "judge_explanation": prediction.explanation})
     complete = len(rows) >= 8 and len([person for person, count in people.items() if count >= 4]) >= 2
     return {"complete": complete, "agreement": metric([float(row["agree"]) for row in rows], "fraction"),
             "rows": rows, "confusion": confusion, "reviewer_counts": people}

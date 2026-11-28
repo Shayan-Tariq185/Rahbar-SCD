@@ -1,0 +1,76 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ragops-ingest
+  namespace: rahbar
+  labels:
+    app: rahbar-indexer
+spec:
+  schedule: "0 2 * * 0"
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: 2
+      template:
+        metadata:
+          labels:
+            app: rahbar-indexer
+        spec:
+          restartPolicy: OnFailure
+          serviceAccountName: indexer-sa
+          automountServiceAccountToken: false
+          enableServiceLinks: false
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 10001
+            runAsGroup: 10001
+            fsGroup: 10001
+          containers:
+            - name: indexer
+              image: rahbar-indexer:dev
+              imagePullPolicy: IfNotPresent
+              args:
+                - python
+                - -m
+                - ragops.ingest
+                - run
+                - --collection
+                - rahbar_scheduled
+                - --batch-dir
+                - /datalake/inbox
+              envFrom:
+                - configMapRef:
+                    name: rahbar-config
+              env:
+                - name: RAGOPS_EXTRACT_TIMEOUT
+                  value: "600"
+              securityContext:
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                capabilities:
+                  drop:
+                    - ALL
+              resources:
+                # Provisional bootstrap values; update from F5 kubectl top measurements
+                requests:
+                  cpu: 250m
+                  memory: 512Mi
+                limits:
+                  cpu: 1000m
+                  memory: 1536Mi
+              volumeMounts:
+                - name: datalake
+                  mountPath: /datalake
+                - name: results
+                  mountPath: /results
+                - name: tmp
+                  mountPath: /tmp
+          volumes:
+            - name: datalake
+              persistentVolumeClaim:
+                claimName: rahbar-datalake-pvc
+            - name: results
+              persistentVolumeClaim:
+                claimName: rahbar-results-pvc
+            - name: tmp
+              emptyDir: {}
