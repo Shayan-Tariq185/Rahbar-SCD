@@ -45,7 +45,9 @@ def main(*, results_root: Path = Path("/results"), config_root: Path = Path("/co
         # Snapshot current ConfigMap at process start. A later update cannot change this run's policy.
         shutil.copyfile(config_root / "gate.yaml", output / "gate-at-start.yaml")
         code, log = command([sys.executable, "-m", "ragops.evalsuite", "--target-api", os.environ["TARGET_API"],
-                             "--golden", str(inputs / "golden.jsonl"), "--pairs", str(inputs / "pairs.jsonl"),
+                             "--golden", str(inputs / "golden.jsonl"),
+                             "--golden-version", os.environ.get("EVAL_GOLDEN_VERSION", "v1"),
+                             "--pairs", str(inputs / "pairs.jsonl"),
                              "--inventory", str(inputs / "inventory.json"), "--human-labels", str(inputs / "labels.jsonl"),
                              "--repeat", os.environ.get("EVAL_REPEAT", "2"), "--embedding-url", os.environ["OLLAMA_URL"],
                              "--judge-model", os.environ.get("JUDGE_MODEL", "llama3.2:3b"), "--out", str(output)])

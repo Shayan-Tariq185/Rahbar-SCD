@@ -98,3 +98,23 @@ def test_suite_setup_error_still_exports_diagnostic_exit_file(tmp_path: Path, mo
     assert job.main(results_root=tmp_path, config_root=tmp_path / "missing-config") == 2
     status = read_json(tmp_path / "runs/test-only/job_exit.json")
     assert status["exit_code"] == 2 and status["error"]
+
+
+def test_suite_job_forwards_expanded_golden_version_without_relabelling_v1(tmp_path, monkeypatch):
+    monkeypatch.setenv("EVAL_RUN_ID", "version-check")
+    monkeypatch.setenv("EVAL_MODE", "suite")
+    monkeypatch.setenv("EVAL_GOLDEN_VERSION", "v2")
+    monkeypatch.setenv("TARGET_API", "http://candidate")
+    monkeypatch.setenv("OLLAMA_URL", "http://embedding")
+    config = tmp_path / "config"
+    config.mkdir()
+    (config / "gate.yaml").write_text("policy_mode: release\n")
+    calls = []
+
+    def stopped_command(args):
+        calls.append(args)
+        return 2, "intentional fixture stop before external calls"
+
+    monkeypatch.setattr(job, "command", stopped_command)
+    assert job.main(results_root=tmp_path, config_root=config) == 2
+    assert calls[0][calls[0].index("--golden-version") + 1] == "v2"
