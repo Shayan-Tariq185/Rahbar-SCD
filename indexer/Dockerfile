@@ -24,8 +24,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 ARG CORPUS_SRC=eval/fixtures
 COPY ${CORPUS_SRC} /corpus
 
-# Copy indexer pipeline package
+# Copy indexer pipeline package and RAGOps ingestion package
 COPY indexer/pipeline ./pipeline
+COPY ragops ./ragops
 
 # Ensure non-root user can read corpus and application files
 RUN chown -R 10001:10001 /corpus /app

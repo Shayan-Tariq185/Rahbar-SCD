@@ -27,6 +27,7 @@ class Settings:
 
     # The embedding pin (section 4.4). The indexer reads the same ConfigMap key.
     embed_model: str = "nomic-embed-text"
+    embed_version: str = ""          # Optional resolved digest/version pin (A03)
 
     # Vector store
     chroma_host: str = "chroma"
@@ -49,12 +50,25 @@ class Settings:
     redis_host: str = "redis"
     redis_port: int = 6379
 
+    # A03 RAGOps tracing & internal evaluation adapter
+    traces_dir: str = "/traces"
+    eval_internal_enabled: bool = True
+    prompt_version: str = "v1"
+
+
+def _bool(name: str, default: bool) -> bool:
+    raw = os.environ.get(name)
+    if raw is None:
+        return default
+    return raw.strip().lower() in {"1", "true", "yes", "on"}
+
 
 def get_settings() -> Settings:
     return Settings(
         retriever=os.environ.get("RETRIEVER", "stub"),
         llm_provider=os.environ.get("LLM_PROVIDER", "stub"),
         embed_model=os.environ.get("EMBED_MODEL", "nomic-embed-text"),
+        embed_version=os.environ.get("EMBED_VERSION", ""),
         chroma_host=os.environ.get("CHROMA_HOST", "chroma"),
         chroma_port=_int("CHROMA_PORT", 8000),
         collection=os.environ.get("CHROMA_COLLECTION", "rahbar"),
@@ -69,4 +83,7 @@ def get_settings() -> Settings:
         cache_threshold=_float("CACHE_THRESHOLD", 0.90),
         redis_host=os.environ.get("REDIS_HOST", "redis"),
         redis_port=_int("REDIS_PORT", 6379),
+        traces_dir=os.environ.get("TRACES_DIR", "/traces"),
+        eval_internal_enabled=_bool("EVAL_INTERNAL_ENABLED", True),
+        prompt_version=os.environ.get("PROMPT_VERSION", "v1"),
     )

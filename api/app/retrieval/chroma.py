@@ -25,9 +25,17 @@ class ChromaRetriever:
             settings=ChromaSettings(anonymized_telemetry=False),
         )
 
-    def retrieve(self, question: str, k: int) -> list[Passage]:
+    def get_collection_metadata(self, collection_name: str | None = None) -> dict[str, Any]:
+        target = collection_name or self.settings.collection
+        try:
+            col = self.client.get_collection(target)
+            return dict(col.metadata or {})
+        except Exception:
+            return {}
+
+    def retrieve(self, question: str, k: int, fresh: bool = False, strict: bool = False) -> list[Passage]:
         collection = self.client.get_collection(self.settings.collection)
-        embedding: Sequence[float] = embed_query(question)
+        embedding: Sequence[float] = embed_query(question, fresh=fresh, strict=strict)
         embeddings: list[Sequence[float]] = [embedding]
         include: list[
             Literal["documents", "embeddings", "metadatas", "distances", "uris", "data"]

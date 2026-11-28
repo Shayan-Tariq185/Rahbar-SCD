@@ -34,3 +34,13 @@ The partner should review q05-q08 herself with her actual identity, skipping ear
 if using the interactive tool. Rejects must be resolved before evaluation/freezing. After
 eight actual reviews, human faithfulness labeling remains a separate task on real
 generated answers and exact retrieved contexts.
+
+## Recorded Member 1 (Mahrukh Masroor) Reviews
+
+| Reviewer | ID | Decision | Reason |
+| --- | --- | --- | --- |
+| Mahrukh Masroor | q05 | accept | Verified against Academic Rules 2026 physical page 12 (rules 2.4 and 2.5) detailing the weighted grade-point calculation formula for SGPA. |
+| Mahrukh Masroor | q06 | accept | Verified against Academic Rules 2026 physical page 24 (rule 5.6) confirming that 3 consecutive warnings below 2.00 CGPA lead to automatic admission closure. |
+| Mahrukh Masroor | q07 | accept | Verified against Academic Rules 2026 physical page 9 (rule 1.20) requiring all prerequisite courses to be successfully cleared before registration. |
+| Mahrukh Masroor | q08 | accept | Verified against Academic Rules 2026 physical page 9 (rule 1.18) granting the Head of Department sole authority to alter course load based on academic criteria. |
+

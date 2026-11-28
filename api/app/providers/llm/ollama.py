@@ -16,8 +16,9 @@ class OllamaProvider:
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings   # ollama_url, llm_model, temperature
+        self.last_request: dict | None = None
 
-    def generate(self, question: str, passages: list[Passage]) -> Answer:
+    def generate(self, question: str, passages: list[Passage], seed: int | None = None) -> Answer:
         evidence = "\n\n".join(
             f"[{index}] {passage.source} / {passage.section} / page {passage.page}\n"
             f"{passage.text}"
@@ -29,13 +30,17 @@ class OllamaProvider:
             "covered, say so and set answered_from_context to false.\n\n"
             f"EVIDENCE:\n{evidence}\n\nQUESTION:\n{question}"
         )
+        options: dict[str, Any] = {"temperature": self.settings.temperature}
+        if seed is not None:
+            options["seed"] = seed
         payload = {
             "model": self.settings.llm_model,
             "messages": [{"role": "user", "content": prompt}],
             "format": Answer.model_json_schema(),
-            "options": {"temperature": self.settings.temperature},
+            "options": options,
             "stream": False,
         }
+        self.last_request = dict(payload)
         with httpx.Client(timeout=120.0) as client:
             for _ in range(2):
                 response = client.post(

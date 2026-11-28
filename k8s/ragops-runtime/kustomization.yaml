@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../overlays/dev
+  - pvcs.yaml
+  - serviceaccounts.yaml
+  - ingest-cronjob.yaml
+  - api-candidate.yaml
+  - networkpolicy-runtime.yaml
+
+patches:
+  - path: api-live-patch.yaml
+  # Retire/suspend legacy A02 CronJob so only ragops-ingest acts as writer
+  - patch: |-
+      apiVersion: batch/v1
+      kind: CronJob
+      metadata:
+        name: reindex
+        namespace: rahbar
+      spec:
+        suspend: true
+  # Remove one-off bootstrap A02 Job from auto-apply so ingestion runs explicitly via scripts/ingest_job.sh
+  - patch: |-
+      $patch: delete
+      apiVersion: batch/v1
+      kind: Job
+      metadata:
+        name: indexer
+        namespace: rahbar

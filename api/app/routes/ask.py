@@ -19,4 +19,6 @@ def ask(body: AskRequest, request: Request, response: Response) -> AskResponse:
         response.headers["X-Cache"] = "HIT"
     else:
         response.headers["X-Cache"] = "MISS"
+    if res.trace_id:
+        response.headers["X-Trace-ID"] = res.trace_id
     return res
