@@ -994,6 +994,19 @@ def run_ingest(
                 counters["doc_check_embeddings"] + counters["chunk_embeddings"]
             )
             index_id = f"{collection}-rev{pending_rev}-{run_id}"
+
+            # Calculate immutable corpus & vector snapshot fingerprints
+            active_docs = state.get_active_documents(collection)
+            active_doc_hashes = sorted(
+                f"{d.doc_id}:{d.doc_version}:{d.content_hash}" for d in active_docs
+            )
+            corpus_sha256 = hashlib.sha256("\n".join(active_doc_hashes).encode("utf-8")).hexdigest()
+
+            all_chunks = store.get_all(collection)
+            chunk_pairs = sorted(zip(all_chunks.get("ids") or [], all_chunks.get("documents") or []))
+            vector_str = "\n".join(f"{cid}:{doc}" for cid, doc in chunk_pairs)
+            vector_sha256 = hashlib.sha256(vector_str.encode("utf-8")).hexdigest()
+
             store.set_collection_metadata(
                 collection,
                 {
@@ -1001,6 +1014,8 @@ def run_ingest(
                     "committed_revision": pending_rev,
                     "index_id": index_id,
                     "indexed_at": utc_now_iso(),
+                    "corpus_sha256": corpus_sha256,
+                    "vector_sha256": vector_sha256,
                 },
             )
             state.commit_revision(
