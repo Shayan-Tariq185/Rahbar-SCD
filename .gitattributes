@@ -5,3 +5,9 @@ scripts/gate_config_demo.sh text eol=lf
 
 # All Bash entrypoints must remain executable in Windows/WSL checkouts.
 *.sh text eol=lf
+
+# Frozen dataset, suite and policy digests must survive Windows checkouts.
+*.json text eol=lf
+*.jsonl text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
