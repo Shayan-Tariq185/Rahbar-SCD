@@ -78,6 +78,7 @@ def readyz(request: Request, response: Response) -> dict[str, Any]:
                 port=settings.chroma_port,
                 settings=ChromaSettings(anonymized_telemetry=False),
             )
+            request.app.state.chroma_client = chroma_client
         chroma_client.heartbeat()
         collection = chroma_client.get_collection(settings.collection)
     except Exception as exc:
