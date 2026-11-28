@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import threading
+
 import json
 from typing import Any
 
@@ -17,7 +19,16 @@ class OllamaProvider:
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings   # ollama_url, llm_model, temperature
+        self._request_state = threading.local()
         self.last_request: dict | None = None
+
+    @property
+    def last_request(self) -> dict | None:
+        return getattr(self._request_state, "request", None)
+
+    @last_request.setter
+    def last_request(self, value: dict | None) -> None:
+        self._request_state.request = value
 
     def generate(self, question: str, passages: list[Passage], seed: int | None = None) -> Answer:
         evidence = "\n\n".join(

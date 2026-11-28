@@ -10,6 +10,7 @@ import json
 import logging
 import re
 import time
+import threading
 
 import httpx
 
@@ -25,8 +26,25 @@ class HostedProvider:
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings   # hosted_base_url, llm_model, llm_api_key, temperature
+        self._request_state = threading.local()
         self.last_request: dict | None = None
         self.last_error: str | None = None
+
+    @property
+    def last_request(self) -> dict | None:
+        return getattr(self._request_state, "request", None)
+
+    @last_request.setter
+    def last_request(self, value: dict | None) -> None:
+        self._request_state.request = value
+
+    @property
+    def last_error(self) -> str | None:
+        return getattr(self._request_state, "error", None)
+
+    @last_error.setter
+    def last_error(self, value: str | None) -> None:
+        self._request_state.error = value
 
     def generate(self, question: str, passages: list[Passage], seed: int | None = None) -> Answer:
         self.last_error = None
