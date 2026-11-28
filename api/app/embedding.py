@@ -48,8 +48,7 @@ def hashing_vector(text: str, dim: int = HASHING_DIM) -> list[float]:
     return [value / norm for value in vector] if norm else vector
 
 
-@lru_cache(maxsize=512)
-def embed_query(text: str) -> list[float]:
+def _embed_query_direct(text: str, strict: bool = False) -> list[float]:
     settings = get_settings()
 
     if settings.embed_model == DUMMY_MODEL:
@@ -68,12 +67,27 @@ def embed_query(text: str) -> list[float]:
             )
             response.raise_for_status()
             embeddings = response.json()["embeddings"]
-    except Exception:
+    except Exception as exc:
+        if strict:
+            raise RuntimeError(f"Ollama embedding failed for model {settings.embed_model}: {exc}") from exc
         dim = DUMMY_DIM if "768" in settings.embed_model else HASHING_DIM
         return fake_vector(text, dim=dim) if dim == DUMMY_DIM else hashing_vector(text, dim=dim)
 
     if not embeddings:
+        if strict:
+            raise RuntimeError(f"Ollama returned empty embeddings for model {settings.embed_model}")
         dim = DUMMY_DIM if "768" in settings.embed_model else HASHING_DIM
         return fake_vector(text, dim=dim) if dim == DUMMY_DIM else hashing_vector(text, dim=dim)
 
     return [float(value) for value in embeddings[0]]
+
+
+@lru_cache(maxsize=512)
+def _embed_query_cached(text: str) -> list[float]:
+    return _embed_query_direct(text, strict=False)
+
+
+def embed_query(text: str, fresh: bool = False, strict: bool = False) -> list[float]:
+    if fresh or strict:
+        return _embed_query_direct(text, strict=strict)
+    return _embed_query_cached(text)
