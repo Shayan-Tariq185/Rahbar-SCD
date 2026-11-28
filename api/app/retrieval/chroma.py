@@ -49,7 +49,9 @@ class ChromaRetriever:
             question,
             re.IGNORECASE,
         )
-        if version_question:
+        # Preserve A02's explicit historical-query route. Strict A03 evaluation
+        # always measures the active snapshot and its declared metadata filter.
+        if version_question and not strict:
             result = collection.query(
                 query_embeddings=embeddings,
                 n_results=k,
