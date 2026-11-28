@@ -4,7 +4,7 @@ Audited against `origin/dev` (Assignment 02 baseline) and `Member_1_RAGOps_Guide
 
 ## Summary of Real A02 State
 - **Track A completed on `origin/dev`**: FastAPI API (`api/app/main.py`, `routes/ask.py`, `routes/health.py`, `routes/metrics.py`, `services/cache.py`), Kubernetes base/dev/prod/ci manifests (`k8s/`), CI/CD workflows (`.github/workflows/ci.yml`, `cd.yml`), Prometheus metrics, JSON stdout logging, and Calico deny-by-default NetworkPolicies.
-- **Track B stubs remaining on `origin/dev`**: `indexer/pipeline/{extract,clean,chunk,embed,store}.py`, `api/app/embedding.py`, `api/app/retrieval/chroma.py`, `api/app/services/{grounding,validate}.py`, `api/app/providers/llm/{ollama,hosted}.py`, and `eval/run_eval.py` still contain `STARTER-TODO` / `TODO(TrackB)`. Per H0 ownership, Member 1 preserves those files untouched and implements `ragops/*` adapters/wrappers and additive API observability.
+- **Corrected integration audit**: The completed Assignment 02 extraction, cleaning, chunking, embedding, Chroma retrieval, grounding, validation, hosted/Ollama generation and evaluation implementations are present and preserved. The earlier incomplete-starter assumption was stale. Current runtime integration fixes and real evidence are documented in `docs/member2/INTEGRATION-20261128.md` and `docs/member2/PROGRESS.md`.
 
 ## Gap Table (A1–F5 and G)
 

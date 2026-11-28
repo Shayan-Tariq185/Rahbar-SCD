@@ -42,8 +42,12 @@ def main() -> int:
             raise ValueError(f"decision input binding differs: {key}")
     if original.get("release_authorized") is not True or original.get("test_only"):
         raise ValueError("decision does not authorize a measured release")
-    identity = asdict(HttpApiClient(args.current_api).identity())
-    fresh = decide(read_json(args.baseline), read_json(args.suite), read_config(args.policy),
+    current_api = HttpApiClient(args.current_api)
+    identity = asdict(current_api.identity())
+    candidate_suite = read_json(args.suite)
+    if current_api.metadata.get("provider") != candidate_suite["provider"]:
+        raise ValueError("current generator provider/model/parameters differ from the measured candidate")
+    fresh = decide(read_json(args.baseline), candidate_suite, read_config(args.policy),
                    baseline_hash=digest(args.baseline), candidate_hash=digest(args.suite),
                    policy_hash=digest(args.policy), current_identity=identity)
     if not fresh["release_authorized"] or fresh["candidate_identity"] != original.get("candidate_identity"):
@@ -74,6 +78,7 @@ def main() -> int:
     patch_path = stem.with_suffix(".patch.json")
     write_json(patch_path, patch)
     audit = {"timestamp": timestamp(), "decision_sha256": digest(args.decision), "fresh_decision": fresh,
+             "current_provider": current_api.metadata["provider"],
              "deployment": args.deployment, "namespace": args.namespace, "dry_run": args.dry_run,
              "rollback_revision": before["metadata"].get("annotations", {}).get("deployment.kubernetes.io/revision"),
              "before_template": before["spec"]["template"], "patch": patch}
