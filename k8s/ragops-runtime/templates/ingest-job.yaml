@@ -31,6 +31,9 @@ spec:
           envFrom:
             - configMapRef:
                 name: rahbar-config
+          env:
+            - name: RAGOPS_EXTRACT_TIMEOUT
+              value: "600"
           securityContext:
             readOnlyRootFilesystem: true
             allowPrivilegeEscalation: false

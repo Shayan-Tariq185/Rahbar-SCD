@@ -534,7 +534,7 @@ def compute_pipeline_fingerprint(
         f"ext={EXTRACTOR_VERSION}|cs={chunk_size}|co={chunk_overlap}"
         f"|em={embed_ident.model}|ed={embed_ident.digest}|dim={embed_ident.dimension}"
     )
-    return hashlib.sha256(raw.encode("utf-8")).hexdigest()[:16]
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
 def _verify_collection_pin(
