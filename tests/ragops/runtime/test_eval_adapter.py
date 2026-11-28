@@ -3,16 +3,19 @@
 from __future__ import annotations
 
 import json
+import sys
+from pathlib import Path
 from unittest.mock import MagicMock
 import pytest
 
 pytest.importorskip("fastapi")
+sys.path.insert(0, str(Path(__file__).resolve().parents[3] / "api"))
 
 
 @pytest.mark.parametrize("digest", ["a" * 64, "sha256:" + "b" * 64])
 def test_runtime_identity_structure(monkeypatch: pytest.MonkeyPatch, digest: str) -> None:
-    from api.app.routes.eval_adapter import _build_runtime_identity
-    from api.app.config import Settings
+    from app.routes.eval_adapter import _build_runtime_identity
+    from app.config import Settings
 
     monkeypatch.setenv("API_IMAGE", "rahbar-api:test-only-source-image")
     settings = Settings(
@@ -57,7 +60,7 @@ def test_runtime_identity_structure(monkeypatch: pytest.MonkeyPatch, digest: str
 def test_eval_adapter_routes_with_fastapi(monkeypatch: pytest.MonkeyPatch) -> None:
     pytest.importorskip("fastapi")
     from fastapi.testclient import TestClient
-    from api.app.main import app
+    from app.main import app
 
     monkeypatch.setenv("EVAL_INTERNAL_ENABLED", "true")
 

@@ -110,3 +110,48 @@ def test_hosted_provider_returns_valid_answer(monkeypatch) -> None:
     assert answer.answer == "Attendance is required."
     assert answer.answered_from_context is True
 
+
+def test_hosted_rate_limit_waits_then_retries_real_provider(monkeypatch) -> None:
+    from app.providers.llm.hosted import HostedProvider
+    import app.providers.llm.hosted as hosted
+
+    valid = {"reasoning": "evidence", "answer": "Attendance is required.",
+             "citations": [{"source": "rules.pdf", "section": "1.21 Attendance", "page": 2}],
+             "answered_from_context": True, "confidence": "high"}
+
+    class RateLimitedResponse:
+        status_code = 429
+        headers = {"retry-after": "2"}
+
+    class Client(_FakeClient):
+        def post(self, url: str, **kwargs: object):
+            if self.calls == 0:
+                self.calls += 1
+                return RateLimitedResponse()
+            return super().post(url, **kwargs)
+
+    client = Client([{}, {"choices": [{"message": {"content": json.dumps(valid)}}]}])
+    waits = []
+    monkeypatch.setattr(httpx, "Client", lambda timeout: client)
+    monkeypatch.setattr(hosted.time, "sleep", waits.append)
+    provider = HostedProvider(Settings(hosted_base_url="https://api.example", llm_api_key="test", llm_model="test"))
+    answer = provider.generate("What is required?", [_passage()])
+    assert answer.answered_from_context is True
+    assert client.calls == 2 and waits == [2.5]
+    assert provider.last_error is None
+
+
+def test_strict_evaluation_rejects_provider_failure_fallback() -> None:
+    import pytest
+    from app.services.validate import fallback_answer, generate_and_validate
+
+    class FailingProvider:
+        name = "test-only"
+        last_error = "hosted request exhausted retries"
+
+        def generate(self, *args, **kwargs):
+            return fallback_answer()
+
+    with pytest.raises(RuntimeError, match="exhausted retries"):
+        generate_and_validate("What is required?", [_passage()], FailingProvider(), Settings(), strict=True)
+
