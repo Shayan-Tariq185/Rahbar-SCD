@@ -57,6 +57,8 @@ def answer_question(
     cache: Any = None,
     *,
     bypass_cache: bool = False,
+    seed: int | None = None,
+    fresh_embedding: bool = False,
     collection_meta: dict[str, Any] | None = None,
     trace_sink: list[dict[str, Any]] | None = None,
 ) -> AskResponse:
@@ -74,7 +76,7 @@ def answer_question(
 
     # 1. Query embedding
     t0 = time.perf_counter()
-    query_vector = embed_query(question)
+    query_vector = embed_query(question, fresh=fresh_embedding, strict=fresh_embedding)
     lat_ms["embed"] = (time.perf_counter() - t0) * 1000.0
     stage_status["embed"] = "ok"
     STAGE_LATENCY.labels(stage="embed").observe(lat_ms["embed"] / 1000.0)
@@ -183,12 +185,23 @@ def answer_question(
     # 3. Retrieval with latency measurement
     t_ret_start = time.perf_counter()
     try:
-        passages = retriever.retrieve(question, k=settings.top_k)
+        import inspect
+        sig = inspect.signature(retriever.retrieve)
+        kwargs: dict[str, Any] = {"k": settings.top_k}
+        if "fresh" in sig.parameters:
+            kwargs["fresh"] = fresh_embedding
+        if "strict" in sig.parameters:
+            kwargs["strict"] = fresh_embedding
+        passages = retriever.retrieve(question, **kwargs)
     except NotImplementedError:
+        if fresh_embedding:
+            raise
         from ..retrieval.stub import StubRetriever
 
         passages = StubRetriever().retrieve(question, k=settings.top_k)
     except Exception as exc:
+        if fresh_embedding:
+            raise
         log.exception("Retrieval failed, falling back to stub retriever: %s", exc)
         from ..retrieval.stub import StubRetriever
 
@@ -238,19 +251,9 @@ def answer_question(
         outcome = "abstained"
     else:
         prompt_text = build_exact_prompt(question, passages, settings.prompt_version)
-        model_request = {
-            "model": getattr(provider, "model", settings.llm_model),
-            "messages": [
-                {"role": "user", "content": prompt_text}
-            ],
-            "options": {
-                "temperature": settings.temperature,
-                "top_k": settings.top_k,
-            },
-        }
         t_gen_start = time.perf_counter()
         try:
-            answer = generate_and_validate(question, passages, provider, settings)
+            answer = generate_and_validate(question, passages, provider, settings, seed=seed)
             stage_status["generate"] = "ok"
         except Exception as exc:
             err_msg = f"{type(exc).__name__}: {exc}"
@@ -263,6 +266,24 @@ def answer_question(
                 confidence="low",
             )
             outcome = "error"
+        t_gen_end = time.perf_counter()
+        GENERATION_LATENCY.observe(t_gen_end - t_gen_start)
+        lat_ms["generate"] = (t_gen_end - t_gen_start) * 1000.0
+        STAGE_LATENCY.labels(stage="generate").observe(t_gen_end - t_gen_start)
+
+        # Capture exact outgoing model request directly from provider boundary
+        model_request = getattr(provider, "last_request", None)
+        if model_request is None and outcome != "error":
+            opts: dict[str, Any] = {"temperature": settings.temperature}
+            if seed is not None:
+                opts["seed"] = seed
+            model_request = {
+                "model": getattr(provider, "model", settings.llm_model),
+                "messages": [
+                    {"role": "user", "content": prompt_text}
+                ],
+                "options": opts,
+            }
         t_gen_end = time.perf_counter()
         GENERATION_LATENCY.observe(t_gen_end - t_gen_start)
         lat_ms["generate"] = (t_gen_end - t_gen_start) * 1000.0

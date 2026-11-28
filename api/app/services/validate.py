@@ -28,12 +28,20 @@ def generate_and_validate(
     passages: list[Passage],
     provider: LLMProvider,
     settings: Settings,
+    seed: int | None = None,
 ) -> Answer:
     _ = settings
     retries = 1
     for attempt in range(retries + 1):
         try:
-            return parse_answer(provider.generate(question, passages).model_dump())
+            if seed is not None:
+                try:
+                    res = provider.generate(question, passages, seed=seed)
+                except TypeError:
+                    res = provider.generate(question, passages)
+            else:
+                res = provider.generate(question, passages)
+            return parse_answer(res.model_dump())
         except Exception:
             if attempt < retries:
                 # retry generation once before fallback
