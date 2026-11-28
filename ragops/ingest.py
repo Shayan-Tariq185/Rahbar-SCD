@@ -571,6 +571,17 @@ def _verify_collection_pin(
     return meta
 
 
+def _snapshot_fingerprints(state: StateStore, store: VectorStore, collection: str) -> tuple[str, str]:
+    """Bind every writer operation to the actual active corpus and stored vectors."""
+    active = sorted(f"{d.doc_id}:{d.doc_version}:{d.content_hash}" for d in state.get_active_documents(collection))
+    corpus_hash = hashlib.sha256("\n".join(active).encode("utf-8")).hexdigest()
+    data = store.get_all(collection)
+    rows = sorted(zip(data.get("ids") or [], data.get("documents") or [],
+                      data.get("embeddings") or [], strict=True), key=lambda row: row[0])
+    encoded = json.dumps(rows, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
+    return corpus_hash, hashlib.sha256(encoded.encode("utf-8")).hexdigest()
+
+
 def _write_verification_reports(
     results_dir: Path,
     collection: str,
@@ -975,16 +986,7 @@ def run_ingest(
             index_id = f"{collection}-rev{pending_rev}-{run_id}"
 
             # Calculate immutable corpus & vector snapshot fingerprints
-            active_docs = state.get_active_documents(collection)
-            active_doc_hashes = sorted(
-                f"{d.doc_id}:{d.doc_version}:{d.content_hash}" for d in active_docs
-            )
-            corpus_sha256 = hashlib.sha256("\n".join(active_doc_hashes).encode("utf-8")).hexdigest()
-
-            all_chunks = store.get_all(collection)
-            chunk_pairs = sorted(zip(all_chunks.get("ids") or [], all_chunks.get("documents") or [], all_chunks.get("embeddings") or [], strict=True), key=lambda row: row[0])
-            vector_str = json.dumps(chunk_pairs, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
-            vector_sha256 = hashlib.sha256(vector_str.encode("utf-8")).hexdigest()
+            corpus_sha256, vector_sha256 = _snapshot_fingerprints(state, store, collection)
 
             store.set_collection_metadata(
                 collection,
@@ -1082,6 +1084,7 @@ def run_tombstone(
                 deleted_versions.append(rec.doc_version)
 
             index_id = f"{collection}-rev{pending_rev}-{run_id}"
+            corpus_sha256, vector_sha256 = _snapshot_fingerprints(state, store, collection)
             store.set_collection_metadata(
                 collection,
                 {
@@ -1090,6 +1093,8 @@ def run_tombstone(
                     "embed_digest": rev["embed_digest"],
                     "dimension": int(rev["dimension"]),
                     "pipeline_fingerprint": rev["pipeline_fingerprint"],
+                    "corpus_sha256": corpus_sha256,
+                    "vector_sha256": vector_sha256,
                     "committed_revision": pending_rev,
                     "index_id": index_id,
                     "indexed_at": utc_now_iso(),
@@ -1129,6 +1134,7 @@ def run_restore(
     embedder: Embedder,
     chunk_size: int = 400,
     chunk_overlap: int = 50,
+    extract_timeout_s: float = 30.0,
 ) -> dict[str, Any]:
     """Restore an archived/superseded version via the writer lock and supersede current active."""
     run_id = f"restore-{int(time.time())}-{os.getpid()}"
@@ -1195,7 +1201,7 @@ def run_restore(
             restored_raw = raw_dir / f"{doc_id}__{doc_version}__{target.source}"
             shutil.copy2(archived_file, restored_raw)
 
-            pages_text, ext_err = extract_with_timeout(restored_raw, doc_version, False)
+            pages_text, ext_err = extract_with_timeout(restored_raw, doc_version, False, timeout_s=extract_timeout_s)
             if ext_err:
                 raise InfrastructureError(f"Restore extraction failed: {ext_err}")
 
@@ -1218,6 +1224,9 @@ def run_restore(
                 embeddings=vectors,
                 metadatas=[c["metadata"] for c in chunks],
             )
+            stale_ids = sorted(set(target.chunk_ids) - {c["id"] for c in chunks})
+            if stale_ids:
+                store.delete_ids(collection, stale_ids)
             state.upsert_document(
                 DocumentRecord(
                     collection=collection,
@@ -1249,6 +1258,7 @@ def run_restore(
                 {"chunks_restored": len(chunks)},
             )
             index_id = f"{collection}-rev{pending_rev}-{run_id}"
+            corpus_sha256, vector_sha256 = _snapshot_fingerprints(state, store, collection)
             store.set_collection_metadata(
                 collection,
                 {
@@ -1257,6 +1267,8 @@ def run_restore(
                     "embed_digest": embed_ident.digest,
                     "dimension": embed_ident.dimension,
                     "pipeline_fingerprint": target.pipeline_fingerprint,
+                    "corpus_sha256": corpus_sha256,
+                    "vector_sha256": vector_sha256,
                     "committed_revision": pending_rev,
                     "index_id": index_id,
                     "indexed_at": utc_now_iso(),
@@ -1434,6 +1446,7 @@ def main(argv: list[str] | None = None) -> int:
                 embedder=embedder,
                 chunk_size=chunk_size,
                 chunk_overlap=chunk_overlap,
+                extract_timeout_s=extract_timeout_s,
             )
             print(json.dumps(res, indent=2))
             return 0

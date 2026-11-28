@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from typing import Any, Protocol
+from typing import Protocol
 
 from ...schemas import Answer, Passage
 
@@ -10,6 +10,6 @@ from ...schemas import Answer, Passage
 class LLMProvider(Protocol):
     name: str
 
-    def generate(self, question: str, passages: list[Passage], **kwargs: Any) -> Answer:
+    def generate(self, question: str, passages: list[Passage], seed: int | None = None) -> Answer:
         """Answer the question from the passages, as an `Answer`."""
         ...

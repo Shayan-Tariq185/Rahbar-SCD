@@ -282,6 +282,19 @@ def generate_batch_b(out_dir: Path) -> dict[str, object]:
         notes="Distinct valid examination conduct fixture.",
     )
 
+    # Two rejected copies, in addition to the canonical source, make the exact
+    # duplicate requirement unambiguous in the verification report.
+    add_text_doc(
+        filename="b13_lab_safety_second_copy.md",
+        content=lab_safety_text,
+        doc_id="lab-safety-second-copy",
+        family_id="lab-safety-second-copy",
+        title="Laboratory Safety Policy Second Copy",
+        doc_version="2026-09",
+        date="2026-09-01",
+        expected_outcome="QUARANTINE (second exact_duplicate)",
+        notes="Second byte-for-byte duplicate of the canonical b02 lab document.",
+    )
     (out_dir / "_index.json").write_text(json.dumps(index_entries, indent=2), encoding="utf-8")
 
     planted_md = [

@@ -103,7 +103,7 @@ def answer_question(
             load_trace_by_id(origin_trace_id, settings.traces_dir) if origin_trace_id else None
         )
         origin_prompt = origin_trace.get("prompt") if origin_trace else None
-        prompt_note = (
+        cached_prompt_note = (
             f"cache_hit_linked_to:{origin_trace_id}"
             if origin_prompt is not None
             else f"cache_hit_origin:{origin_trace_id or 'unknown'}"
@@ -154,7 +154,7 @@ def answer_question(
             filters=filters,
             passages=passages_from_cache,
             prompt=origin_prompt,
-            prompt_note=prompt_note,
+            prompt_note=cached_prompt_note,
             response=response,
             guardrail_actions=(origin_trace or {}).get("guardrail_actions", []),
             stage_latencies_ms=lat_ms,

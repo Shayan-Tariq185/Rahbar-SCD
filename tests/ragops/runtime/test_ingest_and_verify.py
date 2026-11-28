@@ -288,6 +288,9 @@ def test_tombstone_deletes_only_target_doc_and_partial_batch_never_deletes(tmp_p
     assert tomb["deleted_chunks"] > 0
     assert store.count_by_doc_id("rahbar_sandbox", "alpha") == 0
     assert store.count_by_doc_id("rahbar_sandbox", "beta") > 0
+    tombstone_meta = store.get_collection_metadata("rahbar_sandbox")
+    assert tombstone_meta is not None
+    assert all(len(tombstone_meta[key]) == 64 for key in ("corpus_sha256", "vector_sha256"))
 
 
 def test_version_supersede_and_restore_and_candidate_isolation(tmp_path: Path) -> None:
@@ -327,6 +330,9 @@ def test_version_supersede_and_restore_and_candidate_isolation(tmp_path: Path) -
     assert cand_2023 is not None and cand_2023.status == "active"
     assert cand_2026 is not None and cand_2026.status == "superseded"
     assert orig_2026 is not None and orig_2026.status == "active"
+    restored_meta = store.get_collection_metadata("rahbar_cand_good")
+    assert restored_meta is not None
+    assert all(len(restored_meta[key]) == 64 for key in ("corpus_sha256", "vector_sha256"))
 
 
 def test_failed_retry_recovery_and_pin_mismatch(tmp_path: Path) -> None:
@@ -425,10 +431,10 @@ def test_verify_checks_and_batch_b_e2e(tmp_path: Path) -> None:
     assert Path(archived_clone.stored_path).parent == state.archive_dir / "rahbar_ab"
 
     # Expect: academic-rules 2027, lab-safety-a, campus-network-policy (injected), 2 fillers = 5 indexed
-    # Exact dup, near-dup, corrupt pdf, garbled md, missing metadata, truncated = 6 quarantined
+    # Two exact dup copies, near-dup, corrupt, garbled, missing metadata, truncated = 7
     # Older academic-rules 2021 = 1 archived
     assert res_b["counters"]["docs_indexed"] == 5
-    assert res_b["counters"]["docs_quarantined"] == 6
+    assert res_b["counters"]["docs_quarantined"] == 7
     assert res_b["counters"]["docs_archived"] == 1
     # Verify indexable Batch B injection survived verification for D4 testing
     inj_rec = state.get_document("rahbar_ab", "campus-network-policy", "2027-01")
@@ -437,4 +443,4 @@ def test_verify_checks_and_batch_b_e2e(tmp_path: Path) -> None:
     assert Path(res_b["report_json"]).exists()
     assert Path(res_b["report_md"]).exists()
     report_data = json.loads(Path(res_b["report_json"]).read_text(encoding="utf-8"))
-    assert len(report_data["documents"]) == 12
+    assert len(report_data["documents"]) == 13
