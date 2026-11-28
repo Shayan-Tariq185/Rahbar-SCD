@@ -22,11 +22,11 @@ try:
         write_trace_record,
     )
 except ImportError:  # pragma: no cover
-    build_exact_prompt = None  # type: ignore
-    build_trace_record = None  # type: ignore
-    load_trace_by_id = None  # type: ignore
-    sanitize_secrets = None  # type: ignore
-    write_trace_record = None  # type: ignore
+    build_exact_prompt = None
+    build_trace_record = None
+    load_trace_by_id = None
+    sanitize_secrets = None
+    write_trace_record = None
 
 __all__ = [
     "build_exact_prompt",

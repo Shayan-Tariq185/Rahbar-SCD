@@ -413,8 +413,16 @@ def test_verify_checks_and_batch_b_e2e(tmp_path: Path) -> None:
     embedder = CountingEmbedder("hashing-384")
 
     run_ingest(collection="rahbar_a", batch_dir=batch_a, state=state, store=store, embedder=embedder, results_dir=results)
+    baseline_record = state.get_document("rahbar_a", "academic-rules", "2026")
+    assert baseline_record is not None
+    baseline_path = Path(baseline_record.stored_path)
+    baseline_bytes = baseline_path.read_bytes()
     run_snapshot_clone(src_collection="rahbar_a", dst_collection="rahbar_ab", state=state, store=store)
     res_b = run_ingest(collection="rahbar_ab", batch_dir=batch_b, state=state, store=store, embedder=embedder, results_dir=results)
+    assert baseline_path.read_bytes() == baseline_bytes
+    archived_clone = state.get_document("rahbar_ab", "academic-rules", "2026")
+    assert archived_clone is not None
+    assert Path(archived_clone.stored_path).parent == state.archive_dir / "rahbar_ab"
 
     # Expect: academic-rules 2027, lab-safety-a, campus-network-policy (injected), 2 fillers = 5 indexed
     # Exact dup, near-dup, corrupt pdf, garbled md, missing metadata, truncated = 6 quarantined

@@ -421,9 +421,9 @@ def _chunk_pages(
     # Reuse the completed A02 cleaner/chunker, including cross-page clauses and
     # numbered student-handbook items, rather than inventing different sections.
     try:
-        from pipeline.models import Document, Page
-        from pipeline.clean import clean
-        from pipeline.chunk import chunk
+        from pipeline.models import Document, Page  # type: ignore[import-not-found]
+        from pipeline.clean import clean  # type: ignore[import-not-found]
+        from pipeline.chunk import chunk  # type: ignore[import-not-found]
     except ImportError:
         from indexer.pipeline.models import Document, Page
         from indexer.pipeline.clean import clean
@@ -1312,7 +1312,7 @@ def run_snapshot_clone(
                 ids=ids,
                 documents=src_data["documents"],
                 embeddings=src_data["embeddings"],
-                metadatas=src_data["metadatas"],
+                metadatas=[dict(metadata) for metadata in src_data["metadatas"]],
             )
         store.set_collection_metadata(dst_collection, src_meta)
         docs_cloned = state.clone_collection_state(src_collection, dst_collection, run_id)

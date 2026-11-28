@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 import os
 import socket
+import sys
+import shutil
 import sqlite3
 import time
 from collections.abc import Iterator
@@ -46,7 +48,7 @@ class DocumentRecord:
 
 
 def _acquire_file_lock(fd: int) -> bool:
-    if os.name == "nt":
+    if sys.platform == "win32":
         import msvcrt
 
         try:
@@ -64,7 +66,7 @@ def _acquire_file_lock(fd: int) -> bool:
 
 
 def _release_file_lock(fd: int) -> None:
-    if os.name == "nt":
+    if sys.platform == "win32":
         import msvcrt
 
         try:
@@ -613,6 +615,15 @@ class StateStore:
                 "SELECT * FROM documents WHERE collection = ?", (src_collection,)
             ).fetchall()
             for row in rows:
+                # Each collection owns its files. A later archive/delete in a
+                # drift collection must never move a frozen baseline original.
+                source_path = Path(row["stored_path"])
+                area = self.raw_dir if row["status"] == "active" else (
+                    self.quarantine_dir if row["status"] == "quarantined" else self.archive_dir)
+                destination_path = area / dst_collection / source_path.name
+                destination_path.parent.mkdir(parents=True, exist_ok=True)
+                if source_path.resolve() != destination_path.resolve():
+                    shutil.copy2(source_path, destination_path)
                 conn.execute(
                     """
                     INSERT INTO documents (
@@ -652,7 +663,7 @@ class StateStore:
                         row["pipeline_fingerprint"],
                         row["status"],
                         row["superseded"],
-                        row["stored_path"],
+                        str(destination_path),
                         row["chunk_ids_json"],
                         row["doc_embedding_json"],
                         row["verification_json"],
