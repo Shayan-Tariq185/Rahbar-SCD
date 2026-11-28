@@ -33,6 +33,64 @@ from ragops.verify import (  # noqa: E402
 from scripts.make_batch_b import generate_batch_b  # noqa: E402
 
 
+def test_runtime_identity_does_not_call_embedding_endpoint(monkeypatch: pytest.MonkeyPatch) -> None:
+    import httpx
+    calls = []
+
+    class Response:
+        def __init__(self, data: dict[str, Any]) -> None:
+            self.data = data
+
+        def raise_for_status(self) -> None:
+            pass
+
+        def json(self) -> dict[str, Any]:
+            return self.data
+
+    class Client:
+        def __init__(self, **kwargs: Any) -> None:
+            pass
+
+        def __enter__(self) -> Any:
+            return self
+
+        def __exit__(self, *args: Any) -> None:
+            pass
+
+        def get(self, url: str) -> Response:
+            calls.append(url)
+            assert url.endswith('/api/tags')
+            return Response({'models': [{'name': 'nomic-embed-text:latest', 'digest': 'a' * 64}]})
+
+        def post(self, url: str, **kwargs: Any) -> Response:
+            calls.append(url)
+            assert url.endswith('/api/show')
+            return Response({'model_info': {'nomic-bert.embedding_length': 768}})
+
+    monkeypatch.setattr(httpx, 'Client', Client)
+    identity = RuntimeEmbedder('nomic-embed-text', 'http://model').identity()
+    assert identity.dimension == 768
+    assert identity.digest == 'a' * 64
+    assert not any(url.endswith('/api/embed') for url in calls)
+
+
+def test_chroma_metadata_update_excludes_immutable_index_metric() -> None:
+    from ragops.ingest import ChromaVectorStore
+
+    class Collection:
+        def modify(self, *, metadata: dict[str, Any]) -> None:
+            assert 'hnsw:space' not in metadata
+            assert metadata['committed_revision'] == 3
+
+    class Client:
+        def get_collection(self, name: str) -> Collection:
+            return Collection()
+
+    store = ChromaVectorStore('test-only', 8000)
+    store._client = Client()
+    store.set_collection_metadata('fixture', {'hnsw:space': 'cosine', 'committed_revision': 3})
+
+
 class FakeVectorStore:
     """In-memory VectorStore fake for offline unit testing only."""
 

@@ -37,7 +37,7 @@ from .verify import (
     verify_document,
 )
 
-EXTRACTOR_VERSION = "ragops-a02-structure-v2"
+EXTRACTOR_VERSION = "ragops-a02-visible-v3"
 SUPPORTED_EXTS = {".pdf", ".md", ".txt", ".html", ".htm"}
 
 
