@@ -255,7 +255,7 @@ def answer_question(
         prompt_text = build_exact_prompt(question, passages, settings.prompt_version)
         t_gen_start = time.perf_counter()
         try:
-            answer = generate_and_validate(question, passages, provider, settings, seed=seed)
+            answer = generate_and_validate(question, passages, provider, settings, seed=seed, strict=fresh_embedding)
             stage_status["generate"] = "ok"
         except Exception as exc:
             err_msg = f"{type(exc).__name__}: {exc}"

@@ -29,6 +29,7 @@ def generate_and_validate(
     provider: LLMProvider,
     settings: Settings,
     seed: int | None = None,
+    strict: bool = False,
 ) -> Answer:
     _ = settings
     retries = 1
@@ -41,10 +42,14 @@ def generate_and_validate(
                     res = provider.generate(question, passages)
             else:
                 res = provider.generate(question, passages)
+            if strict and (getattr(provider, "last_error", None) or res == fallback_answer()):
+                raise RuntimeError(getattr(provider, "last_error", None) or "Provider returned an invalid-output fallback")
             return parse_answer(res.model_dump())
         except Exception:
             if attempt < retries:
                 # retry generation once before fallback
                 continue
+            if strict:
+                raise
             return fallback_answer()
     return fallback_answer()
