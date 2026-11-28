@@ -8,6 +8,7 @@ and answer_question pipeline with zero Chroma writes.
 from __future__ import annotations
 
 import hashlib
+import inspect
 import json
 import os
 import time
@@ -48,40 +49,55 @@ def _build_runtime_identity(settings: Any, state: Any) -> dict[str, Any]:
     revision = str(col_meta.get("committed_revision") or getattr(settings, "committed_revision", None) or "v1")
     api_image = os.environ.get("API_IMAGE") or "rahbar-api:latest"
 
-    # Compute stable corpus_sha256 from config/corpus-inventory.json or collection metadata
+    # Compute stable 64-char corpus_sha256 from config/corpus-inventory.json or collection metadata
     corpus_sha = col_meta.get("corpus_sha256")
-    if not corpus_sha or len(corpus_sha) != 64:
+    if not corpus_sha or len(str(corpus_sha)) != 64:
         inventory_path = Path(__file__).resolve().parents[3] / "config" / "corpus-inventory.json"
         if inventory_path.exists():
             corpus_sha = hashlib.sha256(inventory_path.read_bytes()).hexdigest()
         else:
             corpus_sha = hashlib.sha256(settings.collection.encode("utf-8")).hexdigest()
 
+    # Pipeline fingerprint (64-char sha256) - do not touch non-existent Settings attributes
     pipeline_sha = col_meta.get("pipeline_sha256")
-    if not pipeline_sha or len(pipeline_sha) != 64:
-        raw_fp = f"{settings.chunk_size}:{settings.chunk_overlap}:{settings.embed_model}:{settings.prompt_version}"
+    if not pipeline_sha or len(str(pipeline_sha)) != 64:
+        raw_fp = f"{getattr(settings, 'embed_model', '')}:{getattr(settings, 'prompt_version', 'v1')}:{getattr(settings, 'relevance_floor', 0.2)}"
         pipeline_sha = hashlib.sha256(raw_fp.encode("utf-8")).hexdigest()
 
     vector_sha = col_meta.get("vector_sha256")
+    if vector_sha is not None and len(str(vector_sha)) != 64:
+        vector_sha = None
 
     config_dict = {
-        "top_k": settings.top_k,
-        "temperature": settings.temperature,
-        "relevance_floor": settings.relevance_floor,
-        "cache_threshold": settings.cache_threshold,
-        "prompt_version": settings.prompt_version,
+        "cache_threshold": float(getattr(settings, "cache_threshold", 0.90)),
+        "prompt_version": str(getattr(settings, "prompt_version", "v1")),
+        "relevance_floor": float(getattr(settings, "relevance_floor", 0.2)),
+        "temperature": float(getattr(settings, "temperature", 0.2)),
+        "top_k": int(getattr(settings, "top_k", 5)),
     }
 
-    digest = col_meta.get("embed_digest") or settings.embed_version or "latest"
-    if not digest.startswith("sha256:"):
-        digest = f"sha256:{hashlib.sha256(digest.encode('utf-8')).hexdigest()[:16]}"
+    digest = str(col_meta.get("embed_digest") or getattr(settings, "embed_version", "") or "")
+    if not digest:
+        digest = f"sha256:{hashlib.sha256(str(getattr(settings, 'embed_model', 'nomic-embed-text')).encode('utf-8')).hexdigest()}"
+    elif not digest.startswith("sha256:"):
+        digest = f"sha256:{hashlib.sha256(digest.encode('utf-8')).hexdigest()}"
 
-    dim = getattr(settings, "embed_dimension", None) or col_meta.get("dimension") or 768
+    dim = col_meta.get("dimension") or getattr(settings, "embed_dimension", None)
     if hasattr(state, "retriever") and hasattr(state.retriever, "embedder"):
         try:
             dim = state.retriever.embedder.dimension
         except Exception:
             pass
+    if not dim or int(dim) < 1:
+        dim = 768
+
+    is_stub = getattr(settings, "retriever", "") == "stub"
+    if hasattr(state, "retriever"):
+        from ..retrieval.stub import StubRetriever
+
+        if isinstance(state.retriever, StubRetriever):
+            is_stub = True
+    provenance = "synthetic_fixture" if is_stub else "real"
 
     return {
         "collection": settings.collection,
@@ -95,7 +111,7 @@ def _build_runtime_identity(settings: Any, state: Any) -> dict[str, Any]:
             "digest": digest,
             "dimension": int(dim),
         },
-        "provenance": "real",
+        "provenance": provenance,
         "vector_sha256": vector_sha,
     }
 
@@ -109,9 +125,11 @@ def eval_identity(request: Request) -> dict[str, Any]:
 
     identity = _build_runtime_identity(settings, state)
     provider = getattr(state, "provider", None)
-    provider_name = getattr(provider, "name", None) or "hosted"
-    provider_model = getattr(provider, "model", None) or settings.llm_model
+    provider_name = getattr(provider, "name", None) or getattr(settings, "llm_provider", "hosted")
+    provider_model = getattr(provider, "model", None) or getattr(settings, "llm_model", "llama3.2:3b")
     provider_version = getattr(provider, "version", None) or provider_model
+
+    supported = getattr(settings, "llm_provider", "") in {"ollama", "ollama-host", "ollama-incluster", "hosted"}
 
     return {
         "schema_version": "1.0",
@@ -121,12 +139,11 @@ def eval_identity(request: Request) -> dict[str, Any]:
             "model": provider_model,
             "version": provider_version,
             "parameters": {
-                "temperature": settings.temperature,
-                "top_k": settings.top_k,
+                "temperature": float(settings.temperature),
             },
         },
         "seed_support": {
-            "supported": True,
+            "supported": supported,
         },
     }
 
@@ -141,11 +158,15 @@ def eval_retrieve(body: EvalRetrieveRequest, request: Request) -> dict[str, Any]
     k = body.top_k or settings.top_k
     t0 = time.perf_counter()
     try:
-        passages = state.retriever.retrieve(body.question, k=k)
-    except NotImplementedError:
-        from ..retrieval.stub import StubRetriever
-
-        passages = StubRetriever().retrieve(body.question, k=k)
+        sig = inspect.signature(state.retriever.retrieve)
+        kwargs: dict[str, Any] = {"k": k}
+        if "fresh" in sig.parameters:
+            kwargs["fresh"] = body.fresh_embedding
+        if "strict" in sig.parameters:
+            kwargs["strict"] = body.fresh_embedding
+        passages = state.retriever.retrieve(body.question, **kwargs)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Retrieval failed without fallback: {exc}")
     latency_ms = (time.perf_counter() - t0) * 1000.0
 
     passages = [p for p in passages if not getattr(p, "superseded", False)]
@@ -203,19 +224,34 @@ def eval_ask(body: EvalAskRequest, request: Request) -> dict[str, Any]:
     if not settings.eval_internal_enabled:
         raise HTTPException(status_code=404, detail="Internal eval adapter disabled")
 
+    identity = _build_runtime_identity(settings, state)
+    col_meta = {
+        "committed_revision": identity["revision"],
+        "embed_digest": identity["embedding"]["digest"],
+        "index_id": settings.collection,
+        "corpus_sha256": identity["corpus_sha256"],
+        "vector_sha256": identity.get("vector_sha256"),
+    }
+
     sink: list[dict[str, Any]] = []
-    res = answer_question(
-        body.question,
-        state.retriever,
-        state.provider,
-        settings,
-        cache=getattr(state, "cache", None),
-        bypass_cache=body.bypass_cache,
-        trace_sink=sink,
-    )
+    try:
+        res = answer_question(
+            body.question,
+            state.retriever,
+            state.provider,
+            settings,
+            cache=getattr(state, "cache", None),
+            bypass_cache=body.bypass_cache,
+            seed=body.seed,
+            fresh_embedding=body.fresh_embedding,
+            collection_meta=col_meta,
+            trace_sink=sink,
+        )
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Answer question failed: {exc}")
+
     trace = sink[-1] if sink else {}
 
-    identity = _build_runtime_identity(settings, state)
     filters = {"where": {"superseded": False}}
     filters_json = json.dumps(filters, sort_keys=True)
 
@@ -282,10 +318,6 @@ def eval_ask(body: EvalAskRequest, request: Request) -> dict[str, Any]:
         "guardrail_actions": [str(a.get("action") if isinstance(a, dict) else a) for a in trace.get("guardrail_actions", [])],
         "errors": errors,
     }
-
-    # Synchronize trace collection revision with identity revision
-    if "collection" in trace and isinstance(trace["collection"], dict):
-        trace["collection"]["committed_revision"] = identity["revision"]
 
     return {
         "query_evidence": query_evidence,
