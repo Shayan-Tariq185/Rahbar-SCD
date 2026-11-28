@@ -23,13 +23,17 @@ class HostedProvider:
 
     def __init__(self, settings: Settings) -> None:
         self.settings = settings   # hosted_base_url, llm_model, llm_api_key, temperature
+        self.last_request: dict | None = None
 
-    def generate(self, question: str, passages: list[Passage]) -> Answer:
+    def generate(self, question: str, passages: list[Passage], seed: int | None = None) -> Answer:
         if not self.settings.llm_api_key:
             log.warning("LLM_API_KEY is empty! Falling back to StubProvider.")
             from .stub import StubProvider
 
-            return StubProvider().generate(question, passages)
+            sub = StubProvider()
+            ans = sub.generate(question, passages)
+            self.last_request = getattr(sub, "last_request", None)
+            return ans
 
         evidence = "\n\n".join(
             f"[{index}] {passage.source} / {passage.section} / page {passage.page}\n"
@@ -54,6 +58,9 @@ class HostedProvider:
             "temperature": self.settings.temperature,
             "response_format": {"type": "json_object"},
         }
+        if seed is not None:
+            payload["seed"] = seed
+        self.last_request = dict(payload)
         headers = {
             "Authorization": f"Bearer {self.settings.llm_api_key.strip()}",
             "Content-Type": "application/json",
