@@ -294,7 +294,9 @@ def test_release_script_refuses_failed_and_synthetic_gates(tmp_path: Path) -> No
         capture_output=True,
         text=True,
     )
-    assert r_canon.returncode == 0
+    # A plausible decision alone, without its bound measured inputs and a fresh
+    # running candidate, must never authorize even a validated dry run.
+    assert r_canon.returncode != 0
 
     demo_gate = tmp_path / "demo.json"
     demo_gate.write_text(

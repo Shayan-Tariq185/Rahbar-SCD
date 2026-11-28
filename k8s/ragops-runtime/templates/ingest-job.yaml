@@ -43,11 +43,11 @@ spec:
           resources:
             # Provisional bootstrap values; update from F5 kubectl top measurements
             requests:
-              cpu: 100m
-              memory: 256Mi
-            limits:
-              cpu: 500m
+              cpu: 250m
               memory: 512Mi
+            limits:
+              cpu: 1000m
+              memory: 1536Mi
           volumeMounts:
             - name: datalake
               mountPath: /datalake

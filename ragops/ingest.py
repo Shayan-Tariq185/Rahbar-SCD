@@ -123,9 +123,17 @@ class RuntimeEmbedder:
                 f"Embedding model {self.model!r} not found in Ollama /api/tags"
             )
 
-        # Probe vector dimension with a single small call only once during identity resolution
-        probe = self.embed_texts(["dimension probe"])
-        dim = len(probe[0]) if probe else 0
+        # Resolve dimension without embedding: an unchanged run must make zero
+        # embedding calls, including model-identity checks.
+        import httpx
+        with httpx.Client(timeout=self.timeout_s) as client:
+            response = client.post(f"{self.ollama_url}/api/show", json={"model": self.model})
+            response.raise_for_status()
+            info = response.json().get("model_info", {})
+        dimensions = {int(value) for key, value in info.items() if key.endswith(".embedding_length")}
+        if len(dimensions) != 1:
+            raise InfrastructureError("Ollama model metadata did not provide one embedding dimension")
+        dim = dimensions.pop()
         if dim <= 0:
             raise InfrastructureError(f"Ollama returned empty embedding for model {self.model!r}")
         self._identity = EmbedIdentity(self.model, digest, dim)
@@ -670,6 +678,7 @@ def run_ingest(
             store.ensure_collection(collection, base_meta)
 
             for doc in docs:
+                _log("document_started", collection=collection, doc_id=doc.doc_id, source=doc.source)
                 raw_bytes = doc.path.read_bytes()
                 raw_hash = hashlib.sha256(raw_bytes).hexdigest()
                 existing = state.get_document(collection, doc.doc_id, doc.doc_version)
