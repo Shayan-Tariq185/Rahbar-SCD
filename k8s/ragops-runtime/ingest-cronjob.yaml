@@ -35,12 +35,15 @@ spec:
                 - ragops.ingest
                 - run
                 - --collection
-                - rahbar_a
+                - rahbar_scheduled
                 - --batch-dir
                 - /datalake/inbox
               envFrom:
                 - configMapRef:
                     name: rahbar-config
+              env:
+                - name: RAGOPS_EXTRACT_TIMEOUT
+                  value: "600"
               securityContext:
                 readOnlyRootFilesystem: true
                 allowPrivilegeEscalation: false
@@ -50,11 +53,11 @@ spec:
               resources:
                 # Provisional bootstrap values; update from F5 kubectl top measurements
                 requests:
-                  cpu: 100m
-                  memory: 256Mi
-                limits:
-                  cpu: 500m
+                  cpu: 250m
                   memory: 512Mi
+                limits:
+                  cpu: 1000m
+                  memory: 1536Mi
               volumeMounts:
                 - name: datalake
                   mountPath: /datalake

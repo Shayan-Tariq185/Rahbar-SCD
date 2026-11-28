@@ -118,8 +118,12 @@ kubectl apply -f "${TMP_MANIFEST}"
 mkdir -p eval/results
 printf '%s\n' "${JOB_NAME}" > eval/results/last-ingest.name
 
-bash scripts/wait_job.sh "${JOB_NAME}" --namespace "${NAMESPACE}" --timeout "${TIMEOUT}"
-STATUS=$?
+STATUS=0
+if bash scripts/wait_job.sh "${JOB_NAME}" --namespace "${NAMESPACE}" --timeout "${TIMEOUT}"; then
+  :
+else
+  STATUS=$?
+fi
 
 echo "+ kubectl logs job/${JOB_NAME} -n ${NAMESPACE}"
 kubectl logs "job/${JOB_NAME}" -n "${NAMESPACE}"

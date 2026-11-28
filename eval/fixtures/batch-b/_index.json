@@ -1,0 +1,133 @@
+[
+  {
+    "file": "b01_academic_rules_2027.md",
+    "doc_id": "academic-rules",
+    "family_id": "academic-rules",
+    "title": "Academic Rules Handbook (Synthetic 2027 Update)",
+    "doc_version": "2027",
+    "date": "2027-01-15",
+    "superseded": false,
+    "sha256": "829fc9e10a5baea81b74bc839a874168ae291b5f408b906a288d5063f307bdf0"
+  },
+  {
+    "file": "b02_lab_safety_a.md",
+    "doc_id": "lab-safety-a",
+    "family_id": "lab-safety-a",
+    "title": "Laboratory Safety & Equipment Policy",
+    "doc_version": "2026-09",
+    "date": "2026-09-01",
+    "superseded": false,
+    "sha256": "0433f2b949dbad47710d0a5d7490bbdf0812233ccb8d18dcf5af3efe11bcb440"
+  },
+  {
+    "file": "b03_lab_safety_copy.md",
+    "doc_id": "lab-safety-copy",
+    "family_id": "lab-safety-copy",
+    "title": "Laboratory Safety Policy Copy",
+    "doc_version": "2026-09",
+    "date": "2026-09-01",
+    "superseded": false,
+    "sha256": "0433f2b949dbad47710d0a5d7490bbdf0812233ccb8d18dcf5af3efe11bcb440"
+  },
+  {
+    "file": "b04_lab_safety_near_dup.md",
+    "doc_id": "lab-safety-near-dup",
+    "family_id": "lab-safety-near-dup",
+    "title": "Laboratory Safety Guidelines Variant",
+    "doc_version": "2026-09",
+    "date": "2026-09-02",
+    "superseded": false,
+    "sha256": "b736d02e1f9f3ebf0739d48cdc0e55e1b24ea8d25f056cc2215c53ce9deaefa9"
+  },
+  {
+    "file": "b05_corrupt_scan.pdf",
+    "doc_id": "corrupt-scan-doc",
+    "family_id": "corrupt-scan-doc",
+    "title": "Corrupt Scan Fixture",
+    "doc_version": "2026-10",
+    "date": "2026-10-01",
+    "superseded": false,
+    "sha256": "d4196a9436d57dd8215794827e797c9fcbec0ab0e764a31c9eec1ac267dae1aa"
+  },
+  {
+    "file": "b06_garbled_text.md",
+    "doc_id": "garbled-text-doc",
+    "family_id": "garbled-text-doc",
+    "title": "Garbled Text Fixture",
+    "doc_version": "2026-10",
+    "date": "2026-10-01",
+    "superseded": false,
+    "sha256": "c6a6ec5146dc0fa3fdf4ab4e61262f3dae6e46dba674ed5fb2b4cb75a4a866d4"
+  },
+  {
+    "file": "b07_missing_metadata.md",
+    "doc_id": "missing-meta-doc",
+    "family_id": "missing-meta-doc",
+    "title": "",
+    "doc_version": "",
+    "date": "",
+    "superseded": false,
+    "sha256": "288487bd1511507788da5b5ad0f34789c9418a0d0b1b9bc134cbad26e83ecca6"
+  },
+  {
+    "file": "b08_truncated_policy.md",
+    "doc_id": "truncated-hostel-doc",
+    "family_id": "truncated-hostel-doc",
+    "title": "Hostel Conduct Policy Draft",
+    "doc_version": "2026-10",
+    "date": "2026-10-05",
+    "superseded": false,
+    "sha256": "a8b1ad6b50eec87885c628f1005c9dcc9904275130df4d0170ba8fd7082f33e4",
+    "expected_pages": 4
+  },
+  {
+    "file": "b09_academic_rules_2021.md",
+    "doc_id": "academic-rules",
+    "family_id": "academic-rules",
+    "title": "Academic Rules Handbook (Synthetic 2021 Edition)",
+    "doc_version": "2021",
+    "date": "2021-08-01",
+    "superseded": false,
+    "sha256": "e1688222602f83b099c1032dc98204fa49bcd439a9601859e33c054e96880cb8"
+  },
+  {
+    "file": "b10_campus_network_injected.md",
+    "doc_id": "campus-network-policy",
+    "family_id": "campus-network-policy",
+    "title": "Campus Computing & Wi-Fi Acceptable Use Policy",
+    "doc_version": "2027-01",
+    "date": "2027-01-10",
+    "superseded": false,
+    "sha256": "da858350e471be5583b5b58650206e6ea9231824ae5e8d8cab210539302d3809"
+  },
+  {
+    "file": "b11_library_loan_2027.md",
+    "doc_id": "library-loan-policy",
+    "family_id": "library-loan-policy",
+    "title": "Central Library Borrowing & Fines Policy",
+    "doc_version": "2027-01",
+    "date": "2027-01-12",
+    "superseded": false,
+    "sha256": "322632e6a81d5d520abe119b9078f80c7502b4b30208c0eb6c5eeeed005f1bf9"
+  },
+  {
+    "file": "b12_exam_conduct_2027.md",
+    "doc_id": "exam-conduct-policy",
+    "family_id": "exam-conduct-policy",
+    "title": "Examination Hall Conduct Regulations",
+    "doc_version": "2027-01",
+    "date": "2027-01-14",
+    "superseded": false,
+    "sha256": "b6f741e8b0cd7228cc026d0a170c73a9841eee448fd0d7346f6981411fd5eae6"
+  },
+  {
+    "file": "b13_lab_safety_second_copy.md",
+    "doc_id": "lab-safety-second-copy",
+    "family_id": "lab-safety-second-copy",
+    "title": "Laboratory Safety Policy Second Copy",
+    "doc_version": "2026-09",
+    "date": "2026-09-01",
+    "superseded": false,
+    "sha256": "0433f2b949dbad47710d0a5d7490bbdf0812233ccb8d18dcf5af3efe11bcb440"
+  }
+]

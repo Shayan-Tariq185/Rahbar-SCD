@@ -39,8 +39,8 @@ jobs:
       - name: Run Ruff Linter
         run: |
           ruff check api indexer eval corpus scripts/tune_cache_threshold.py ragops tests/ragops/evaluation
-          ruff check scripts/eval_*.py scripts/apply_gate.py scripts/check_no_rollout.py scripts/diff_results.py scripts/render_report.py scripts/review_synthetic.py scripts/validate_golden.py
-          for script in scripts/eval_*.sh scripts/coverage_*.sh scripts/gate_config_demo.sh; do bash -n "$script"; done
+          ruff check scripts/eval_*.py scripts/apply_gate.py scripts/check_no_rollout.py scripts/diff_results.py scripts/render_report.py scripts/report_measured_body.py scripts/release_validated.py scripts/review_synthetic.py scripts/validate_golden.py scripts/trace_demo_in_pod.py
+          for script in scripts/eval_*.sh scripts/coverage_*.sh scripts/gate_config_demo.sh scripts/complete_controlled_experiment.sh; do bash -n "$script"; done
 
       - name: Run Mypy Type Checker (API)
         run: |
@@ -81,7 +81,7 @@ jobs:
           cd indexer && pytest -v
 
       - name: Run RAGOps Contracts and A02 Evaluator Tests
-        run: python -m pytest -v tests/ragops/evaluation eval/test_run_eval.py
+        run: python -m pytest -v tests/ragops/evaluation tests/ragops/runtime eval/test_run_eval.py
 
   manifests:
     name: Validate Kubernetes Manifests

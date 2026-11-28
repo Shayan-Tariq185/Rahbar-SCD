@@ -3,17 +3,19 @@ set -euo pipefail
 trap 'echo "ConfigMap demo setup/runtime failure" >&2; exit 2' ERR
 ROOT="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")/.." && pwd)"; cd "$ROOT"
 MODE=""; BACKUP=eval/results/gate-demo-original.json; PY="${RAGOPS_PY:-python3}"
+JOB=rahbar-eval
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --mode) [[ $# -ge 2 ]] || exit 2; MODE="$2"; shift 2 ;;
     --backup) [[ $# -ge 2 ]] || exit 2; BACKUP="$2"; shift 2 ;;
+    --job-name) [[ $# -ge 2 ]] || exit 2; JOB="$2"; shift 2 ;;
     --help|-h) echo 'Usage: gate_config_demo.sh --mode fail|restore [--backup FILE]'; exit 0 ;;
     *) exit 2 ;;
   esac
 done
 [[ "$MODE" == fail || "$MODE" == restore ]] || exit 2
 mkdir -p "$(dirname -- "$BACKUP")"
-IMAGE="$(kubectl get job rahbar-eval -n rahbar -o jsonpath='{.spec.template.spec.containers[0].image}')"
+IMAGE="$(kubectl get job "$JOB" -n rahbar -o jsonpath='{.spec.template.spec.containers[0].image}')"
 if [[ "$MODE" == fail ]]; then
   [[ ! -e "$BACKUP" ]] || { echo 'Original backup already exists; restore or choose a new explicit backup' >&2; exit 2; }
   kubectl get configmap release-gate -n rahbar -o json > "$BACKUP"

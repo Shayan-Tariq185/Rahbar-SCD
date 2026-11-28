@@ -8,9 +8,18 @@ resources:
   - ingest-cronjob.yaml
   - api-candidate.yaml
   - networkpolicy-runtime.yaml
+  - host-egress.yaml
+
+images:
+  - name: rahbar-api
+    newTag: 2124c3713328-a03
+  - name: rahbar-indexer
+    newTag: 09ac8a21351a-a03
 
 patches:
   - path: api-live-patch.yaml
+  - path: config-patch.yaml
+  - path: chroma-resources-patch.yaml
   # Retire/suspend legacy A02 CronJob so only ragops-ingest acts as writer
   - patch: |-
       apiVersion: batch/v1

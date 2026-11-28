@@ -21,6 +21,7 @@ venv/
 .ruff_cache/
 
 # Local scratch
+/tmp/
 *.log
 .coverage
 .coverage.*

@@ -130,14 +130,14 @@ def report_body(inputs: dict, artifacts: dict) -> str:
     page += table(['Figure 3 stage', 'Implementation', 'Evidence or remaining work'], [
         ['Ingest', 'ragops/ingest.py through writer Jobs', 'Member 1 integration and run evidence'],
         ['Verify', 'ragops/verify.py before chunking', 'Batch B verification report'],
-        ['Update data lake', 'raw archive quarantine and state PVC', 'Persistence and restore proof'],
-        ['Update retrieval sources', 'Committed collection revision and chunk writes', 'Incremental counts and vector fingerprints'],
-        ['Offline testing', 'ragops/evalsuite and evaluation Job', 'Two complete measured suite repeats'],
-        ['Live testing', 'Simulated usage and production traces', 'Forty queries and trace samples'],
+        ['Update data lake', 'ragops/ingest.py and ragops/state.py on data PVC', 'Persistence and restore proof'],
+        ['Update retrieval sources', 'ragops/ingest.py commits chunk/vector revisions', 'Incremental counts and vector fingerprints'],
+        ['Offline testing', 'ragops/evalsuite/runner.py and k8s/eval-job.yaml', 'Two complete measured suite repeats'],
+        ['Live testing', 'scripts/load_queries.py and ragops/trace.py', 'Simulated queries and actual trace samples'],
         ['Check coverage', 'ragops/coverage.py and coverage Job', 'Fixed-policy coverage before and after expansion'],
     ], [1900, 3500, 3960])
     page += paragraph('Architecture', 'Heading2')
-    page += paragraph('Indexing and serving remain separate. Ingestion Jobs write Chroma and persistent lifecycle state. The API retrieves and generates answers; evaluation calls the same read-only production path. Gate policies are ConfigMaps and results are written to a PVC.')
+    page += paragraph('Figure 3 (paper p8) links these seven data stages to the software lifecycle. Indexing and serving remain separate. Ingestion Jobs write Chroma and persistent lifecycle state. Evaluation calls the production API. Gate policies are ConfigMaps; results are written to a PVC.')
     pages.append(page)
     page = paragraph('Data verification and version updates', 'Heading1')
     page += table(['Check', 'Measure', 'Recorded result'], [
@@ -147,7 +147,7 @@ def report_body(inputs: dict, artifacts: dict) -> str:
         ['Uniqueness', 'Exact hashes and embedding near duplicates', 'Pending verification artifact'],
     ], [1700, 4200, 3460])
     page += paragraph('Batch B', 'Heading2')
-    page += paragraph('Record at least ten documents including two exact duplicates, one near duplicate, one corrupt or truncated file, missing metadata, a newer version and an injected instruction. Insert the actual per-check counts and reasons from the selected verification report.')
+    page += paragraph('Record at least ten documents including two exact duplicates, one near duplicate, one corrupt or truncated file, missing metadata, a newer version and an injected instruction. Insert actual per-check counts and reasons. Paper section 4.2.2 also discusses consistency; automated contradiction detection is outside the four required A1 checks and is not claimed here.')
     page += paragraph('Incremental and recovery evidence', 'Heading2')
     for text in ['Unchanged run chunks embedded and document-check calls: __________________',
                  'Changed document and unaffected document fingerprints: __________________',
@@ -194,17 +194,19 @@ def report_body(inputs: dict, artifacts: dict) -> str:
     pages.append(page)
     page = paragraph('Traceability and operational qualities', 'Heading1')
     page += table(['Table 2 quality', 'Measure and threshold', 'Evidence'], [
-        ['Adaptability', 'Controlled change passes frozen policy', 'Candidate comparison and release decision'],
-        ['Monitorability', 'Similarity distribution cache abstention stage p95 injection count', 'Metrics endpoint and time-window summary'],
-        ['Observability', 'Runtime failures are explicit and diagnosable', 'Job logs and stage outcomes'],
-        ['Traceability', 'Exact prompt and evidence reconstruct by trace ID', 'Full JSON trace and replay tool'],
-        ['Reliability', 'Zero unavailable rollout persistent data verified undo', 'Rollout and restoration evidence'],
+        ['Adaptability', 'Versioned source/config changes; recall drop at most 0.02 under justified policy', 'Incremental updates and candidate comparison'],
+        ['Monitorability', 'Relevance quality latency and source changes; insert frozen alert thresholds', 'Metrics time-window summary and revision history'],
+        ['Observability', 'Retrieval injection/relevance; generation context support meets justified faithfulness floor', 'Guardrail trace and judged answer/context evidence'],
+        ['Traceability', 'Version routing and grounded-source chain; exact context and request reconstruct', 'Trace IDs document/model versions filters and prompt replay'],
+        ['Reliability', 'Peak CPU/memory versus measured requests/limits; rollout and recovery checks', 'API vector-store and Job samples; rollout/undo evidence'],
     ], [1800, 4000, 3560])
+    page += paragraph('Paper Table 2 (p13) guides these measures. Insert actual thresholds and evidence. Dedicated toxicity/usefulness scores and network bandwidth are not measured; rollout and recovery are additional assignment checks.')
     page += paragraph('Five line diagnosis from one trace', 'Heading2')
     lines = inputs.get('trace_diagnosis') or [f'Line {i} from the selected trace: __________________' for i in range(1, 6)]
     for line in lines:
         page += paragraph(line)
-    page += paragraph('Trace ID __________________  Student 1 review __________________  Student 2 review __________________')
+    page += paragraph('Trace ID __________________')
+    page += paragraph('Student 1 review __________________  Student 2 review __________________')
     page += paragraph('The diagnosis must use only the selected wrong or abstained answer trace. Identify the relevant chunk, document version, score or filter and distinguish recorded facts from hypotheses.')
     pages.append(page)
     page = paragraph('Usage coverage data drift and Kubernetes', 'Heading1')
@@ -213,7 +215,7 @@ def report_body(inputs: dict, artifacts: dict) -> str:
         result = artifacts.get(name)
         coverage_rows.append([label] + ([f"{result['coverage']:.2%}", str(result['similarity_cutoff']), f"{result['coverage_floor']:.2%}"] if result else ['Pending'] * 3))
     page += table(['Golden version', 'Coverage', 'Cosine cutoff', 'Coverage floor'], coverage_rows, [3300, 2020, 2020, 2020])
-    page += paragraph('Keep the live set, embedding model and both thresholds identical. List uncovered topic groups, the six useful additions, and measured coverage rise. Coverage of test questions is distinct from corpus answerability.')
+    page += paragraph('Keep the live set, embedding model and both thresholds identical. List uncovered topics, six useful additions and measured coverage rise. Paper section 4.2.7 uses 85 percent as an example coverage floor, not a required cosine cutoff. Justify both thresholds; question coverage does not establish corpus answerability.')
     page += paragraph('Fixed golden data drift', 'Heading2')
     page += paragraph('Compare Batch A with A plus B using frozen golden v1 before expanding tests. Link changed ranks, versions, citations and abstentions to the verification inventory. Record actual changes without assuming improvement.')
     page += table(['Kubernetes object', 'RAGOps responsibility'], [
@@ -249,7 +251,7 @@ def report_body(inputs: dict, artifacts: dict) -> str:
                  'Both members can explain the complete pipeline and rehearse unseen ingestion']:
         page += paragraph('[  ] ' + text)
     page += paragraph('References', 'Heading2')
-    page += paragraph('Assignment 02 RAHBAR Grounded RAG on Kubernetes. Assignment 03 RAGOps. Xu and colleagues RAGOps paper version used by the course: __________________. Record the exact version read and the selected artifact hashes.')
+    page += paragraph('Xu, X., Weytjens, H., Zhang, D., Lu, Q., Weber, I. and Zhu, L. (2026). RAGOps: Operating and Managing Retrieval-Augmented Generation Pipelines. Preprint, 19 pages, SSRN 7353461. Figure 3 p8; Table 1 p10; Table 2 p13. Also: Assignment 02 RAHBAR and Assignment 03 RAGOps. Record the selected run artifact hashes.')
     pages.append(page)
     return page_break().join(pages)
 
@@ -290,7 +292,11 @@ def main() -> int:
     else:
         inputs = read_json(args.inputs)
         artifacts, missing = load_artifacts(inputs, draft=args.draft)
-        body = report_body(inputs, artifacts)
+        if inputs.get('measured_report'):
+            from report_measured_body import build
+            body = build(inputs, artifacts, paragraph, table, page_break)
+        else:
+            body = report_body(inputs, artifacts)
         if not args.draft and ('____' in body or 'Pending' in body):
             raise ValueError('Report still contains editorial placeholders; finish the editable draft before submission')
     save_docx(args.out, body)

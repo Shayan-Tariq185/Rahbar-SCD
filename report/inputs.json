@@ -1,25 +1,71 @@
 {
-  "students": [
-    {"name": "Student 1", "roll": "", "role": "Member 1"},
-    {"name": "Student 2", "roll": "", "role": "Member 2"}
-  ],
-  "artifacts": {
-    "baseline_a": null,
-    "drift_ab": null,
-    "change_baseline": null,
-    "candidate_bad": null,
-    "candidate_good": null,
-    "gate_bad": null,
-    "gate_good": null,
-    "coverage_before": null,
-    "coverage_after": null,
-    "verification_b": null,
-    "post_undo_trace": null,
-    "resource_summary": null
-  },
-  "trace_diagnosis": [],
-  "trace_diagnosis_reviewers": [],
-  "short_answers": {"a": "", "b": "", "c": "", "d": "", "e": "", "f": ""},
-  "screenshots": [],
-  "notes": "Explicit paths only. Never select the newest JSON by glob. Student placeholders are intentional for the editable template."
+    "students":  [
+                     {
+                         "name":  "Student 1",
+                         "roll":  "",
+                         "role":  "Member 1"
+                     },
+                     {
+                         "name":  "Student 2",
+                         "roll":  "",
+                         "role":  "Member 2"
+                     }
+                 ],
+    "artifacts":  {
+                      "baseline_a":  "eval/results/baseline-a-20261128/eval-20261128t145145z-7222c9f3/suite-20261128T145225Z-3a48878c.json",
+                      "drift_ab":  "eval/results/drift-ab-retry-20261128/eval-20261128t155005z-6ddbff30/suite-20261128T155010Z-10eae695.json",
+                      "change_baseline":  "eval/results/change-baseline-20261128/eval-20261128t171225z-34704131/suite-20261128T171302Z-4a1712d2.json",
+                      "candidate_bad":  null,
+                      "candidate_good":  null,
+                      "gate_bad":  null,
+                      "gate_good":  null,
+                      "coverage_before":  "eval/results/coverage-before-20261128/eval-20261128t171041z-a30234b6/coverage-20261128T171048Z-58751684.json",
+                      "coverage_after":  "eval/results/coverage-after-20261128/eval-20261128t171133z-2f0ecbbb/coverage-20261128T171140Z-60a562ea.json",
+                      "verification_b":  "eval/results/verification-b-20261128/verification.json",
+                      "post_undo_trace":  null,
+                      "resource_summary":  null
+                  },
+    "trace_diagnosis":  [
+                            "The query asks what clause 1.21 requires; the trace records rahbar_a revision 4, top_k 5 and cache BYPASS.",
+                            "The five retrieved passages concern medals, conduct, devices, AI use and examination seating; none is labelled clause 1.21.",
+                            "Scores 0.643308 to 0.664247 exceed the configured 0.35 relevance floor, which admitted these passages.",
+                            "The retrieval guardrail passed and generation had no recorded error; the answer abstained with low confidence and no citations.",
+                            "This trace suggests a clause-specific retrieval mismatch; exact clause matching is a proposed follow-up requiring fresh evaluation."
+                        ],
+    "trace_diagnosis_reviewers":  [
+
+                                  ],
+    "short_answers":  {
+                          "a":  "Uniqueness caught the most Batch B problems: two exact copies and one near-duplicate (cosine 0.9839 against the 0.95 cutoff). Quality caught two and completeness caught two; recency archived one older version. Verification accepted the injected-instruction document, showing that document checks do not replace retrieval guardrails. A remedy is layered instruction detection and strict evidence-only generation, evaluated with the actual injection trace.",
+                          "b":  "Module cosine gap stayed 0.318141 in both A and A+B, but recall@5 fell from 0.741935 to 0.032258 in both repeats. The synthetic newer academic policy superseded the full 2026 document, so fixed-v1 ground-truth passages became archived and were excluded. Stable embedding similarity therefore did not protect retrieval against data/version drift. This is an isolated drift finding, not a claim that the synthetic policy is suitable for production.",
+                          "c":  "Archiving preserves the original source, version lineage and evidence needed for audits and restoration, while filtering superseded chunks from ordinary retrieval. Explicit deletion removes the document from active retrieval and the sandbox count proves zero remaining chunks. Archival uses more storage and requires clear filters; deletion makes later reconstruction harder.",
+                          "d":  "Faithfulness is least trusted because it depends on a small local LLM judge. Its first prompt disagreed with all eight human-supported answers; the revised evidence format and explanation-first rubric agreed with all eight. These were calibration examples, all positive, so that agreement is not an independent accuracy estimate and does not establish the false-positive rate.",
+                          "e":  "The hardest implementation issue was keeping data-lake originals, metadata, vectors and release identities consistent across updates. The adaptation uses one writer lock, committed revisions, immutable experiment collections and copied originals in snapshots. Actual recovery fixes addressed Chroma metadata constraints and stale fingerprints after restore. This is a single-node adaptation, not an atomic distributed transaction.",
+                          "f":  "Deployments and Services run and expose the API and candidate. Chroma and PVCs retain vectors; additional PVCs retain sources, traces and results. Ingestion Jobs perform writes, the CronJob schedules ingestion, and a shared file lock serializes manual and scheduled writers. Read-only evaluation and coverage Jobs persist measurements. The gate ConfigMap supplies thresholds at Job start; changing it does not rebuild the image."
+                      },
+    "screenshots":  [
+
+                    ],
+    "notes":  "Explicit paths only. Never select the newest JSON by glob. Student placeholders are intentional for the editable template.",
+    "measured_report":  true,
+    "narratives":  {
+                       "monitoring_thresholds":  "Proposed alerts: repeated failed writer/evaluation Jobs, sustained stage p95 above the frozen release budget, or coverage below 85 percent. Actual thresholds and observed values are retained separately; no production alert history is claimed.",
+                       "changed_deleted_restore":  "Separate sandbox Jobs proved a changed Alpha document embedded one new chunk while reusing two, deletion left Alpha with zero chunks while Beta retained one, and version restoration worked in both directions. The final 2027 to 2026 restore used indexer 09ac8a21351a and recomputed committed corpus/vector fingerprints. Before/after Batch B source checksums confirm all six baseline originals were preserved.",
+                       "trace_summary":  "The full abstained-query trace is traces/diagnosis-q11.jsonl. It records original retrieved text, exact outgoing payload, source/version filters, guardrail action, model identity and stage timings. Both-member review of the five diagnostic lines remains pending; no approval is inferred from a request to continue. A real ASGI request inside the deployed API image queried the isolated synthetic Wi-Fi policy. Trace b17c227460ce48bc8886ddea7446161d records sanitized_injection and the correct synthetic 50 GB answer. A separate compact trace exposed retained malicious section wording; metadata sanitation remains a hardening limitation. No actual key was exposed.",
+                       "reproducibility":  "Runtime images have recorded source SHAs in config/runtime-images.json. Corpus PDFs are fetched/staged with recorded checksums and are not committed. k8s/README.md documents cluster setup; the screenshot command sheet links the actual observed Jobs and artifacts.",
+                       "observability_thresholds":  "Release floors are citation validity 95 percent, answer faithfulness 90 percent and unanswerable abstention 100 percent. Inspect abstention and retrieval distributions with trace IDs; judge scores remain calibrated estimates.",
+                       "unchanged":  "Job ragops-ingest-1795876857-21933 completed with six unchanged documents, 527 reused chunks, zero chunk embeddings and zero document-check embeddings. The active collection remains rahbar_a revision 4; archived chunks are excluded by metadata.",
+                       "member2_evidence":  "Integration branch commits, exported Jobs, suite/gate/coverage artifacts and report manifest.",
+                       "coverage":  "With 40 fixed live questions, pinned nomic embeddings, cosine cutoff 0.68 and aggregate floor 85 percent, v1 measured 27/40 covered (67.5 percent; exit 1). Seven additional synthetic questions address the two human-confirmed gaps: six unsupported IT recovery procedures and one answerable 3+1 credit-notation question. V2 measured 39/40 (97.5 percent; exit 0). One IT query remains uncovered. Semantic coverage measures representative tests, not source answerability.",
+                       "member1_evidence":  "Partner commits through ec3ba947; human questions/reviews/labels retain their actual author.",
+                       "judge_calibration":  "Eight actual supported answers were labelled by the two members, four each. The initial judge disagreed with all eight; an explanation-first rubric with plain exact evidence achieved 8/8 agreement. These same positive examples calibrated the judge and are not an independent holdout or false-positive estimate. The real labelled packet predates the final PDF crop correction; calibration evaluates its own recorded answer/context.",
+                       "outcome":  "Real Kubernetes runs verify the corpus lifecycle, document rejection, two-repeat evaluation and usage coverage. Coverage increased from 67.5 to 97.5 percent with the same frozen policy. Release and recovery results are populated from their explicit artifacts when complete.",
+                       "limitations":  "Single-node local Kubernetes and a file lock do not implement a distributed transaction. Synthetic Batch B policies are isolated from production. Eight positive human labels do not establish judge accuracy. Provider quotas and latency vary. Student names/roll numbers and manually captured appendix images must be supplied before submission.",
+                       "evidence_index":  "Explicit artifact paths appear in report/inputs.json. Evaluation and lifecycle directories retain real results, status objects and logs, including failed setup attempts. Screenshot appendix images are manually captured by the students.",
+                       "evaluation_method":  "The entire module, component and E2E suite runs twice with seed 42 requested, temperature 0.2 and fresh embedding/generation calls. Answer cache is bypassed; identical judge inputs may reuse a verdict within the same process. Hosted seed support is not guaranteed. Typos provide retrieval noise; all clean/noisy metrics and repeat deltas are retained in suite JSON.",
+                       "batch_b":  "The fresh 13-document Batch B verification indexed five, quarantined seven and archived one. It rejected two exact copies, one near-duplicate, two quality failures and two incomplete documents. The newer synthetic policy superseded the older source only in isolated A+B. Its 82 percent attendance and 2.10 CGPA rules are synthetic test data, not university policy.",
+                       "drift":  "The fixed-v1 A versus A+B comparison changed 70 query records across two repeats. Embedding cosine gap stayed 0.318141 while recall@5 fell from 0.741935 to 0.032258. Batch B archived the full 2026 academic rules in favor of a short synthetic 2027 policy; superseded:false correctly excluded the old ground-truth passages. Faithfulness remained 0.90, citations and unanswerable abstention 1.0. This measures a source/test-version mismatch, not a one-variable pipeline release improvement. Production candidates retain the A-based real handbook snapshot.",
+                       "experiment_control":  "C uses a new baseline on rahbar_change_base, with bad/good snapshots cloned from the same frozen Batch A corpus. All C runs use golden v1, identical pairs/judge/seeds, API image 2124c3713328, evaluator image 837ab482ab37 and generator qwen/qwen3.8-27b. This model switch occurred before the new C baseline because hosted quotas constrained the earlier generator. Only top_k changes within C: baseline 5, poor candidate 1, changed candidate 6. Account credentials rotate for quota capacity without changing model or generation settings; provider seed determinism is not guaranteed.",
+                       "gate_policy":  "The exact original policy was frozen after both C baseline passes and before candidate outcomes, bound to baseline SHA-256 65df946a6bd07bf1520b382dc170b5da768103b12cc0613f21604f8663262fff. It allows recall@5 loss at most 0.02 and requires faithfulness at least 0.90, citation validity at least 0.95, and unanswerable abstention 1.0. The p95 budget is 31055.005 ms: twice the worst C baseline repeat of 15527.502 ms, justified before outcomes using observed local/provider jitter. No post-outcome retuning is authorized."
+                   }
 }

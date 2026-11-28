@@ -52,7 +52,9 @@ spec:
             - name: EMBED_MODEL
               value: "nomic-embed-text"
             - name: EMBED_VERSION
-              value: ""
+              value: "0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f"
+            - name: API_IMAGE
+              value: "rahbar-api:2124c3713328-a03"
             - name: TOP_K
               value: "5"
             - name: TRACES_DIR

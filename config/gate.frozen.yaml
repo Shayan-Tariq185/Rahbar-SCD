@@ -1,0 +1,16 @@
+schema_version: '1.0'
+policy_mode: release
+declared_change: top_k
+frozen: true
+baseline_sha256: 65df946a6bd07bf1520b382dc170b5da768103b12cc0613f21604f8663262fff
+max_recall5_drop: 0.02
+min_faithfulness: 0.9
+min_citation_validity: 0.95
+min_abstention_correctness: 1.0
+max_p95_latency_ms: 31055.004652502248
+rationale: Freeze before any candidate outcome. Keep all quality floors and allow
+  two-times the worst measured repeat p95 for local CPU/hosted-provider jitter; the
+  earlier independent A baseline varied from 3840 to 14648 ms. This is an operational
+  allowance, not a statistical confidence interval. Baseline worst repeat p95=15527.5
+  ms; headroom=2.0. Two repeats do not establish a statistical confidence interval;
+  preserve original quality floors.

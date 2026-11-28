@@ -1,0 +1,21 @@
+schema_version: '1.0'
+frozen: true
+embedding_url: http://host.docker.internal:11434
+embedding:
+  model: nomic-embed-text
+  digest: 0a109f422b47e3a30ba2b10eca18548e944e8a23073ee3f3e947efcf3c45e59f
+  dimension: 768
+similarity_cutoff: 0.68
+coverage_floor: 0.85
+topic_reviewers:
+  academic policy: Shayan-Tariq185
+  campus IT account recovery: Shayan-Tariq185
+rationale: The measured maximum similarity for the twelve IT recovery queries is 0.650;
+  0.68 rejects those accidental matches while retaining 27 of 28 in-domain queries,
+  whose remaining boundary examples are 0.701 and 0.704. The 3+1 credit query at 0.605
+  is a genuine missing test topic rather than a reason to lower the cutoff. Shayan
+  confirmed both gap groups before expansion. The separate 85 percent aggregate floor
+  requires at least 34 of 40 usage questions to have a representative test; it is
+  not a cosine threshold.
+calibration_sha256: 0471b4073f192cf84ddbb725fa7e9f58c1d7c5c83373224ee5b38b4b78ba4d4b
+live_sha256: c827872a34ef3a2834dcded522cea8e6027b1b132f9a1575d62ede4f84aa3258

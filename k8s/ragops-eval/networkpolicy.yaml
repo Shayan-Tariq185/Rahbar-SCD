@@ -23,9 +23,10 @@ spec:
       ports:
         - {protocol: UDP, port: 53}
         - {protocol: TCP, port: 53}
-    # Existing A02 host route; validate this actual address before any live run.
+    # Verified from the local minikube API pod on 2026-11-28.
+    # host.docker.internal resolves here; override for another host environment.
     - to:
-        - ipBlock: {cidr: 192.168.49.1/32}
+        - ipBlock: {cidr: 192.168.65.254/32}
       ports:
         - {protocol: TCP, port: 11434}
 ---
