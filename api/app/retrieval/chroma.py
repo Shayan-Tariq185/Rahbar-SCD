@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from collections.abc import Sequence
-from typing import Literal
+from typing import Any, Literal
 
 from ..config import Settings
 from ..embedding import embed_query

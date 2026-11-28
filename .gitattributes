@@ -2,3 +2,6 @@
 scripts/eval_*.sh text eol=lf
 scripts/coverage_*.sh text eol=lf
 scripts/gate_config_demo.sh text eol=lf
+
+# All Bash entrypoints must remain executable in Windows/WSL checkouts.
+*.sh text eol=lf

@@ -37,7 +37,7 @@ from .verify import (
     verify_document,
 )
 
-EXTRACTOR_VERSION = "ragops-ext-v1"
+EXTRACTOR_VERSION = "ragops-a02-structure-v2"
 SUPPORTED_EXTS = {".pdf", ".md", ".txt", ".html", ".htm"}
 
 
@@ -149,7 +149,7 @@ class RuntimeEmbedder:
                     batch = texts[i : i + batch_size]
                     resp = client.post(
                         f"{self.ollama_url}/api/embed",
-                        json={"model": self.model, "input": batch},
+                        json={"model": self.model, "input": [("search_document: " + text) if self.model.startswith("nomic") else text for text in batch]},
                     )
                     resp.raise_for_status()
                     data = resp.json()
@@ -292,7 +292,7 @@ class ChromaVectorStore:
                 "metadata": dict(col.metadata or {}),
                 "ids": list(data.get("ids") or []),
                 "documents": list(data.get("documents") or []),
-                "embeddings": list(data.get("embeddings") or []),
+                "embeddings": [] if data.get("embeddings") is None else [[float(v) for v in row] for row in data["embeddings"]],
                 "metadatas": list(data.get("metadatas") or []),
             }
         except Exception as exc:
@@ -408,56 +408,24 @@ def _chunk_pages(
     chunk_overlap: int,
 ) -> list[dict[str, Any]]:
     """Structure-aware chunker preserving section headings, page numbers, and stable IDs."""
-    chunks: list[dict[str, Any]] = []
-    current_section = "General"
-    idx = 0
-    step_words = max(1, chunk_size - min(chunk_overlap, max(0, chunk_size - 1)))
-
-    for page_num, page_text in enumerate(pages_text, start=1):
-        cleaned = _clean_page_text(page_text)
-        if not cleaned:
-            continue
-        sections: list[tuple[str, list[str]]] = []
-        buf: list[str] = []
-        for line in cleaned.splitlines():
-            if line.startswith("#") or re.match(r"^\d+(\.\d+)*\s+[A-Z]", line):
-                if buf:
-                    sections.append((current_section, buf))
-                    buf = []
-                current_section = line.lstrip("#").strip()[:120] or current_section
-            buf.append(line)
-        if buf:
-            sections.append((current_section, buf))
-
-        for sec_name, sec_lines in sections:
-            words = " ".join(sec_lines).split()
-            if not words:
-                continue
-            pos = 0
-            while pos < len(words):
-                piece = " ".join(words[pos : pos + chunk_size])
-                text_hash = hashlib.sha256(piece.encode("utf-8")).hexdigest()[:12]
-                chunk_id = f"{doc_id}::{doc_version}::{idx:04d}::{text_hash}"
-                chunks.append(
-                    {
-                        "id": chunk_id,
-                        "text": piece,
-                        "metadata": {
-                            "doc_id": doc_id,
-                            "family_id": doc_id,
-                            "source": source,
-                            "section": sec_name,
-                            "page": page_num,
-                            "doc_version": doc_version,
-                            "superseded": superseded,
-                        },
-                    }
-                )
-                idx += 1
-                if pos + chunk_size >= len(words):
-                    break
-                pos += step_words
-    return chunks
+    # Reuse the completed A02 cleaner/chunker, including cross-page clauses and
+    # numbered student-handbook items, rather than inventing different sections.
+    try:
+        from pipeline.models import Document, Page
+        from pipeline.clean import clean
+        from pipeline.chunk import chunk
+    except ImportError:
+        from indexer.pipeline.models import Document, Page
+        from indexer.pipeline.clean import clean
+        from indexer.pipeline.chunk import chunk
+    document = Document(source, doc_version, superseded,
+                        [Page(source, number, text) for number, text in enumerate(pages_text, 1)])
+    result = []
+    for index, item in enumerate(chunk(clean(document), chunk_size, chunk_overlap)):
+        text_hash = hashlib.sha256(item.text.encode("utf-8")).hexdigest()[:12]
+        result.append({"id": f"{doc_id}::{doc_version}::{index:04d}::{text_hash}", "text": item.text,
+                       "metadata": {**item.metadata(), "doc_id": doc_id, "family_id": doc_id}})
+    return result
 
 
 @dataclass
@@ -1003,8 +971,8 @@ def run_ingest(
             corpus_sha256 = hashlib.sha256("\n".join(active_doc_hashes).encode("utf-8")).hexdigest()
 
             all_chunks = store.get_all(collection)
-            chunk_pairs = sorted(zip(all_chunks.get("ids") or [], all_chunks.get("documents") or []))
-            vector_str = "\n".join(f"{cid}:{doc}" for cid, doc in chunk_pairs)
+            chunk_pairs = sorted(zip(all_chunks.get("ids") or [], all_chunks.get("documents") or [], all_chunks.get("embeddings") or [], strict=True), key=lambda row: row[0])
+            vector_str = json.dumps(chunk_pairs, ensure_ascii=False, separators=(",", ":"), allow_nan=False)
             vector_sha256 = hashlib.sha256(vector_str.encode("utf-8")).hexdigest()
 
             store.set_collection_metadata(

@@ -76,9 +76,11 @@ def answer_question(
 
     # 1. Query embedding
     t0 = time.perf_counter()
-    query_vector = embed_query(question, fresh=fresh_embedding, strict=fresh_embedding)
+    # A bypassed semantic cache does not need its own duplicate query embedding.
+    # The production retriever performs the fresh, strict embedding for evaluation.
+    query_vector = [] if bypass_cache else embed_query(question, fresh=fresh_embedding, strict=fresh_embedding)
     lat_ms["embed"] = (time.perf_counter() - t0) * 1000.0
-    stage_status["embed"] = "ok"
+    stage_status["embed"] = "skipped_cache_bypass" if bypass_cache else "ok"
     STAGE_LATENCY.labels(stage="embed").observe(lat_ms["embed"] / 1000.0)
 
     # 2. Semantic cache lookup
@@ -273,22 +275,11 @@ def answer_question(
 
         # Capture exact outgoing model request directly from provider boundary
         model_request = getattr(provider, "last_request", None)
-        if model_request is None and outcome != "error":
-            opts: dict[str, Any] = {"temperature": settings.temperature}
-            if seed is not None:
-                opts["seed"] = seed
-            model_request = {
-                "model": getattr(provider, "model", settings.llm_model),
-                "messages": [
-                    {"role": "user", "content": prompt_text}
-                ],
-                "options": opts,
-            }
-        t_gen_end = time.perf_counter()
-        GENERATION_LATENCY.observe(t_gen_end - t_gen_start)
-        lat_ms["generate"] = (t_gen_end - t_gen_start) * 1000.0
-        STAGE_LATENCY.labels(stage="generate").observe(t_gen_end - t_gen_start)
-
+        if model_request is None and outcome != "error" and fresh_embedding:
+            raise RuntimeError("Provider did not capture the actual outgoing model request")
+        if model_request is not None:
+            import json
+            prompt_text = json.dumps(model_request, sort_keys=True, ensure_ascii=False)
         t_val_start = time.perf_counter()
         answer = check_citations(answer, passages)
         lat_ms["validate"] = (time.perf_counter() - t_val_start) * 1000.0

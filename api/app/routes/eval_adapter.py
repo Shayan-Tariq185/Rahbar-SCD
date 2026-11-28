@@ -12,7 +12,6 @@ import inspect
 import json
 import os
 import time
-from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, HTTPException, Request
@@ -39,80 +38,51 @@ class EvalAskRequest(BaseModel):
 
 
 def _build_runtime_identity(settings: Any, state: Any) -> dict[str, Any]:
-    col_meta: dict[str, Any] = {}
-    if hasattr(state, "retriever") and hasattr(state.retriever, "get_collection_metadata"):
-        try:
-            col_meta = state.retriever.get_collection_metadata(settings.collection) or {}
-        except Exception:
-            col_meta = {}
-
-    revision = str(col_meta.get("committed_revision") or getattr(settings, "committed_revision", None) or "v1")
-    api_image = os.environ.get("API_IMAGE") or "rahbar-api:latest"
-
-    # Compute stable 64-char corpus_sha256 from config/corpus-inventory.json or collection metadata
-    corpus_sha = col_meta.get("corpus_sha256")
-    if not corpus_sha or len(str(corpus_sha)) != 64:
-        inventory_path = Path(__file__).resolve().parents[3] / "config" / "corpus-inventory.json"
-        if inventory_path.exists():
-            corpus_sha = hashlib.sha256(inventory_path.read_bytes()).hexdigest()
-        else:
-            corpus_sha = hashlib.sha256(settings.collection.encode("utf-8")).hexdigest()
-
-    # Pipeline fingerprint (64-char sha256) - do not touch non-existent Settings attributes
-    pipeline_sha = col_meta.get("pipeline_sha256")
-    if not pipeline_sha or len(str(pipeline_sha)) != 64:
-        raw_fp = f"{getattr(settings, 'embed_model', '')}:{getattr(settings, 'prompt_version', 'v1')}:{getattr(settings, 'relevance_floor', 0.2)}"
-        pipeline_sha = hashlib.sha256(raw_fp.encode("utf-8")).hexdigest()
-
-    vector_sha = col_meta.get("vector_sha256")
-    if vector_sha is not None and len(str(vector_sha)) != 64:
-        vector_sha = None
+    from ..retrieval.stub import StubRetriever
 
     config_dict = {
-        "cache_threshold": float(getattr(settings, "cache_threshold", 0.90)),
-        "prompt_version": str(getattr(settings, "prompt_version", "v1")),
-        "relevance_floor": float(getattr(settings, "relevance_floor", 0.2)),
-        "temperature": float(getattr(settings, "temperature", 0.2)),
-        "top_k": int(getattr(settings, "top_k", 5)),
+        "cache_threshold": float(settings.cache_threshold),
+        "prompt_version": str(settings.prompt_version),
+        "relevance_floor": float(settings.relevance_floor),
+        "temperature": float(settings.temperature),
+        "top_k": int(settings.top_k),
     }
-
-    digest = str(col_meta.get("embed_digest") or getattr(settings, "embed_version", "") or "")
-    if not digest:
-        digest = f"sha256:{hashlib.sha256(str(getattr(settings, 'embed_model', 'nomic-embed-text')).encode('utf-8')).hexdigest()}"
-    elif not digest.startswith("sha256:"):
-        digest = f"sha256:{hashlib.sha256(digest.encode('utf-8')).hexdigest()}"
-
-    dim = col_meta.get("dimension") or getattr(settings, "embed_dimension", None)
-    if hasattr(state, "retriever") and hasattr(state.retriever, "embedder"):
-        try:
-            dim = state.retriever.embedder.dimension
-        except Exception:
-            pass
-    if not dim or int(dim) < 1:
-        dim = 768
-
-    is_stub = getattr(settings, "retriever", "") == "stub"
-    if hasattr(state, "retriever"):
-        from ..retrieval.stub import StubRetriever
-
-        if isinstance(state.retriever, StubRetriever):
-            is_stub = True
-    provenance = "synthetic_fixture" if is_stub else "real"
-
+    is_stub = settings.retriever == "stub" or isinstance(state.retriever, StubRetriever)
+    if is_stub:
+        fp = hashlib.sha256(b"explicit-test-fixture").hexdigest()
+        return {
+            "collection": settings.collection, "revision": "fixture", "api_image": "fixture",
+            "config_json": json.dumps(config_dict, sort_keys=True), "corpus_sha256": fp,
+            "pipeline_sha256": fp, "vector_sha256": None,
+            "embedding": {"model": settings.embed_model, "digest": settings.embed_version or "fixture", "dimension": 768},
+            "provenance": "synthetic_fixture",
+        }
+    try:
+        meta = state.retriever.get_collection_metadata(settings.collection)
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail=f"Committed collection metadata unavailable: {type(exc).__name__}") from exc
+    required = ("committed_revision", "corpus_sha256", "vector_sha256", "embed_digest", "dimension", "embed_model")
+    if not meta or any(meta.get(key) is None or meta.get(key) == "" for key in required):
+        raise HTTPException(status_code=503, detail="Collection is missing committed revision/model/snapshot metadata")
+    pipeline = meta.get("pipeline_sha256") or meta.get("pipeline_fingerprint")
+    for name, value in (("corpus_sha256", meta["corpus_sha256"]), ("vector_sha256", meta["vector_sha256"]), ("pipeline_sha256", pipeline)):
+        if not isinstance(value, str) or len(value) != 64 or any(c not in "0123456789abcdef" for c in value):
+            raise HTTPException(status_code=503, detail=f"Invalid actual collection fingerprint: {name}")
+    api_image = os.environ.get("API_IMAGE", "")
+    if not api_image or api_image.endswith((":latest", ":dev")):
+        raise HTTPException(status_code=503, detail="API_IMAGE must identify the deployed immutable source image")
+    if meta["embed_model"] != settings.embed_model:
+        raise HTTPException(status_code=503, detail="Configured embedding model differs from committed collection")
+    digest = str(meta["embed_digest"])
+    if settings.embed_version and settings.embed_version != digest:
+        raise HTTPException(status_code=503, detail="Configured embedding digest differs from committed collection")
+    config_dict["index_pipeline_sha256"] = pipeline
     return {
-        "collection": settings.collection,
-        "revision": revision,
-        "api_image": api_image,
-        "config_json": json.dumps(config_dict, sort_keys=True),
-        "corpus_sha256": corpus_sha,
-        "pipeline_sha256": pipeline_sha,
-        "embedding": {
-            "model": settings.embed_model,
-            "digest": digest,
-            "dimension": int(dim),
-        },
-        "provenance": provenance,
-        "vector_sha256": vector_sha,
+        "collection": settings.collection, "revision": str(meta["committed_revision"]), "api_image": api_image,
+        "config_json": json.dumps(config_dict, sort_keys=True), "corpus_sha256": meta["corpus_sha256"],
+        "pipeline_sha256": pipeline, "vector_sha256": meta["vector_sha256"],
+        "embedding": {"model": settings.embed_model, "digest": digest, "dimension": int(meta["dimension"])},
+        "provenance": "real",
     }
 
 
@@ -129,7 +99,7 @@ def eval_identity(request: Request) -> dict[str, Any]:
     provider_model = getattr(provider, "model", None) or getattr(settings, "llm_model", "llama3.2:3b")
     provider_version = getattr(provider, "version", None) or provider_model
 
-    supported = getattr(settings, "llm_provider", "") in {"ollama", "ollama-host", "ollama-incluster", "hosted"}
+    supported = getattr(settings, "llm_provider", "") in {"ollama", "ollama-host", "ollama-incluster"}
 
     return {
         "schema_version": "1.0",

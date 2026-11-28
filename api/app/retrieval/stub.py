@@ -5,6 +5,7 @@ Switch to RETRIEVER=chroma in the ConfigMap once your index exists.
 """
 
 from __future__ import annotations
+from typing import Any
 
 from ..schemas import Passage
 

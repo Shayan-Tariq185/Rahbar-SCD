@@ -9,11 +9,14 @@ import pytest
 pytest.importorskip("fastapi")
 
 
-def test_runtime_identity_structure() -> None:
+@pytest.mark.parametrize("digest", ["a" * 64, "sha256:" + "b" * 64])
+def test_runtime_identity_structure(monkeypatch: pytest.MonkeyPatch, digest: str) -> None:
     from api.app.routes.eval_adapter import _build_runtime_identity
     from api.app.config import Settings
 
+    monkeypatch.setenv("API_IMAGE", "rahbar-api:test-only-source-image")
     settings = Settings(
+        retriever="chroma",
         collection="rahbar_a",
         top_k=5,
         temperature=0.2,
@@ -21,13 +24,14 @@ def test_runtime_identity_structure() -> None:
         cache_threshold=0.90,
         prompt_version="v1",
         embed_model="nomic-embed-text",
-        embed_version="sha256:abc1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcd",
+        embed_version=digest,
     )
 
     mock_state = MagicMock()
     mock_state.retriever.get_collection_metadata.return_value = {
         "committed_revision": "2",
-        "embed_digest": "sha256:abc1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcd",
+        "embed_model": "nomic-embed-text",
+        "embed_digest": digest,
         "dimension": 768,
         "corpus_sha256": "0" * 64,
         "vector_sha256": "1" * 64,
@@ -39,7 +43,7 @@ def test_runtime_identity_structure() -> None:
     assert identity["revision"] == "2"
     assert identity["provenance"] == "real"
     assert identity["embedding"]["model"] == "nomic-embed-text"
-    assert identity["embedding"]["digest"] == "sha256:abc1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcd"
+    assert identity["embedding"]["digest"] == digest
     assert identity["embedding"]["dimension"] == 768
     assert len(identity["corpus_sha256"]) == 64
     assert len(identity["pipeline_sha256"]) == 64
